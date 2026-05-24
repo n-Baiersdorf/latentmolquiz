@@ -929,7 +929,6 @@ async function init() {
   initTheme();
   initKeyboard();
   initGlossary();
-  initCuratorEntry();
   bindQuizControls();
   setStartButtonState(true);
 
@@ -973,15 +972,6 @@ async function init() {
     setStartButtonState(false, state.curatedSets.length ? null : "Keine Sets geladen");
   });
 
-  if (isCuratorMode()) {
-    try {
-      await ensureCuratorReady();
-      await showCuratorScreen();
-    } catch (err) {
-      document.getElementById("app").innerHTML =
-        `<p class="error-msg">Kurator konnte nicht geladen werden: ${escapeHtml(err.message)}</p>`;
-    }
-  }
 }
 
 init().catch((err) => {

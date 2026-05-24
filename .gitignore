@@ -5,30 +5,35 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 
-# Build-Artefakte (GitHub Pages nutzt docs/, nicht dist/)
+# Build-Artefakte (GitHub Pages nutzt docs/, lokal serve.sh nutzt dist/)
 dist/
 .*.staging/
 .*.bak/
 latentmol-quiz-pages.zip
 
-# RDKit-Galerie-Cache im Projektroot (wird von build.py erzeugt)
-gallery/*.png
+# RDKit-Galerie-Cache im Projektroot (docs/gallery/ gehört ins Repo!)
+/gallery/
 
 # OS / Editor
 .DS_Store
 Thumbs.db
 .cursor/
 
-# LaTeX / Druck / große PDFs (nicht für Web nötig)
+# Nicht für Web-Quiz — nur lokal behalten
+cards/
+catalog_assets/
+desktop/
+print/
+causality_summary.png
+catalog_*.pdf
+catalog_*.tex
 *.aux
 *.log
 *.synctex.gz
-catalog_*.pdf
-catalog_*.tex
-catalog_random_combined.pdf
-catalog_random_puzzle.pdf
-catalog_random_reveal.pdf
-print/
 
-# Optional: Desktop-Entwicklung lokal behalten, nicht ins Repo
-# desktop/
+# Daten: nur Inference-JSONs fürs Build nötig
+Daten/*
+!Daten/inference_*.json
+
+# Interne Planung (optional lokal)
+WEBAPP_REQUIREMENTS.md

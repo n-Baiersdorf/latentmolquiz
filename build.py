@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -438,6 +439,53 @@ def build_bundle(target: Path, inference_files: list[Path]) -> None:
     (target / ".nojekyll").touch()
 
 
+def sanitize_public_pages(target: Path) -> None:
+    """Remove dev-only tooling from the public GitHub Pages bundle (docs/ only)."""
+    index = target / "index.html"
+    html = index.read_text(encoding="utf-8")
+    html = re.sub(
+        r"\n\s*<section id=\"screen-curator\".*?</section>\n",
+        "\n",
+        html,
+        flags=re.DOTALL,
+    )
+    html = html.replace('  <script type="module" src="js/curator.js"></script>\n', "")
+    index.write_text(html, encoding="utf-8")
+
+    (target / "js" / "curator.js").write_text(
+        "/** Public Pages — Kurator deaktiviert. */\n"
+        "export async function ensureCuratorReady() {}\n"
+        "export async function showCuratorScreen() {}\n",
+        encoding="utf-8",
+    )
+
+    loader = target / "js" / "data-loader.js"
+    loader.write_text(
+        loader.read_text(encoding="utf-8").replace(
+            'return new URLSearchParams(window.location.search).get("mode") === "curator";',
+            "return false;",
+        ),
+        encoding="utf-8",
+    )
+
+    app = target / "js" / "app.js"
+    app_text = app.read_text(encoding="utf-8")
+    app_text = app_text.replace("  initCuratorEntry();\n", "")
+    app_text = re.sub(
+        r"\n  if \(isCuratorMode\(\)\) \{.*?\n  \}\n",
+        "\n",
+        app_text,
+        count=1,
+        flags=re.DOTALL,
+    )
+    app.write_text(app_text, encoding="utf-8")
+
+    for name in ("WISSENSCHAFTLICHE_EINORDNUNG.full.md",):
+        extra = target / name
+        if extra.exists():
+            extra.unlink()
+
+
 def deploy_bundle(target: Path, inference_files: list[Path]) -> None:
     """Build into a staging dir, then swap — keeps a running dev server on target alive."""
     staging = target.parent / f".{target.name}.staging"
@@ -482,6 +530,8 @@ def main() -> int:
     deploy_bundle(DIST, inference_files)
     print("Erstelle docs/ …")
     deploy_bundle(DOCS, inference_files)
+    sanitize_public_pages(DOCS)
+    print("  docs/: Kurator und Dev-Dateien für Pages entfernt")
 
     print("Fertig.")
     print(f"  dist/:  {DIST}")

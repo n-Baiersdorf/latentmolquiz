@@ -85,42 +85,6 @@
       </div>
     </section>
 
-    <section id="screen-curator" class="screen">
-      <div class="curator-head">
-        <h1>Kurator</h1>
-        <button type="button" id="btn-back-quiz" class="text-btn">← Quiz</button>
-      </div>
-
-      <div class="curator-controls">
-        <select id="filter-strategy">
-          <option value="">Alle Strategien</option>
-          <option value="scaffold_similar">scaffold_similar</option>
-          <option value="random">random</option>
-        </select>
-        <select id="filter-category">
-          <option value="">Alle Kategorien</option>
-          <option value="perfect">5/5 korrekt</option>
-          <option value="confident_wrong">0/5 falsch</option>
-          <option value="scattered">Uneinig</option>
-        </select>
-        <label class="check"><input type="checkbox" id="filter-kept-only"> Nur Auswahl</label>
-        <label class="check"><input type="checkbox" id="toggle-properties" checked> HOMO, gap</label>
-        <label class="check"><input type="checkbox" id="toggle-iupac"> IUPAC</label>
-        <button type="button" id="btn-export-config" class="action small">Export</button>
-        <label class="action small import-label">
-          Import
-          <input type="file" id="import-config" accept=".json" hidden>
-        </label>
-      </div>
-
-      <div id="curator-gallery" class="curator-gallery"></div>
-
-      <div id="curator-selected" class="curator-selected">
-        <h2>Auswahl (<span id="selected-count">0</span>)</h2>
-        <ol id="selected-list"></ol>
-      </div>
-    </section>
-
   </main>
 
   <footer class="site-footer">
@@ -140,7 +104,6 @@
 
   <script type="module" src="js/data-loader.js"></script>
   <script type="module" src="js/pea-heatmap.js"></script>
-  <script type="module" src="js/curator.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
