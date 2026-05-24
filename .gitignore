@@ -35,5 +35,6 @@ catalog_*.tex
 Daten/*
 !Daten/inference_*.json
 
-# Interne Planung (optional lokal)
+# Interne Planung / Langfassung (optional lokal, nicht im Repo)
 WEBAPP_REQUIREMENTS.md
+WISSENSCHAFTLICHE_EINORDNUNG.full.md

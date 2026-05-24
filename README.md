@@ -52,7 +52,7 @@ git add -A && git commit -m "…" && git push          # privates Dev-Repo
 
 ## Was ins Git-Repo gehört (~20 MB)
 
-- `src/`, `docs/`, `build.py`, `config.json`, `scripts/`, `serve.sh`, `README.md`, `WISSENSCHAFTLICHE_EINORDNUNG*.md`
+- `src/`, `docs/`, `build.py`, `config.json`, `scripts/`, `serve.sh`, `README.md`, `WISSENSCHAFTLICHE_EINORDNUNG.md`
 - `Daten/inference_*.json` (für Rebuilds)
 
 **Nicht committen** (steht in `.gitignore`): `.venv/`, `cards/`, `catalog_assets/`, `desktop/`, Embeddings (`.npy`), PDFs/LaTeX, `gallery/`-Cache.

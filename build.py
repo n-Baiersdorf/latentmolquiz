@@ -392,7 +392,6 @@ def build_bundle(target: Path, inference_files: list[Path]) -> None:
         "config.json",
         "config.example.json",
         "WISSENSCHAFTLICHE_EINORDNUNG.md",
-        "WISSENSCHAFTLICHE_EINORDNUNG.full.md",
     ):
         src = ROOT / name
         if src.exists():
@@ -479,11 +478,6 @@ def sanitize_public_pages(target: Path) -> None:
         flags=re.DOTALL,
     )
     app.write_text(app_text, encoding="utf-8")
-
-    for name in ("WISSENSCHAFTLICHE_EINORDNUNG.full.md",):
-        extra = target / name
-        if extra.exists():
-            extra.unlink()
 
 
 def deploy_bundle(target: Path, inference_files: list[Path]) -> None:
