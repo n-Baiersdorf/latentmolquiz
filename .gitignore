@@ -1,0 +1,34 @@
+# Python / venv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Build-Artefakte (GitHub Pages nutzt docs/, nicht dist/)
+dist/
+.*.staging/
+.*.bak/
+latentmol-quiz-pages.zip
+
+# RDKit-Galerie-Cache im Projektroot (wird von build.py erzeugt)
+gallery/*.png
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.cursor/
+
+# LaTeX / Druck / große PDFs (nicht für Web nötig)
+*.aux
+*.log
+*.synctex.gz
+catalog_*.pdf
+catalog_*.tex
+catalog_random_combined.pdf
+catalog_random_puzzle.pdf
+catalog_random_reveal.pdf
+print/
+
+# Optional: Desktop-Entwicklung lokal behalten, nicht ins Repo
+# desktop/

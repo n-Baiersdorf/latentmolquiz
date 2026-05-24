@@ -1,0 +1,16 @@
+{
+  "sets": [
+    {"strategy": "scaffold_similar", "set_idx": 0},
+    {"strategy": "scaffold_similar", "set_idx": 11},
+    {"strategy": "scaffold_similar", "set_idx": 12},
+    {"strategy": "scaffold_similar", "set_idx": 23},
+    {"strategy": "scaffold_similar", "set_idx": 15},
+    {"strategy": "scaffold_similar", "set_idx": 22},
+    {"strategy": "scaffold_similar", "set_idx": 13},
+    {"strategy": "scaffold_similar", "set_idx": 1},
+    {"strategy": "scaffold_similar", "set_idx": 10},
+    {"strategy": "scaffold_similar", "set_idx": 14}
+  ],
+  "show_properties": true,
+  "show_iupac": false
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="LatentMol Odd-One-Out">
+  <title>LatentMol OOO</title>
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      var t = localStorage.getItem("jufo_theme");
+      if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <button type="button" id="btn-theme" class="theme-toggle" aria-label="Dunkelmodus">☾ DUNKEL</button>
+  <main id="app">
+
+    <section id="screen-intro" class="screen active">
+      <h1 class="title-spaced">Odd-One-Out-Quiz</h1>
+      <div class="intro-body panel-double">
+        <p class="lead">Vier Moleküle — eines passt nicht zur Gruppe. Findest du es?</p>
+        <p class="intro-text">Du vergleichst dich mit dem LatentMol-KI-Modell (MultiMol + PEA), das Moleküle als Ausreißer erkennt. Nach deiner Wahl siehst du, was das Modell sagt — und <strong>warum</strong> ein Molekül heraussticht (funktionelle Gruppen, Seed-Votes, PEA-Matrix).</p>
+        <p class="intro-text muted">Kuratiertes Quiz: 9 Sets · ca. 3 Minuten · kein Chemie-Wissen nötig.</p>
+      </div>
+      <div class="intro-start">
+        <button type="button" id="btn-start" class="action">Los geht's</button>
+        <p class="intro-alt muted">
+          <button type="button" id="btn-intro-endless" class="text-btn">Endlos-Modus</button>
+          <span class="intro-alt-sep" aria-hidden="true">·</span>
+          <button type="button" id="btn-intro-more-info" class="text-btn">Mehr zum KI-Modell</button>
+        </p>
+      </div>
+    </section>
+
+    <section id="screen-quiz" class="screen">
+      <div class="quiz-top panel-single">
+        <span id="progress-label" class="counter">1 / 9</span>
+        <h1 class="question">Welches Molekül passt nicht dazu?</h1>
+      </div>
+
+      <div id="quiz-body" class="quiz-body">
+        <div id="molecule-grid" class="grid" role="group" aria-label="Moleküle"></div>
+
+        <div id="resolution" class="resolution hidden">
+          <div id="fg-highlight" class="fg-highlight" aria-live="polite"></div>
+          <details id="resolution-details" class="resolution-details">
+            <summary>Details</summary>
+            <div id="fg-summary" class="fg-summary"></div>
+            <div id="pea-container"></div>
+          </details>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-left">
+          <button type="button" id="btn-prev" class="nav-btn" disabled aria-label="Vorheriges Set">←</button>
+          <button type="button" id="btn-home" class="nav-btn nav-btn-menu">Hauptmenü</button>
+        </div>
+        <button type="button" id="btn-next" class="nav-btn action hidden">Weiter →</button>
+      </nav>
+    </section>
+
+    <section id="screen-outro" class="screen">
+      <h1 class="title-spaced">Danke fürs Mitmachen!</h1>
+      <p id="outro-score" class="lead"></p>
+      <div class="outro-actions panel-single">
+        <button type="button" id="btn-restart" class="action">Nochmal</button>
+        <button type="button" id="btn-endless" class="action secondary">Endlos-Modus</button>
+        <button type="button" id="btn-more-info" class="action secondary">Mehr zum KI-Modell</button>
+      </div>
+    </section>
+
+    <section id="screen-info" class="screen">
+      <div class="info-head">
+        <h1>Wissenschaftliche Einordnung</h1>
+        <button type="button" id="btn-info-back" class="text-btn">Hauptmenü</button>
+      </div>
+      <div id="info-content" class="info-content">
+        <p class="muted">Lade …</p>
+      </div>
+    </section>
+
+    <section id="screen-curator" class="screen">
+      <div class="curator-head">
+        <h1>Kurator</h1>
+        <button type="button" id="btn-back-quiz" class="text-btn">← Quiz</button>
+      </div>
+
+      <div class="curator-controls">
+        <select id="filter-strategy">
+          <option value="">Alle Strategien</option>
+          <option value="scaffold_similar">scaffold_similar</option>
+          <option value="random">random</option>
+        </select>
+        <select id="filter-category">
+          <option value="">Alle Kategorien</option>
+          <option value="perfect">5/5 korrekt</option>
+          <option value="confident_wrong">0/5 falsch</option>
+          <option value="scattered">Uneinig</option>
+        </select>
+        <label class="check"><input type="checkbox" id="filter-kept-only"> Nur Auswahl</label>
+        <label class="check"><input type="checkbox" id="toggle-properties" checked> HOMO, gap</label>
+        <label class="check"><input type="checkbox" id="toggle-iupac"> IUPAC</label>
+        <button type="button" id="btn-export-config" class="action small">Export</button>
+        <label class="action small import-label">
+          Import
+          <input type="file" id="import-config" accept=".json" hidden>
+        </label>
+      </div>
+
+      <div id="curator-gallery" class="curator-gallery"></div>
+
+      <div id="curator-selected" class="curator-selected">
+        <h2>Auswahl (<span id="selected-count">0</span>)</h2>
+        <ol id="selected-list"></ol>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-rule">────────────────────────</span>
+    LatentMol · Nora Baiersdorf · 2026
+  </footer>
+
+  <div id="fg-glossary-backdrop" class="fg-glossary-backdrop hidden" aria-hidden="true">
+    <div class="fg-glossary" role="dialog" aria-labelledby="fg-glossary-title">
+      <div class="fg-glossary-head">
+        <h2 id="fg-glossary-title">Funktionelle Gruppen</h2>
+        <button type="button" id="btn-fg-glossary-close" class="text-btn" aria-label="Schließen">×</button>
+      </div>
+      <div id="fg-glossary-body" class="fg-glossary-body"></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/data-loader.js"></script>
+  <script type="module" src="js/pea-heatmap.js"></script>
+  <script type="module" src="js/curator.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
