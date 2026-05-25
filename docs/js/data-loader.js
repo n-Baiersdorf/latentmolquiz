@@ -4,6 +4,8 @@
 
 const DATA_BASE = "./data/";
 const GALLERY_BASE = "./gallery/";
+const POOL_STRATEGIES = ["scaffold_similar", "random"];
+const LOAD_BATCH_SIZE = 30;
 
 let allSetsCache = null;
 let configCache = null;
@@ -38,19 +40,48 @@ export function clearAllSetsCache() {
   allSetsCache = null;
 }
 
-export async function loadAllInferenceSets() {
+export async function loadAllInferenceSets(onProgress) {
   if (allSetsCache) return allSetsCache;
 
-  const strategies = ["scaffold_similar", "random"];
-  const sets = [];
-  for (const strategy of strategies) {
-    for (let i = 0; i < 100; i++) {
-      const data = await loadSetData(strategy, i);
-      if (data) sets.push(enrichSetMeta(data));
+  let jobs = [];
+  try {
+    const resp = await fetch(`${DATA_BASE}set_manifest.json`, { cache: "no-store" });
+    if (resp.ok) {
+      const manifest = await resp.json();
+      for (const strategy of POOL_STRATEGIES) {
+        for (const setIdx of manifest.strategies?.[strategy] || []) {
+          jobs.push({ strategy, setIdx });
+        }
+      }
+    }
+  } catch {
+    /* fallback below */
+  }
+
+  if (!jobs.length) {
+    for (const strategy of POOL_STRATEGIES) {
+      for (let setIdx = 0; setIdx < 100; setIdx++) {
+        jobs.push({ strategy, setIdx });
+      }
     }
   }
+
+  const sets = [];
+  for (let offset = 0; offset < jobs.length; offset += LOAD_BATCH_SIZE) {
+    const chunk = jobs.slice(offset, offset + LOAD_BATCH_SIZE);
+    const results = await Promise.all(
+      chunk.map(({ strategy, setIdx }) => loadSetData(strategy, setIdx))
+    );
+    for (const data of results) {
+      if (data) sets.push(enrichSetMeta(data));
+    }
+    if (onProgress) {
+      onProgress(Math.min(offset + chunk.length, jobs.length), jobs.length);
+    }
+  }
+
   allSetsCache = sets;
-  return sets;
+  return allSetsCache;
 }
 
 export async function loadSetData(strategy, setIdx, retries = 2) {

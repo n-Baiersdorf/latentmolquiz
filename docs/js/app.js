@@ -48,9 +48,16 @@ function showScreen(name) {
 function updateProgress() {
   const total = state.sets.length;
   const current = state.currentIdx + 1;
-  const suffix = state.mode === "endless" ? " · Endlos" : "";
-  document.getElementById("progress-label").textContent = `${current} / ${total}${suffix}`;
+  const label = document.getElementById("progress-label");
+  if (!label) return;
+  if (state.mode === "endless") {
+    label.textContent = `${current} / ${total} · Pool`;
+  } else {
+    label.textContent = `${current} / ${total}`;
+  }
 }
+
+const POOL_BTN_LABEL = "Weitere Sets";
 
 function setKey(s) {
   return `${s.strategy}_${s.set_idx}`;
@@ -849,7 +856,19 @@ function onEndlessClick() {
     showIntroLoadError(state.loadError || "Keine Sets geladen — bitte Seite neu laden.");
     return;
   }
-  startEndlessMode();
+  startEndlessMode().catch((err) => {
+    console.error(err);
+    showIntroLoadError(`Weitere Sets konnten nicht geladen werden: ${err.message}`);
+  });
+}
+
+function setPoolButtonsLoading(loading) {
+  for (const id of ["btn-intro-endless", "btn-endless"]) {
+    const btn = document.getElementById(id);
+    if (!btn) continue;
+    btn.disabled = loading;
+    btn.textContent = loading ? "Lade …" : POOL_BTN_LABEL;
+  }
 }
 
 function goHome() {
@@ -866,14 +885,25 @@ function startQuiz() {
 }
 
 async function startEndlessMode() {
-  const curated = new Set(state.config.sets.map((e) => `${e.strategy}_${e.set_idx}`));
-  const all = await loadAllInferenceSets();
-  state.mode = "endless";
-  state.sets = all.filter((s) => !curated.has(setKey(s)));
-  state.currentIdx = 0;
-  state.juryAnswers = new Array(state.sets.length).fill(null);
-  showScreen("quiz");
-  renderCurrentSet();
+  setPoolButtonsLoading(true);
+  try {
+    const curated = new Set(state.config.sets.map((e) => `${e.strategy}_${e.set_idx}`));
+    const all = await loadAllInferenceSets((done, total) => {
+      const btn = document.getElementById("btn-intro-endless");
+      if (btn) btn.textContent = `Lade … ${done}/${total}`;
+    });
+    state.sets = all.filter((s) => !curated.has(setKey(s)));
+    if (!state.sets.length) {
+      throw new Error("Keine zusätzlichen Sets im Pool.");
+    }
+    state.mode = "endless";
+    state.currentIdx = 0;
+    state.juryAnswers = new Array(state.sets.length).fill(null);
+    showScreen("quiz");
+    renderCurrentSet();
+  } finally {
+    setPoolButtonsLoading(false);
+  }
 }
 
 async function showInfoScreen(returnTo = "outro") {
@@ -1008,7 +1038,6 @@ async function init() {
   initTheme();
   initKeyboard();
   initGlossary();
-  initCuratorEntry();
   bindQuizControls();
   setStartButtonState(true);
 
@@ -1052,15 +1081,6 @@ async function init() {
     setStartButtonState(false, state.curatedSets.length ? null : "Keine Sets geladen");
   });
 
-  if (isCuratorMode()) {
-    try {
-      await ensureCuratorReady();
-      await showCuratorScreen();
-    } catch (err) {
-      document.getElementById("app").innerHTML =
-        `<p class="error-msg">Kurator konnte nicht geladen werden: ${escapeHtml(err.message)}</p>`;
-    }
-  }
 }
 
 init().catch((err) => {

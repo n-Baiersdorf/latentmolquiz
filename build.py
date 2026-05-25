@@ -410,17 +410,27 @@ def build_bundle(target: Path, inference_files: list[Path]) -> None:
     Chem, _ = try_rdkit()
 
     needed = set()
+    manifest: dict[str, list[int]] = {}
     for json_path in inference_files:
         data = json.loads(json_path.read_text(encoding="utf-8"))
         if Chem is not None:
             data = enrich_functional_groups(data, Chem)
         strategy = data["strategy"]
         set_idx = data["set_idx"]
+        if strategy in ("scaffold_similar", "random"):
+            manifest.setdefault(strategy, []).append(set_idx)
         for mol_idx in range(len(data["molecules"])):
             needed.add(f"{strategy}_set{set_idx}_mol{mol_idx}.png")
         (data_dir / json_path.name).write_text(
             json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+
+    for indices in manifest.values():
+        indices.sort()
+    (data_dir / "set_manifest.json").write_text(
+        json.dumps({"strategies": manifest}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     # Gallery PNGs
     gallery_dst = target / "gallery"
