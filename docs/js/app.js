@@ -174,6 +174,39 @@ function buildHighlightContent(setData) {
   };
 }
 
+function seedVoteRanked(setData) {
+  const counts = {};
+  for (const e of setData._seedEntries || []) {
+    counts[e.predIdx] = (counts[e.predIdx] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([idx, n]) => ({ idx: Number(idx), n }))
+    .sort((a, b) => b.n - a.n);
+}
+
+function moleculesAllOxygenVaried(setData) {
+  const oxygenFgs = new Set([
+    "Ether",
+    "Alkohol",
+    "Aldehyd",
+    "Keton",
+    "Ester",
+    "Phenol",
+    "Carbonsäure",
+  ]);
+  const mols = setData.molecules || [];
+  if (mols.length < 4) return false;
+  return mols.every((m) => (m.fg_labels_de || []).some((l) => oxygenFgs.has(l)));
+}
+
+function fgSummaryForMol(setData, molIdx, glossary) {
+  const mol = setData.molecules[molIdx];
+  const labels = fgLabelsDe(mol);
+  if (labels.length) return fgChips(labels, glossary);
+  const primary = mol?.fg_primary_de;
+  return primary ? fgChips([primary], glossary) : molNum(molIdx + 1);
+}
+
 function buildModelPerspectiveHtml(setData) {
   if (!setData._modelAltCorrect || !hasFgData(setData)) return null;
 
@@ -188,19 +221,25 @@ function buildModelPerspectiveHtml(setData) {
   const exclusive = fg?.model_exclusive_fgs_de || [];
   const lacks = fg?.model_lacks_fgs_de || [];
   const noN = fg?.model_without_n_fg;
+  const total = setData._totalSeeds || 5;
+  const ranked = seedVoteRanked(setData);
+  const modelVotes = ranked.find((r) => r.idx === modelIdx)?.n ?? 0;
   const unanimous = setData._category === "confident_wrong";
+  const wrongRanked = ranked.filter((r) => r.idx !== gtIdx);
+  const splitWrong =
+    wrongRanked.length >= 2 && wrongRanked.filter((r) => r.n >= 2).length >= 2;
 
-  let intro = unanimous
-    ? `Alle Seeds wählen einheitlich ${molNum(modelNum)} — nicht die definierte Ground Truth (${molNum(gtNum)}). `
-    : `Das Modell tendiert zu ${molNum(modelNum)} statt ${molNum(gtNum)}. `;
-
-  let reason = "";
-  if (noN) {
-    reason = `nur ${molNum(modelNum)} hat keine stickstoffhaltige funktionelle Gruppe`;
-  } else if (exclusive.length) {
-    reason = `nur ${molNum(modelNum)} hat ${fgChips(exclusive, glossary)}`;
-  } else if (lacks.length) {
-    reason = `nur ${molNum(modelNum)} hat kein ${fgChips(lacks, glossary)} — die anderen schon`;
+  let intro;
+  if (unanimous) {
+    intro = `Alle ${total} Seeds wählen ${molNum(modelNum)} statt der Ground Truth (${molNum(gtNum)}).`;
+  } else if (splitWrong) {
+    const parts = wrongRanked
+      .filter((r) => r.n >= 2)
+      .map((r) => `${r.n} von ${total} Seeds → ${molNum(r.idx + 1)}`)
+      .join(", ");
+    intro = `Die Seeds sind uneinig (${parts}). Ground Truth: ${molNum(gtNum)}.`;
+  } else {
+    intro = `${modelVotes} von ${total} Seeds wählen ${molNum(modelNum)}; Ground Truth ist ${molNum(gtNum)}.`;
   }
 
   const gtLacks = fg?.gt_lacks_fgs_de || [];
@@ -208,15 +247,43 @@ function buildModelPerspectiveHtml(setData) {
   let gtPart = "";
   if (gtLacks.length) {
     const others = formatOtherMolNums(setData, gtIdx);
-    gtPart = `Die definierte Ground Truth sieht ${molNum(gtNum)} als Ausreißer, weil ${others} ${fgChips(gtLacks, glossary)} teilen — ${molNum(gtNum)} nicht`;
+    gtPart = `${others} teilen ${fgChips(gtLacks, glossary)} — ${molNum(gtNum)} nicht`;
   } else if (gtExtra.length) {
-    gtPart = `Die definierte Ground Truth sieht ${molNum(gtNum)} wegen ${fgChips(gtExtra, glossary)} als Ausreißer`;
+    gtPart = `nur ${molNum(gtNum)} hat ${fgChips(gtExtra, glossary)}`;
   } else {
-    gtPart = "Die definierte Ground Truth fasst die Gruppe anders";
+    gtPart = "die Ground Truth ordnet die Gruppe anders";
   }
 
-  if (!reason) return null;
-  return `${intro}Chemisch nachvollziehbar: ${reason}. ${gtPart} — beides ist verteidbar.`;
+  if (splitWrong) {
+    const parts = wrongRanked
+      .filter((r) => r.n >= 2)
+      .map(
+        (r) =>
+          `${molNum(r.idx + 1)} (${fgSummaryForMol(setData, r.idx, glossary)}, ${r.n}/${total} Seeds)`
+      );
+    let ambiguity = "Mehrere Einordnungen sind hier plausibel — die Seeds setzen unterschiedliche Schwerpunkte.";
+    if (moleculesAllOxygenVaried(setData)) {
+      ambiguity =
+        "Alle vier unterscheiden sich vor allem in sauerstoffhaltigen Gruppen — die Zuordnung ist besonders mehrdeutig.";
+    }
+    return `${intro} Modell-Schwerpunkte: ${parts.join("; ")}. Ground Truth: ${gtPart}. ${ambiguity}`;
+  }
+
+  let modelPart = "";
+  if (noN) {
+    modelPart = `${molNum(modelNum)} ist das einzige ohne stickstoffhaltige funktionelle Gruppe`;
+  } else if (exclusive.length) {
+    modelPart = `${molNum(modelNum)} ist das einzige mit ${fgChips(exclusive, glossary)}`;
+  } else if (lacks.length) {
+    modelPart = `${molNum(modelNum)} fehlt ${fgChips(lacks, glossary)}, das die anderen teilen`;
+  }
+
+  if (!modelPart) return null;
+
+  const closing =
+    "Beide Sichtweisen sind chemisch korrekt — nur das Kriterium unterscheidet sich.";
+
+  return `${intro} Modell-Sicht: ${modelPart}. Ground-Truth-Sicht: ${gtPart}. ${closing}`;
 }
 
 function inlineMd(text) {
@@ -878,15 +945,20 @@ function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+function isCompactTheme() {
+  return window.matchMedia("(max-width: 767px)").matches;
+}
+
 function updateThemeButton(theme, followsSystem) {
   const btn = document.getElementById("btn-theme");
   if (!btn) return;
-  const suffix = followsSystem ? " · SYS" : "";
+  const compact = isCompactTheme();
+  const suffix = followsSystem && !compact ? " · SYS" : "";
   if (theme === "dark") {
-    btn.textContent = `☀ HELL${suffix}`;
+    btn.textContent = compact ? "☀" : `☀ HELL${suffix}`;
     btn.setAttribute("aria-label", followsSystem ? "Hellmodus (folgt System)" : "Hellmodus");
   } else {
-    btn.textContent = `☾ DUNKEL${suffix}`;
+    btn.textContent = compact ? "☾" : `☾ DUNKEL${suffix}`;
     btn.setAttribute("aria-label", followsSystem ? "Dunkelmodus (folgt System)" : "Dunkelmodus");
   }
   btn.title = followsSystem
@@ -918,6 +990,13 @@ function initTheme() {
     }
   });
 
+  window.matchMedia("(max-width: 767px)").addEventListener("change", () => {
+    const follows = localStorage.getItem(THEME_KEY) !== "light" && localStorage.getItem(THEME_KEY) !== "dark";
+    const current =
+      document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    updateThemeButton(current, follows);
+  });
+
   document.getElementById("btn-theme")?.addEventListener("click", () => {
     const next =
       document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
@@ -929,6 +1008,7 @@ async function init() {
   initTheme();
   initKeyboard();
   initGlossary();
+  initCuratorEntry();
   bindQuizControls();
   setStartButtonState(true);
 
@@ -972,6 +1052,15 @@ async function init() {
     setStartButtonState(false, state.curatedSets.length ? null : "Keine Sets geladen");
   });
 
+  if (isCuratorMode()) {
+    try {
+      await ensureCuratorReady();
+      await showCuratorScreen();
+    } catch (err) {
+      document.getElementById("app").innerHTML =
+        `<p class="error-msg">Kurator konnte nicht geladen werden: ${escapeHtml(err.message)}</p>`;
+    }
+  }
 }
 
 init().catch((err) => {

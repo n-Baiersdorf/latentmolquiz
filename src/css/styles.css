@@ -64,6 +64,38 @@ body {
   padding: 1.25rem 1rem 7rem;
 }
 
+@media (max-width: 767px) {
+  /* Platz für fixierten Theme-Button oben rechts (viewport, nicht #app-Breite) */
+  #app {
+    padding-top: max(2.5rem, calc(0.5rem + env(safe-area-inset-top) + 2rem));
+    padding-right: max(3.25rem, calc(2.75rem + env(safe-area-inset-right)));
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+
+  .theme-toggle {
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 0.45rem 0.5rem;
+    min-height: 40px;
+    min-width: 40px;
+  }
+
+  .info-head,
+  .curator-head {
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+  }
+
+  .info-head h1,
+  .curator-head h1 {
+    flex: 1 1 100%;
+    margin-bottom: 0;
+    padding-right: 0;
+  }
+}
+
 @media (min-width: 768px) {
   #app { max-width: 52rem; padding: 2rem 1.5rem 3rem; }
   html { font-size: 17px; }
@@ -951,6 +983,14 @@ h1 {
   padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
   background: var(--paper);
   border-top: 3px double var(--ink);
+  z-index: 40;
+}
+
+@media (max-width: 767px) {
+  .nav {
+    padding-left: max(0.65rem, env(safe-area-inset-left));
+    padding-right: max(0.65rem, env(safe-area-inset-right));
+  }
 }
 
 @media (min-width: 768px) {

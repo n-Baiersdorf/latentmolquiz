@@ -12,7 +12,23 @@ chmod +x serve.sh
 ./serve.sh                                # http://localhost:8080 (dist/, mit Kurator)
 ```
 
-**Kurator (nur lokal in `dist/`):** Titel „Odd-One-Out-Quiz“ 800 ms gedrückt halten, oder `?mode=curator`. Set-Auswahl und `config.json` exportieren. In `docs/` (GitHub Pages) ist der Kurator absichtlich deaktiviert.
+**Kurator (nur lokal in `dist/`):** Titel „Odd-One-Out-Quiz“ 800 ms gedrückt halten, oder `?mode=curator`. Sets auswählen, Reihenfolge per Drag-and-drop, dann **Export** → `config.json`. In `docs/` (GitHub Pages) ist der Kurator absichtlich deaktiviert.
+
+### Kuratierte Sets live schalten
+
+1. Lokal kuratieren: `./serve.sh` → Kurator → **Export**
+2. Ins Projekt übernehmen:
+
+```bash
+chmod +x scripts/apply-config.sh
+./scripts/apply-config.sh ~/Downloads/config.json
+```
+
+(`--quick` kopiert nur `docs/config.json`, ohne vollen `build.py`-Lauf.)
+
+3. Deployen: `git add config.json docs/config.json` → commit → push bzw. `./scripts/deploy-public-pages.sh …`
+
+Die öffentliche Seite liest nur `config.json` — kein Kurator nötig online.
 
 ---
 

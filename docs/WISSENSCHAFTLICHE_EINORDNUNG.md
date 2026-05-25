@@ -16,8 +16,8 @@ Nach deiner Wahl erklärt die Auflösung den Ausreißer. Unter **Details** siehs
 
 Das Netz wurde **ausschließlich selbstüberwacht** trainiert — auf QM9 (kleine organische Moleküle), mit zwei Aufgaben:
 
-- **Masked Sequence Modelling** — vergleichbar mit Lückentexten, nur dass ganze Moleküle maskiert und wiederhergestellt werden
-- **Tanimoto-Regression** — das Modell lernt, paarweise strukturelle Ähnlichkeit zwischen Molekülen vorherzusagen
+- **Masked Sequence Modelling** — vergleichbar mit Lückentexten: einzelne **Atome** werden maskiert und aus dem Kontext wiederhergestellt
+- **Tanimoto-Regression** — das Modell lernt, die **strukturelle Distanz** zwischen Molekülpaaren vorherzusagen (Tanimoto-Ähnlichkeit als Zielgröße)
 
 Danach wurde LatentMol **eingefroren**. Für die OOO-Aufgabe kommt nur noch eine **lineare Probe** obendrauf — eine einfache Schicht, die aus den bereits gelernten Einbettungen ausliest, welches Molekül nicht zur Gruppe passt. Das Netz selbst wurde dafür **nicht** nachtrainiert.
 
@@ -29,13 +29,13 @@ Danach wurde LatentMol **eingefroren**. Für die OOO-Aufgabe kommt nur noch eine
 
 Die Antwort ist **ja** — LatentMol liegt in diesem Quiz **deutlich über Zufall** (25 %). Die Repräsentationen tragen bereits Struktur über die Gruppe hinweg; die lineare Probe muss sie nur noch zuordnen.
 
-Manchmal wählen **alle fünf Seeds einheitlich ein anderes Molekül** als die definierte Ground Truth. Das zeigt eine **Limitation der festen GT-Regel** — funktionelle Gruppen erlauben oft mehrere sinnvolle Einordnungen. Bemerkenswert ist, dass das Modell dabei häufig **chemisch ebenso gültige oder sogar treffendere** Gruppierungen findet (z. B. Ether statt Amin als Kriterium). Im Quiz erklärt **↗ Sicht des Modells**, warum diese alternative Wahl haltbar ist.
+Manchmal wählen **alle fünf Seeds einheitlich ein anderes Molekül** als die definierte Ground Truth. Das kann eine **Limitation der festen GT-Regel** sein — funktionelle Gruppen erlauben oft mehrere sinnvolle Einordnungen, und das Modell findet dann **chemisch ebenso gültige** Gruppierungen (z. B. Ether statt Amin als Kriterium). Manchmal ist die Modell-Wahl aber auch **einfach falsch** — nicht jede Abweichung ist chemisch haltbar. Im Quiz erklärt **↗ Sicht des Modells**, wann eine alternative Wahl Sinn ergibt.
 
 ---
 
-## PEA beeinflusst die Gruppierung
+## PEA und kausaler Einfluss auf die Gruppierung
 
-In Experimenten wurde die PEA-Matrix absichtlich verändert — etwa die Spalte des Ausreißers verstärkt. Je stärker die Verstärkung, desto besser die OOO-Trefferquote; ohne Umkehr. Wird PEA abgeschaltet, fällt die Leistung wieder ab. Korrelation allein erklärt das nicht: An der Gruppierung hängt PEA mit drin.
+In Experimenten wurde die PEA-Matrix absichtlich verändert. Entscheidend: **Nur die Verstärkung der Spalte der bekannten Ground Truth** verbesserte die OOO-Trefferquote — je stärker die GT-Spalte, desto häufiger wurde das richtige Ausreißer-Molekül gewählt. Wird stattdessen eine **falsche** Spalte verstärkt, fällt die Leistung oft ab. Wird PEA ganz abgeschaltet, sinkt sie ebenfalls. Ein solcher, gezielt steuerbarer Effekt spricht dafür, dass PEA **kausal** an der Gruppierung beteiligt ist — nicht nur zufällig damit korreliert.
 
 ---
 
@@ -47,7 +47,6 @@ In Experimenten wurde die PEA-Matrix absichtlich verändert — etwa die Spalte 
 | **OOO-Test** | Lineare Probe auf gelernten Einbettungen |
 | **Ground Truth** | Regelbasiert über funktionelle Gruppen — eine von mehreren möglichen Einordnungen |
 | **Seed-Ringe** | Fünf unabhängige Starts; Übereinstimmung zeigt, wie stabil die Modell-Sicht ist |
-| **Sicht des Modells** | Erklärt, warum eine alternative Wahl chemisch Sinn ergeben kann |
-| **PEA-Manipulation** | Verstärkung der Ausreißer-Spalte verbessert OOO schrittweise |
+| **Sicht des Modells** | Erklärt, wann eine alternative Wahl chemisch Sinn ergibt — nicht bei jeder Abweichung |
+| **PEA-Manipulation** | GT-Spalte verstärken → bessere OOO-Treffer; falsche Spalte → oft schlechter |
 
-*Eine ausführliche wissenschaftliche Fassung (Architektur, Ablationen, Statistik) folgt in einem späteren Update.*

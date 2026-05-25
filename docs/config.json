@@ -1,15 +1,26 @@
 {
   "sets": [
-    {"strategy": "scaffold_similar", "set_idx": 11},
-    {"strategy": "scaffold_similar", "set_idx": 12},
-    {"strategy": "scaffold_similar", "set_idx": 23},
-    {"strategy": "scaffold_similar", "set_idx": 15},
-    {"strategy": "scaffold_similar", "set_idx": 22},
-    {"strategy": "scaffold_similar", "set_idx": 13},
-    {"strategy": "scaffold_similar", "set_idx": 5},
-    {"strategy": "scaffold_similar", "set_idx": 10},
-    {"strategy": "scaffold_similar", "set_idx": 14}
+    {
+      "strategy": "scaffold_similar",
+      "set_idx": 13
+    },
+    {
+      "strategy": "scaffold_similar",
+      "set_idx": 21
+    },
+    {
+      "strategy": "scaffold_similar",
+      "set_idx": 22
+    },
+    {
+      "strategy": "scaffold_similar",
+      "set_idx": 33
+    },
+    {
+      "strategy": "scaffold_similar",
+      "set_idx": 23
+    }
   ],
   "show_properties": true,
-  "show_iupac": false
+  "show_iupac": true
 }
