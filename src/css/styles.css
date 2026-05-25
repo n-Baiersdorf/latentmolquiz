@@ -53,11 +53,6 @@ body {
   --seed-bad: #f87171;
 }
 
-[data-theme="dark"] .mol-img,
-[data-theme="dark"] .curator-mini img {
-  filter: invert(1);
-}
-
 #app {
   max-width: 36rem;
   margin: 0 auto;
