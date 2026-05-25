@@ -2,9 +2,28 @@
  * Data loading and set utilities for JuFo MultiMol OOO-Quiz.
  */
 
-const DATA_BASE = "./data/";
-const GALLERY_BASE = "./gallery/";
+const APP_BASE = new URL("../", import.meta.url).href;
+const DATA_BASE = `${APP_BASE}data/`;
+const GALLERY_BASE = `${APP_BASE}gallery/`;
 const POOL_STRATEGIES = ["scaffold_similar", "random"];
+
+function assetVersion() {
+  const link = document.querySelector('link[href*="styles.css"]');
+  if (!link?.href) return "";
+  try {
+    return new URL(link.href).searchParams.get("v") || "";
+  } catch {
+    return "";
+  }
+}
+
+export function galleryImageUrl(filename) {
+  const version = assetVersion();
+  const query = version ? `?v=${encodeURIComponent(version)}` : "";
+  return `${GALLERY_BASE}${filename}${query}`;
+}
+
+export { APP_BASE, DATA_BASE, GALLERY_BASE };
 const LOAD_BATCH_SIZE = 30;
 
 let allSetsCache = null;
@@ -21,7 +40,7 @@ export async function loadConfig() {
       /* fall through */
     }
   }
-  const resp = await fetch("./config.json", { cache: "no-store" });
+  const resp = await fetch(`${APP_BASE}config.json`, { cache: "no-store" });
   if (!resp.ok) throw new Error("config.json konnte nicht geladen werden");
   configCache = await resp.json();
   return configCache;
@@ -186,7 +205,7 @@ export function enrichSetMeta(data) {
 }
 
 export function moleculeImagePath(strategy, setIdx, molIdx) {
-  return `${GALLERY_BASE}${strategy}_set${setIdx}_mol${molIdx}.png`;
+  return galleryImageUrl(`${strategy}_set${setIdx}_mol${molIdx}.png`);
 }
 
 export function formatProperty(prop) {

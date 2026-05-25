@@ -9,6 +9,7 @@ import {
   buildPoolEntries,
   loadPoolSetEntry,
   clearAllSetsCache,
+  galleryImageUrl,
   moleculeImagePath,
   formatProperty,
   isCuratorMode,
@@ -165,7 +166,6 @@ function fgPrimaryDe(mol) {
   return mol?.fg_primary_de || null;
 }
 
-const GLOSSARY_IMG_BASE = "./gallery/";
 const GLOSSARY_NOTE =
   "Die Einordnung folgt RDKit-Heuristiken für dieses Quiz, nicht der IUPAC-Nomenklatur. Referenzbilder sind schematische Beispiele.";
 
@@ -462,7 +462,7 @@ function openGlossary(glossary) {
   const itemsHtml = entries
     .map(([name, entry]) => {
       const imgHtml = entry.image
-        ? `<img class="fg-glossary-img" src="${escapeHtml(GLOSSARY_IMG_BASE + entry.image)}" alt="Beispielstruktur" loading="lazy">`
+        ? `<img class="fg-glossary-img" src="${escapeHtml(galleryImageUrl(entry.image))}" alt="Beispielstruktur" loading="lazy">`
         : "";
       return `<div class="fg-glossary-item">
         <div class="fg-glossary-item-body">

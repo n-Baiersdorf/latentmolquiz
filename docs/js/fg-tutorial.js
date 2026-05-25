@@ -2,6 +2,8 @@
  * FG tutorial — compact popup with 2-molecule comparison pairs.
  */
 
+import { galleryImageUrl } from "./data-loader.js";
+
 const TUTORIAL_STORAGE_KEY = "jufo_fg_tutorial_done";
 
 const PAIRS = [
@@ -75,12 +77,12 @@ function escapeHtml(text) {
 function renderPair(pair) {
   return `<div class="fg-tutorial-pair" role="group" aria-label="${escapeHtml(pair.title)}">
   <div class="fg-tutorial-pair-item">
-    <img src="./gallery/tutorial_${pair.id}_mol0.png" alt="${escapeHtml(pair.left.label)}" class="fg-tutorial-pair-img" loading="eager">
+    <img src="${galleryImageUrl(`tutorial_${pair.id}_mol0.png`)}" alt="${escapeHtml(pair.left.label)}" class="fg-tutorial-pair-img" loading="eager">
     <strong>${escapeHtml(pair.left.label)}</strong>
     <span class="muted">${escapeHtml(pair.left.caption)}</span>
   </div>
   <div class="fg-tutorial-pair-item">
-    <img src="./gallery/tutorial_${pair.id}_mol1.png" alt="${escapeHtml(pair.right.label)}" class="fg-tutorial-pair-img" loading="eager">
+    <img src="${galleryImageUrl(`tutorial_${pair.id}_mol1.png`)}" alt="${escapeHtml(pair.right.label)}" class="fg-tutorial-pair-img" loading="eager">
     <strong>${escapeHtml(pair.right.label)}</strong>
     <span class="muted">${escapeHtml(pair.right.caption)}</span>
   </div>
