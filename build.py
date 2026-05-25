@@ -6,7 +6,9 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).parent.resolve()
@@ -1355,6 +1357,53 @@ def sanitize_public_pages(target: Path) -> None:
     app.write_text(app_text, encoding="utf-8")
 
 
+def asset_cache_version() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            text=True,
+            cwd=ROOT,
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return str(int(time.time()))
+
+
+def stamp_asset_cache_bust(target: Path) -> None:
+    """Append ?v=… to CSS/JS so GitHub Pages/browsers load fresh bundles after deploy."""
+    index = target / "index.html"
+    if not index.is_file():
+        return
+    version = asset_cache_version()
+    html = index.read_text(encoding="utf-8")
+    html = re.sub(
+        r'href="css/styles\.css(?:\?[^"]*)?"',
+        f'href="css/styles.css?v={version}"',
+        html,
+    )
+    html = re.sub(
+        r'src="js/([^"?]+\.js)(?:\?[^"]*)?"',
+        lambda m: f'src="js/{m.group(1)}?v={version}"',
+        html,
+    )
+    index.write_text(html, encoding="utf-8")
+
+
+def verify_public_bundle(target: Path) -> None:
+    """Sanity checks for GitHub Pages bundle (tutorial modal, glossary JS, …)."""
+    index = (target / "index.html").read_text(encoding="utf-8")
+    for needle in ("fg-tutorial-backdrop", "fg-glossary-backdrop", "btn-intro-fg-tutorial"):
+        if needle not in index:
+            raise RuntimeError(f"Pages bundle incomplete: {needle} missing from index.html")
+    app = target / "js" / "app.js"
+    app_text = app.read_text(encoding="utf-8")
+    if "normalizeGlossaryEntry" not in app_text:
+        raise RuntimeError("Pages bundle incomplete: normalizeGlossaryEntry missing from app.js")
+    if not (target / "js" / "fg-tutorial.js").is_file():
+        raise RuntimeError("Pages bundle incomplete: js/fg-tutorial.js missing")
+    if not (target / "gallery" / "tutorial_p1_mol0.png").is_file():
+        raise RuntimeError("Pages bundle incomplete: tutorial PNGs missing")
+
+
 def deploy_bundle(target: Path, inference_files: list[Path]) -> None:
     """Build into a staging dir, then swap — keeps a running dev server on target alive."""
     staging = target.parent / f".{target.name}.staging"
@@ -1397,10 +1446,13 @@ def main() -> int:
 
     print("Erstelle dist/ …")
     deploy_bundle(DIST, inference_files)
+    stamp_asset_cache_bust(DIST)
     print("Erstelle docs/ …")
     deploy_bundle(DOCS, inference_files)
     sanitize_public_pages(DOCS)
-    print("  docs/: Kurator und Dev-Dateien für Pages entfernt")
+    stamp_asset_cache_bust(DOCS)
+    verify_public_bundle(DOCS)
+    print("  docs/: Kurator entfernt, Pages-Bundle geprüft")
 
     print("Fertig.")
     print(f"  dist/:  {DIST}")
