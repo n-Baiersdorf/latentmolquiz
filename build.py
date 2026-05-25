@@ -1685,7 +1685,7 @@ def generate_tutorial_pngs(Chem) -> int:
 
 def generate_gallery(inference_files: list[Path]) -> dict:
     Chem, Draw = try_rdkit()
-    stats = {"rdkit": 0, "placeholder": 0, "sets": 0, "images": 0}
+    stats = {"rdkit": 0, "placeholder": 0, "preserved": 0, "sets": 0, "images": 0}
     GALLERY.mkdir(parents=True, exist_ok=True)
 
     for json_path in inference_files:
@@ -1707,6 +1707,9 @@ def generate_gallery(inference_files: list[Path]) -> dict:
         else:
             methods = []
             for mol_idx, (smiles, path) in enumerate(zip(smiles_list, paths)):
+                if path.is_file():
+                    methods.append("preserved")
+                    continue
                 placeholder_png(path, smiles, mol_idx)
                 methods.append("placeholder")
 
@@ -1806,26 +1809,43 @@ def build_bundle(target: Path, inference_files: list[Path], preserve_data_from: 
         encoding="utf-8",
     )
 
+    def resolve_gallery_src(rel: str) -> Path | None:
+        primary = GALLERY / rel
+        if primary.is_file():
+            return primary
+        if preserve_data_from is not None:
+            fallback = preserve_data_from / "gallery" / rel
+            if fallback.is_file():
+                return fallback
+        return None
+
     # Gallery PNGs
     gallery_dst = target / "gallery"
     gallery_dst.mkdir(parents=True, exist_ok=True)
 
     for png_name in sorted(needed):
-        src = GALLERY / png_name
-        if src.exists():
+        src = resolve_gallery_src(png_name)
+        if src is not None:
             shutil.copy2(src, gallery_dst / png_name)
 
     for pair in TUTORIAL_PAIRS:
         for i in range(len(pair["smiles"])):
-            src = GALLERY / f"tutorial_{pair['id']}_mol{i}.png"
-            if src.exists():
-                shutil.copy2(src, gallery_dst / src.name)
+            rel = f"tutorial_{pair['id']}_mol{i}.png"
+            src = resolve_gallery_src(rel)
+            if src is not None:
+                shutil.copy2(src, gallery_dst / rel)
 
+    fg_ref_dst = gallery_dst / FG_REF_DIR
     fg_ref_src = GALLERY / FG_REF_DIR
-    if fg_ref_src.is_dir():
-        fg_ref_dst = gallery_dst / FG_REF_DIR
+    fg_ref_fallback = (
+        preserve_data_from / "gallery" / FG_REF_DIR
+        if preserve_data_from is not None
+        else None
+    )
+    ref_dir = fg_ref_src if fg_ref_src.is_dir() else fg_ref_fallback
+    if ref_dir is not None and ref_dir.is_dir():
         fg_ref_dst.mkdir(parents=True, exist_ok=True)
-        for png in sorted(fg_ref_src.glob("*.png")):
+        for png in sorted(ref_dir.glob("*.png")):
             shutil.copy2(png, fg_ref_dst / png.name)
 
     if (GALLERY / "set_index.json").exists():
@@ -1960,9 +1980,11 @@ def main() -> int:
 
     print(f"Generiere Bilder für {len(inference_files)} Sets …")
     stats = generate_gallery(inference_files)
+    preserved = stats.get("preserved", 0)
     print(
         f"  {stats['images']} Bilder "
-        f"({stats['rdkit']} RDKit, {stats['placeholder']} Platzhalter)"
+        f"({stats['rdkit']} RDKit, {stats['placeholder']} Platzhalter"
+        f"{f', {preserved} beibehalten' if preserved else ''})"
     )
 
     print("Erstelle dist/ …")
