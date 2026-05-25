@@ -896,13 +896,20 @@
       "Halogen (F/Cl/…)"
     ],
     "gt_instead_fgs_de": [
-      "Halogen (F/Cl/…)"
+      "O im aromatischen Ring"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [
       "N im Ring"
     ],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "Halogen (F/Cl/…)"
+    ],
+    "highlight_instead_de": [
+      "O im aromatischen Ring"
+    ],
+    "highlight_mode": "extra",
     "glossary": {
       "–COOH (Carbonsäure)": {
         "text": "Struktur: –COOH (C=O plus –OH am selben C). Typisch: Carbonsäure.",
@@ -952,6 +959,14 @@
         "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
         "image": "fg_ref/ring_n_coarse.png"
       },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
+      },
       "N und O im Ring (N,O-Heterocycl)": {
         "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
         "image": "fg_ref/ring_no.png"
@@ -978,7 +993,18 @@
       "O im Ring (cycl. Ether)"
     ],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [],
+    "model_criterion_mode": "no_n",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil es — anders als #1, #2 und #3 — kein Stickstoff-Fragment hat."
+      ],
+      "auto": true
+    },
+    "model_plausible_hint_de": null,
     "model_without_n_fg": true,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 5
   }
 }

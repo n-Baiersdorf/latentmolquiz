@@ -10,6 +10,8 @@ import {
   moleculeImagePath,
 } from "./data-loader.js";
 
+import { showPerspectiveCuratorScreen } from "./perspective-curator.js";
+
 const STORAGE_KEY = "jufo_curator_selection";
 
 let allSets = [];
@@ -296,6 +298,13 @@ async function initCuratorCore() {
     const file = e.target.files?.[0];
     if (file) importConfig(file);
     e.target.value = "";
+  });
+
+  document.getElementById("btn-open-perspective-review")?.addEventListener("click", () => {
+    showPerspectiveCuratorScreen().catch((err) => {
+      console.error("Sicht-Kurator:", err);
+      alert(`Sicht-Kurator konnte nicht geladen werden: ${err.message}`);
+    });
   });
 
   renderGallery();

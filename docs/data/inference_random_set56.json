@@ -750,16 +750,21 @@
       "O im Ring (cycl. Ether)"
     ],
     "gt_extra_fgs_de": [
-      "C=O in der Kette (Keton)",
-      "–NH– (sekundäres Amin)"
+      "C=O in der Kette (Keton)"
     ],
     "gt_instead_fgs_de": [
-      "C=O in der Kette (Keton)",
-      "–NH– (sekundäres Amin)"
+      "C=O in der Kette (Keton)"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "O im Ring (cycl. Ether)"
+    ],
+    "highlight_instead_de": [
+      "C=O in der Kette (Keton)"
+    ],
+    "highlight_mode": "lacks",
     "glossary": {
       "C=N–H (Imin)": {
         "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
@@ -784,6 +789,14 @@
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
         "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
       }
     },
     "alt_gt_indices": [
@@ -801,7 +814,14 @@
       "C=N–H (Imin)"
     ],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [
+      "C=N–H (Imin)"
+    ],
+    "model_criterion_mode": "exclusive",
+    "model_perspective_de": null,
+    "model_plausible_hint_de": "Die Seeds sind sich nicht einig — mehrere Einordnungen sind chemisch vertretbar. Solche Fälle zeigen, wie fein Molekül-Muster sein können.",
     "model_without_n_fg": false,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 3
   }
 }

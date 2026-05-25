@@ -10,7 +10,13 @@
     },
     {
       "strategy": "scaffold_similar",
-      "set_idx": 22
+      "set_idx": 22,
+      "model_perspective": {
+        "title": "Sicht des Modells",
+        "paragraphs": [
+          "Das Modell wählt überwiegend Molekül #4. Vermutlich weil [[C=N–H (Imin)]] nur in #4 ist."
+        ]
+      }
     },
     {
       "strategy": "scaffold_similar",

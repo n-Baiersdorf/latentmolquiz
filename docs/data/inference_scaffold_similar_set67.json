@@ -890,6 +890,13 @@
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "–OH (Alkohol)"
+    ],
+    "highlight_instead_de": [
+      "O im Ring (cycl. Ether)"
+    ],
+    "highlight_mode": "lacks",
     "glossary": {
       "O im Ring (cycl. Ether)": {
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
@@ -910,6 +917,14 @@
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
         "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
       }
     },
     "alt_gt_indices": [
@@ -925,7 +940,14 @@
     "model_alt_correct": false,
     "model_exclusive_fgs_de": [],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [
+      "–OH (Alkohol)"
+    ],
+    "model_criterion_mode": "primary",
+    "model_perspective_de": null,
+    "model_plausible_hint_de": null,
     "model_without_n_fg": false,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 3
   }
 }

@@ -897,13 +897,20 @@
       "N und O im Ring (N,O-Heterocycl)"
     ],
     "gt_instead_fgs_de": [
-      "N und O im Ring (N,O-Heterocycl)"
+      "O im aromatischen Ring"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [
       "N im Ring"
     ],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "N und O im Ring (N,O-Heterocycl)"
+    ],
+    "highlight_instead_de": [
+      "O im aromatischen Ring"
+    ],
+    "highlight_mode": "extra",
     "glossary": {
       "–COOR (Ester)": {
         "text": "Struktur: C=O mit –O– zu einem zweiten C (–COOR). Typisch: Ester.",
@@ -957,6 +964,14 @@
         "text": "Fein: aromatischer Ring-N mit H (Pyrrol-typ).",
         "image": "fg_ref/ring_n_h.png"
       },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
+      },
       "N und O im Ring (N,O-Heterocycl)": {
         "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
         "image": "fg_ref/ring_no.png"
@@ -980,11 +995,23 @@
     "model_pred_idx": 0,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "C≡N (Nitril)",
-      "C=O in der Kette (Keton)"
+      "C≡N (Nitril)"
     ],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [
+      "C≡N (Nitril)"
+    ],
+    "model_criterion_mode": "exclusive",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #1. Möglicherweise weil [[C≡N (Nitril)]] nur in #1 ist."
+      ],
+      "auto": true
+    },
+    "model_plausible_hint_de": null,
     "model_without_n_fg": false,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 5
   }
 }

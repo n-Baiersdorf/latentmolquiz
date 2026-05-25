@@ -756,6 +756,13 @@
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "–CONR– (Amid)"
+    ],
+    "highlight_instead_de": [
+      "–CONR– (Amid)"
+    ],
+    "highlight_mode": "extra",
     "glossary": {
       "–CONR– (Amid)": {
         "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
@@ -780,6 +787,14 @@
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
         "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
       }
     },
     "alt_gt_indices": [
@@ -803,7 +818,20 @@
     "model_lacks_fgs_de": [
       "O im Ring (cycl. Ether)"
     ],
+    "model_criterion_de": [
+      "O im Ring (cycl. Ether)"
+    ],
+    "model_criterion_mode": "lacks",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #2. Möglicherweise weil #1, #3 und #4 [[O im Ring (cycl. Ether)]] haben — #2 nicht."
+      ],
+      "auto": true
+    },
+    "model_plausible_hint_de": null,
     "model_without_n_fg": false,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 5
   }
 }

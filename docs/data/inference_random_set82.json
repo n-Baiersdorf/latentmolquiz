@@ -755,6 +755,13 @@
       "N im Ring"
     ],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "N im Ring (Heterocycl)"
+    ],
+    "highlight_instead_de": [
+      "N im Ring (Heterocycl)"
+    ],
+    "highlight_mode": "extra",
     "glossary": {
       "N im Ring (Heterocycl)": {
         "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
@@ -779,6 +786,14 @@
       "N im Ring": {
         "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
         "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
       }
     },
     "alt_gt_indices": [
@@ -794,7 +809,12 @@
     "model_alt_correct": false,
     "model_exclusive_fgs_de": [],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [],
+    "model_criterion_mode": "",
+    "model_perspective_de": null,
+    "model_plausible_hint_de": null,
     "model_without_n_fg": false,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 4
   }
 }

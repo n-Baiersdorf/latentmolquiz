@@ -17,24 +17,37 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <button type="button" id="btn-theme" class="theme-toggle" aria-label="Dunkelmodus">☾ DUNKEL</button>
   <main id="app">
 
     <section id="screen-intro" class="screen active">
-      <h1 class="title-spaced">Odd-One-Out-Quiz</h1>
+      <div class="brand-block">
+        <div class="brand-frame">
+          <div class="brand-top">
+            <span class="brand-kicker">JUFO 2026 · Jugend Forscht</span>
+            <div class="brand-top-end">
+              <span id="theme-slot-intro" class="theme-slot">
+                <button type="button" id="btn-theme" class="theme-toggle" aria-label="Dunkelmodus">☾ DUNKEL</button>
+              </span>
+            </div>
+          </div>
+          <h1 class="brand-title">LATENTMOL</h1>
+          <p class="brand-claim">Chemie ist kollaborativ — Modelle müssen es auch sein.</p>
+          <p class="brand-ascii" aria-hidden="true">= = = = = = = =</p>
+        </div>
+      </div>
       <div class="intro-body panel-double">
-        <p class="lead">Vier Moleküle — eines passt nicht zur Gruppe. Findest du es?</p>
-        <p class="intro-text">Du spielst gegen eine KI, die genau das lernt: Moleküle vergleichen und Ausreißer finden. Nach deiner Wahl siehst du, ob die KI ähnlich denkt — und <strong>warum</strong> ein Molekül heraussticht (vor allem anhand <strong>funktioneller Gruppen</strong>).</p>
-        <p class="intro-text muted">Kuratiertes Quiz: 5 Sets · ca. 2 Minuten · kein Chemie-Wissen nötig.</p>
+        <p class="lead">Odd-One-Out-Quiz</p>
+        <p class="intro-text">Vier Moleküle — eines passt nicht zur Gruppe. Klicke den Ausreißer. Danach siehst du, wie das Modell entscheidet — PEA-Tabelle + funktionelle Gruppen.</p>
+        <p class="intro-text muted">Ergänzung zur Jufo-Arbeit · 5 Sets · ~2 Minuten · kein Chemie-Wissen nötig.</p>
       </div>
       <div class="intro-start">
         <button type="button" id="btn-start" class="action">Los geht's <span class="key-hint key-hint-suffix" aria-hidden="true">(1)</span></button>
         <p class="intro-alt muted">
           <button type="button" id="btn-intro-fg-tutorial" class="text-btn">Funktionelle Gruppen kurz erklärt</button>
           <span class="intro-alt-sep" aria-hidden="true">·</span>
-          <button type="button" id="btn-intro-endless" class="text-btn">Weitere Sets</button>
+          <button type="button" id="btn-intro-endless" class="text-btn">Weitere Sets (Pool)</button>
           <span class="intro-alt-sep" aria-hidden="true">·</span>
-          <button type="button" id="btn-intro-more-info" class="text-btn">Mehr zum KI-Modell</button>
+          <button type="button" id="btn-intro-more-info" class="text-btn">Wissenschaftliche Einordnung</button>
         </p>
       </div>
     </section>
@@ -42,7 +55,10 @@
     <section id="screen-quiz" class="screen">
       <div class="quiz-top panel-single">
         <span id="progress-label" class="counter">1 / 9</span>
-        <h1 class="question">Welches Molekül passt nicht dazu?</h1>
+        <div class="quiz-top-row">
+          <h1 class="question">Welches Molekül passt nicht dazu?</h1>
+          <span id="theme-slot-quiz" class="theme-slot"></span>
+        </div>
       </div>
 
       <div id="quiz-body" class="quiz-body">
@@ -50,8 +66,9 @@
 
         <div id="resolution" class="resolution hidden">
           <div id="fg-highlight" class="fg-highlight" aria-live="polite"></div>
+          <div id="fg-model-perspective" class="fg-model-perspective hidden" aria-live="polite"></div>
           <details id="resolution-details" class="resolution-details">
-            <summary>Details</summary>
+            <summary>Details <span class="details-hint">(D zum Aufklappen)</span></summary>
             <div id="fg-summary" class="fg-summary"></div>
             <div id="pea-container"></div>
           </details>
@@ -68,19 +85,28 @@
     </section>
 
     <section id="screen-outro" class="screen">
-      <h1 class="title-spaced">Danke fürs Mitmachen!</h1>
+      <div class="outro-head">
+        <h1 class="title-spaced">Danke fürs Mitmachen!</h1>
+        <div class="outro-head-actions">
+          <span id="theme-slot-outro" class="theme-slot"></span>
+          <button type="button" id="btn-outro-home" class="text-btn">Hauptmenü <span class="key-hint key-hint-suffix" aria-hidden="true">(H)</span></button>
+        </div>
+      </div>
       <p id="outro-score" class="lead"></p>
       <div class="outro-actions panel-single">
         <button type="button" id="btn-restart" class="action">Nochmal <span class="key-hint key-hint-suffix" aria-hidden="true">(1)</span></button>
-        <button type="button" id="btn-endless" class="action secondary">Weitere Sets <span class="key-hint key-hint-suffix" aria-hidden="true">(2)</span></button>
-        <button type="button" id="btn-more-info" class="action secondary">Mehr zum KI-Modell <span class="key-hint key-hint-suffix" aria-hidden="true">(3)</span></button>
+        <button type="button" id="btn-endless" class="action secondary">Weitere Sets (Pool) <span class="key-hint key-hint-suffix" aria-hidden="true">(2)</span></button>
+        <button type="button" id="btn-more-info" class="action secondary">Wissenschaftliche Einordnung <span class="key-hint key-hint-suffix" aria-hidden="true">(3)</span></button>
       </div>
     </section>
 
     <section id="screen-info" class="screen">
       <div class="info-head">
         <h1>Wissenschaftliche Einordnung</h1>
-        <button type="button" id="btn-info-back" class="text-btn">Hauptmenü</button>
+        <div class="info-head-actions">
+          <span id="theme-slot-info" class="theme-slot"></span>
+          <button type="button" id="btn-info-back" class="text-btn">Hauptmenü</button>
+        </div>
       </div>
       <div id="info-content" class="info-content">
         <p class="muted">Lade …</p>
@@ -90,7 +116,10 @@
     <section id="screen-curator" class="screen">
       <div class="curator-head">
         <h1>Kurator</h1>
-        <button type="button" id="btn-back-quiz" class="text-btn">← Quiz</button>
+        <div class="curator-head-actions">
+          <span id="theme-slot-curator" class="theme-slot"></span>
+          <button type="button" id="btn-back-quiz" class="text-btn">← Quiz</button>
+        </div>
       </div>
 
       <div class="curator-controls">
@@ -108,6 +137,7 @@
         <label class="check"><input type="checkbox" id="filter-kept-only"> Nur Auswahl</label>
         <label class="check"><input type="checkbox" id="toggle-properties" checked> HOMO, gap</label>
         <label class="check"><input type="checkbox" id="toggle-iupac"> IUPAC</label>
+        <button type="button" id="btn-open-perspective-review" class="action small">↗ Sicht prüfen</button>
         <button type="button" id="btn-export-config" class="action small">Export</button>
         <label class="action small import-label">
           Import
@@ -120,6 +150,33 @@
       <div id="curator-selected" class="curator-selected">
         <h2>Auswahl (<span id="selected-count">0</span>)</h2>
         <ol id="selected-list"></ol>
+      </div>
+    </section>
+
+    <section id="screen-perspective-curator" class="screen">
+      <div class="curator-head">
+        <h1>↗ Sicht des Modells — Kurator</h1>
+        <div class="curator-head-actions">
+          <button type="button" id="btn-persp-back-curator" class="text-btn">← Kurator</button>
+        </div>
+      </div>
+      <div class="persp-review-toolbar">
+        <select id="persp-filter-status">
+          <option value="pending">Offen</option>
+          <option value="all">Alle</option>
+          <option value="approved">OK</option>
+          <option value="suppressed">Ausgeblendet</option>
+          <option value="edited">Bearbeitet</option>
+          <option value="flagged">Markiert</option>
+        </select>
+        <span id="persp-review-progress" class="counter"></span>
+        <span id="persp-review-summary" class="muted"></span>
+        <button type="button" id="persp-btn-export" class="action small">Export Python</button>
+        <button type="button" id="persp-btn-clear" class="text-btn">Reset</button>
+      </div>
+      <div class="persp-review-layout">
+        <div id="persp-review-list" class="persp-review-list"></div>
+        <div id="persp-review-detail" class="persp-review-detail"></div>
       </div>
     </section>
 
@@ -153,6 +210,8 @@
   <script type="module" src="js/data-loader.js"></script>
   <script type="module" src="js/pea-heatmap.js"></script>
   <script type="module" src="js/fg-tutorial.js"></script>
+  <script type="module" src="js/model-perspective.js"></script>
+  <script type="module" src="js/perspective-curator.js"></script>
   <script type="module" src="js/curator.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>

@@ -16,6 +16,7 @@ import {
 import { initFgTutorial } from "./fg-tutorial.js";
 import { renderPeaHeatmap } from "./pea-heatmap.js";
 import { showCuratorScreen, ensureCuratorReady } from "./curator.js";
+import { getEffectiveModelPerspective } from "./model-perspective.js";
 
 const SCREENS = {
   intro: document.getElementById("screen-intro"),
@@ -36,6 +37,7 @@ const state = {
   poolSetData: null,
   poolCache: new Map(),
   poolLoading: false,
+  quizTransitionLock: false,
   currentIdx: 0,
   juryAnswers: [],
   resolved: false,
@@ -50,6 +52,59 @@ function showScreen(name) {
   Object.entries(SCREENS).forEach(([key, el]) => {
     el?.classList.toggle("active", key === name);
   });
+  placeThemeButton(name);
+}
+
+const THEME_SLOTS = {
+  intro: "theme-slot-intro",
+  quiz: "theme-slot-quiz",
+  outro: "theme-slot-outro",
+  info: "theme-slot-info",
+  curator: "theme-slot-curator",
+};
+
+function placeThemeButton(screenName) {
+  const btn = document.getElementById("btn-theme");
+  const slot = document.getElementById(THEME_SLOTS[screenName] || THEME_SLOTS.intro);
+  if (btn && slot && btn.parentElement !== slot) {
+    slot.appendChild(btn);
+  }
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+const QUIZ_SET_OUT_MS = 140;
+const QUIZ_SET_IN_MS = 320;
+
+function delay(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function runQuizSetTransition(updateFn) {
+  const screen = SCREENS.quiz;
+  if (!screen || prefersReducedMotion()) {
+    await updateFn();
+    return;
+  }
+
+  state.quizTransitionLock = true;
+  screen.classList.add("quiz-set-out");
+  await delay(QUIZ_SET_OUT_MS);
+  screen.classList.remove("quiz-set-out");
+  await updateFn();
+  screen.classList.add("quiz-set-in");
+  await delay(QUIZ_SET_IN_MS);
+  screen.classList.remove("quiz-set-in");
+  state.quizTransitionLock = false;
+}
+
+function playQuizSetEnter() {
+  const screen = SCREENS.quiz;
+  if (!screen || prefersReducedMotion()) return;
+  screen.classList.add("quiz-set-in");
+  window.setTimeout(() => screen.classList.remove("quiz-set-in"), QUIZ_SET_IN_MS);
 }
 
 function updateProgress() {
@@ -139,10 +194,11 @@ function fgChips(labels, glossary = null) {
   return labels
     .map((l) => {
       const text = escapeHtml(l);
+      const titleAttr = ` title="${text}"`;
       if (hasGlossaryTerm(glossary, l)) {
-        return `<button type="button" class="fg-chip fg-chip-btn" data-fg="${text}" aria-label="${text} — Erklärung">${text}</button>`;
+        return `<button type="button" class="fg-chip fg-chip-btn" data-fg="${text}" aria-label="${text} — Erklärung"${titleAttr}>${text}</button>`;
       }
-      return `<span class="fg-chip">${text}</span>`;
+      return `<span class="fg-chip"${titleAttr}>${text}</span>`;
     })
     .join(" ");
 }
@@ -165,9 +221,9 @@ function formatOtherMolNums(setData, gtIdx) {
 function buildHighlightContent(setData) {
   const fg = setData._fgAnalysis;
   const gtIdx = setData.ground_truth_ooo_idx;
-  const gtMol = setData.molecules[gtIdx];
   const gtNum = gtIdx + 1;
   const others = formatOtherMolNums(setData, gtIdx);
+  const glossary = fg?.glossary || {};
 
   if (!hasFgData(setData)) {
     return {
@@ -177,85 +233,62 @@ function buildHighlightContent(setData) {
     };
   }
 
-  const shared = fg?.shared_fgs_de || [];
-  const extra = fg?.gt_extra_fgs_de || [];
-  const gtLacksCoarse = fg?.gt_lacks_coarse_de || [];
-  const gtLacks = fg?.gt_lacks_fgs_de || [];
-  const gtFgDe = fg?.gt_fg_de || fgPrimaryDe(gtMol);
-  const gtLabels = fgLabelsDe(gtMol);
-  const glossary = fg?.glossary || {};
+  const criterion = fg?.highlight_criterion_de || [];
+  const instead = fg?.highlight_instead_de || [];
+  const mode = fg?.highlight_mode;
 
-  // Fall 0: Grobes Kriterium (z. B. N im Ring) — zuerst für die Jury
-  if (gtLacksCoarse.length) {
-    const lacksChips = fgChips(gtLacksCoarse, glossary);
-    const insteadList =
-      fg?.gt_instead_fgs_de?.length
-        ? fg.gt_instead_fgs_de
-        : gtLabels.length
-          ? gtLabels
-          : gtFgDe
-            ? [gtFgDe]
-            : [];
-    const subHtml = insteadList.length
-      ? `Stattdessen: ${fgChips(insteadList, glossary)}`
-      : null;
-    return {
-      gtIdx,
-      bodyHtml: `${others} haben ${lacksChips} — ${molNum(gtNum)} hat das nicht.`,
-      subHtml,
-    };
-  }
-
-  // Fall 1: Die anderen teilen X, Ausreißer fehlt X
-  if (gtLacks.length) {
-    const lacksChips = fgChips(gtLacks, glossary);
-    let subHtml = null;
-    const instead =
-      fg?.gt_instead_fgs_de?.length
-        ? fg.gt_instead_fgs_de
-        : gtLabels.length
-          ? gtLabels
-          : gtFgDe
-            ? [gtFgDe]
-            : [];
-    if (instead.length) {
-      subHtml = `Stattdessen: ${fgChips(instead, glossary)}`;
+  if (criterion.length && mode) {
+    const chip = fgChips(criterion, glossary);
+    const subHtml =
+      instead.length && instead[0] !== criterion[0]
+        ? `Stattdessen: ${fgChips(instead, glossary)}`
+        : null;
+    let bodyHtml;
+    switch (mode) {
+      case "lacks_coarse":
+      case "lacks":
+        bodyHtml = `${others} haben ${chip} — ${molNum(gtNum)} hat das nicht.`;
+        break;
+      case "shared_extra":
+        bodyHtml = `${molNum(gtNum)} hat zusätzlich ${chip} — die anderen teilen den Rest der Gruppe.`;
+        break;
+      case "extra":
+        bodyHtml = `Nur ${molNum(gtNum)} hat ${chip} — die anderen nicht.`;
+        break;
+      default:
+        bodyHtml = `${molNum(gtNum)} ist der Ausreißer mit ${chip}.`;
     }
-    return {
-      gtIdx,
-      bodyHtml: `${others} haben alle ${lacksChips} — ${molNum(gtNum)} hat das nicht.`,
-      subHtml,
-    };
+    return { gtIdx, bodyHtml, subHtml };
   }
 
-  // Fall 2: Alle vier teilen X, Ausreißer hat zusätzlich Y
-  if (shared.length && extra.length) {
+  // Legacy fallback (ältere JSON ohne highlight_*)
+  const shared = fg?.shared_fgs_de || [];
+  const extra = (fg?.gt_extra_fgs_de || []).slice(0, 1);
+  const gtLacksCoarse = fg?.gt_lacks_coarse_de || [];
+  const gtLacks = (fg?.gt_lacks_fgs_de || []).slice(0, 1);
+  const gtFgDe = fg?.gt_fg_de || fgPrimaryDe(setData.molecules[gtIdx]);
+
+  if (gtLacksCoarse.length) {
+    const insteadLegacy = (fg?.highlight_instead_de || fg?.gt_instead_fgs_de || []).slice(0, 1);
     return {
       gtIdx,
-      bodyHtml: `Alle vier haben ${fgChips(shared, glossary)} — aber ${molNum(gtNum)} hat zusätzlich ${fgChips(extra, glossary)}.`,
+      bodyHtml: `${others} haben ${fgChips(gtLacksCoarse.slice(0, 1), glossary)} — ${molNum(gtNum)} hat das nicht.`,
+      subHtml: insteadLegacy.length
+        ? `Stattdessen: ${fgChips(insteadLegacy, glossary)}`
+        : null,
+    };
+  }
+  if (gtLacks.length) {
+    return {
+      gtIdx,
+      bodyHtml: `${others} haben alle ${fgChips(gtLacks, glossary)} — ${molNum(gtNum)} hat das nicht.`,
       subHtml: null,
     };
   }
-
-  // Fall 3: Ausreißer hat X exklusiv
   if (extra.length) {
     return {
       gtIdx,
       bodyHtml: `Nur ${molNum(gtNum)} hat ${fgChips(extra, glossary)} — die anderen nicht.`,
-      subHtml: null,
-    };
-  }
-
-  // Fallback: Primärgruppe unterscheidet, auch wenn die Gruppe woanders als Neben-Label vorkommt
-  const otherPrim = fg?.other_primaries_de || [];
-  const othersSharePrimary = setData.molecules.some(
-    (mol, i) => i !== gtIdx && mol.fg_labels_de?.includes(gtFgDe)
-  );
-  if (gtFgDe && otherPrim.length) {
-    const lead = othersSharePrimary ? "Als Primärgruppe hat" : "Hat";
-    return {
-      gtIdx,
-      bodyHtml: `${molNum(gtNum)} ${lead} ${fgChips([gtFgDe], glossary)} — abweichend von ${fgChips(otherPrim, glossary)}.`,
       subHtml: null,
     };
   }
@@ -272,125 +305,6 @@ function buildHighlightContent(setData) {
     bodyHtml: `${molNum(gtNum)} weicht in der funktionellen Einordnung von ${others} ab.`,
     subHtml: null,
   };
-}
-
-function seedVoteRanked(setData) {
-  const counts = {};
-  for (const e of setData._seedEntries || []) {
-    counts[e.predIdx] = (counts[e.predIdx] || 0) + 1;
-  }
-  return Object.entries(counts)
-    .map(([idx, n]) => ({ idx: Number(idx), n }))
-    .sort((a, b) => b.n - a.n);
-}
-
-function moleculesAllOxygenVaried(setData) {
-  const oxygenFgs = new Set([
-    "Ether",
-    "Alkohol",
-    "–OH",
-    "Aldehyd",
-    "Keton",
-    "Ester",
-    "Phenol",
-    "Heterocycl-OH",
-    "Carbonsäure",
-  ]);
-  const mols = setData.molecules || [];
-  if (mols.length < 4) return false;
-  return mols.every((m) => (m.fg_labels_de || []).some((l) => oxygenFgs.has(l)));
-}
-
-function fgSummaryForMol(setData, molIdx, glossary) {
-  const mol = setData.molecules[molIdx];
-  const labels = fgLabelsDe(mol);
-  if (labels.length) return fgChips(labels, glossary);
-  const primary = mol?.fg_primary_de;
-  return primary ? fgChips([primary], glossary) : molNum(molIdx + 1);
-}
-
-function buildModelPerspectiveHtml(setData) {
-  if (!setData._modelAltCorrect || !hasFgData(setData)) return null;
-
-  const fg = setData._fgAnalysis;
-  const gtIdx = setData.ground_truth_ooo_idx;
-  const modelIdx = setData._modelPredIdx;
-  if (modelIdx == null || modelIdx === gtIdx) return null;
-
-  const glossary = fg?.glossary || {};
-  const modelNum = modelIdx + 1;
-  const gtNum = gtIdx + 1;
-  const exclusive = fg?.model_exclusive_fgs_de || [];
-  const lacks = fg?.model_lacks_fgs_de || [];
-  const noN = fg?.model_without_n_fg;
-  const total = setData._totalSeeds || 5;
-  const ranked = seedVoteRanked(setData);
-  const modelVotes = ranked.find((r) => r.idx === modelIdx)?.n ?? 0;
-  const unanimous = setData._category === "confident_wrong";
-  const wrongRanked = ranked.filter((r) => r.idx !== gtIdx);
-  const splitWrong =
-    wrongRanked.length >= 2 && wrongRanked.filter((r) => r.n >= 2).length >= 2;
-
-  let intro;
-  if (unanimous) {
-    intro = `Alle ${total} Seeds wählen ${molNum(modelNum)} statt der Ground Truth (${molNum(gtNum)}).`;
-  } else if (splitWrong) {
-    const parts = wrongRanked
-      .filter((r) => r.n >= 2)
-      .map((r) => `${r.n} von ${total} Seeds → ${molNum(r.idx + 1)}`)
-      .join(", ");
-    intro = `Die Seeds sind uneinig (${parts}). Ground Truth: ${molNum(gtNum)}.`;
-  } else {
-    intro = `${modelVotes} von ${total} Seeds wählen ${molNum(modelNum)}; Ground Truth ist ${molNum(gtNum)}.`;
-  }
-
-  const gtCoarse = fg?.gt_lacks_coarse_de || [];
-  const gtLacks = fg?.gt_lacks_fgs_de || [];
-  const gtExtra = fg?.gt_extra_fgs_de || [];
-  let gtPart = "";
-  if (gtCoarse.length) {
-    const others = formatOtherMolNums(setData, gtIdx);
-    gtPart = `${others} haben ${fgChips(gtCoarse, glossary)} — ${molNum(gtNum)} nicht`;
-  } else if (gtLacks.length) {
-    const others = formatOtherMolNums(setData, gtIdx);
-    gtPart = `${others} teilen ${fgChips(gtLacks, glossary)} — ${molNum(gtNum)} nicht`;
-  } else if (gtExtra.length) {
-    gtPart = `nur ${molNum(gtNum)} hat ${fgChips(gtExtra, glossary)}`;
-  } else {
-    gtPart = "die Ground Truth ordnet die Gruppe anders";
-  }
-
-  if (splitWrong) {
-    const parts = wrongRanked
-      .filter((r) => r.n >= 2)
-      .map(
-        (r) =>
-          `${molNum(r.idx + 1)} (${fgSummaryForMol(setData, r.idx, glossary)}, ${r.n}/${total} Seeds)`
-      );
-    let ambiguity = "Mehrere Einordnungen sind hier plausibel — die Seeds setzen unterschiedliche Schwerpunkte.";
-    if (moleculesAllOxygenVaried(setData)) {
-      ambiguity =
-        "Alle vier unterscheiden sich vor allem in sauerstoffhaltigen Gruppen — die Zuordnung ist besonders mehrdeutig.";
-    }
-    return `${intro} Modell-Schwerpunkte: ${parts.join("; ")}. Ground Truth: ${gtPart}. ${ambiguity}`;
-  }
-
-  let modelPart = "";
-  if (noN) {
-    modelPart = `${molNum(modelNum)} ist das einzige ohne stickstoffhaltige funktionelle Gruppe`;
-  } else if (exclusive.length) {
-    modelPart = `${molNum(modelNum)} ist das einzige mit ${fgChips(exclusive, glossary)}`;
-  } else if (lacks.length) {
-    modelPart = `${molNum(modelNum)} fehlt ${fgChips(lacks, glossary)}, das die anderen teilen`;
-  }
-
-  if (!modelPart) return null;
-
-  const closing = gtCoarse.length
-    ? "Für die Auswertung zählt die Ground-Truth-Begründung (grob: fehlendes Ring-N)."
-    : "Das Modell und die Ground Truth setzen hier verschiedene Schwerpunkte — beide können plausibel wirken.";
-
-  return `${intro} Modell-Sicht: ${modelPart}. Ground-Truth-Sicht: ${gtPart}. ${closing}`;
 }
 
 function inlineMd(text) {
@@ -702,22 +616,77 @@ function buildMoleculeCard(mol, molIdx, setData, options) {
   return card;
 }
 
+function expandPerspectiveText(text, glossary) {
+  return text
+    .split(/(\[\[[^\]]+\]\])/g)
+    .map((part) => {
+      const match = part.match(/^\[\[(.+)\]\]$/);
+      if (match) return fgChips([match[1].trim()], glossary);
+      return escapeHtml(part);
+    })
+    .join("");
+}
+
+function formatPerspectiveTitle(title) {
+  const text = (title || "Sicht des Modells").trim();
+  return text.startsWith("↗") ? text : `↗ ${text}`;
+}
+
+function perspectiveParagraphs(perspective) {
+  if (Array.isArray(perspective?.paragraphs) && perspective.paragraphs.length) {
+    return perspective.paragraphs;
+  }
+  if (perspective?.body) {
+    return perspective.body.split("\n\n").map((p) => p.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function renderPerspectiveBlock(perspective, glossary) {
+  const paragraphs = perspectiveParagraphs(perspective);
+  if (!paragraphs.length) return "";
+
+  const title = formatPerspectiveTitle(perspective.title);
+  const rows = paragraphs
+    .map((p, i) => {
+      const cls = i === 0 ? "fg-perspective-lead" : "fg-perspective-detail";
+      return `<p class="${cls}">${expandPerspectiveText(p, glossary)}</p>`;
+    })
+    .join("");
+
+  return `
+    <p class="fg-perspective-title">${escapeHtml(title)}</p>
+    ${rows}`;
+}
+
+function renderModelPerspective(setData) {
+  const el = document.getElementById("fg-model-perspective");
+  if (!el) return;
+
+  const glossary = setData._fgAnalysis?.glossary || null;
+  const perspective = getEffectiveModelPerspective(setData);
+
+  if (perspectiveParagraphs(perspective).length) {
+    el.innerHTML = renderPerspectiveBlock(perspective, glossary);
+    el.classList.remove("hidden");
+    bindFgChipClicks(el, glossary);
+    return;
+  }
+
+  el.innerHTML = "";
+  el.classList.add("hidden");
+}
+
 function renderFgHighlight(setData) {
   const el = document.getElementById("fg-highlight");
   if (!el) return;
   const { gtIdx, bodyHtml, subHtml } = buildHighlightContent(setData);
   const glossary = setData._fgAnalysis?.glossary || null;
-  const perspectiveHtml = buildModelPerspectiveHtml(setData);
 
   el.innerHTML = `
     <p class="fg-highlight-title">★ Ausreißer: Molekül #${gtIdx + 1}</p>
     <p class="fg-highlight-body">${bodyHtml}</p>
-    ${subHtml ? `<p class="fg-highlight-sub">${subHtml}</p>` : ""}
-    ${perspectiveHtml ? `
-    <div class="fg-highlight-perspective">
-      <p class="fg-perspective-title">↗ Sicht des Modells</p>
-      <p class="fg-perspective-body">${perspectiveHtml}</p>
-    </div>` : ""}`;
+    ${subHtml ? `<p class="fg-highlight-sub">${subHtml}</p>` : ""}`;
 
   bindFgChipClicks(el, glossary);
 }
@@ -781,6 +750,43 @@ function renderFgSummary(setData) {
   bindFgChipClicks(el, fg?.glossary || null);
 }
 
+function scrollToElementWithOffset(el, offset = 8) {
+  if (!el) return;
+  const top = window.scrollY + el.getBoundingClientRect().top - offset;
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+}
+
+function scrollQuizToMolTops(offset = 8) {
+  const img = document.querySelector(
+    "#molecule-grid .mol-img, #molecule-grid .mol-img-fallback"
+  );
+  scrollToElementWithOffset(img || document.getElementById("molecule-grid"), offset);
+}
+
+function scrollResolutionDetailsIntoView() {
+  const details = document.getElementById("resolution-details");
+  if (!details) return;
+  const target = details.querySelector("summary") || details;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollToElementWithOffset(target, 8);
+    });
+  });
+}
+
+function ensureResolutionInView() {
+  scrollQuizToMolTops(8);
+}
+
+function toggleResolutionDetails() {
+  const details = document.getElementById("resolution-details");
+  if (!details) return;
+  details.open = !details.open;
+  if (details.open) {
+    scrollResolutionDetailsIntoView();
+  }
+}
+
 function renderCurrentSet() {
   const setData = getCurrentSetData();
   if (!setData) return;
@@ -818,6 +824,7 @@ function renderCurrentSet() {
     btnNext.classList.remove("hidden");
 
     renderFgHighlight(setData);
+    renderModelPerspective(setData);
     renderFgSummary(setData);
 
     const details = document.getElementById("resolution-details");
@@ -834,15 +841,17 @@ function renderCurrentSet() {
     );
 
     requestAnimationFrame(() => {
-      document.getElementById("fg-highlight")?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
+      ensureResolutionInView();
     });
   } else {
     resolution.classList.add("hidden");
     btnNext.classList.add("hidden");
     document.getElementById("fg-highlight").innerHTML = "";
+    const perspectiveEl = document.getElementById("fg-model-perspective");
+    if (perspectiveEl) {
+      perspectiveEl.innerHTML = "";
+      perspectiveEl.classList.add("hidden");
+    }
     document.getElementById("fg-summary").innerHTML = "";
     document.getElementById("pea-container").innerHTML = "";
     closeGlossary();
@@ -853,60 +862,75 @@ function renderCurrentSet() {
 }
 
 function onMoleculeClick(molIdx) {
-  if (state.resolved) return;
+  if (state.resolved || state.quizTransitionLock) return;
   state.juryAnswers[state.currentIdx] = molIdx;
+  document.getElementById("quiz-body")?.classList.add("is-revealing");
   renderCurrentSet();
+  window.setTimeout(() => {
+    document.getElementById("quiz-body")?.classList.remove("is-revealing");
+  }, 400);
 }
 
-function goNext() {
-  if (state.poolLoading) return;
+async function goNext() {
+  if (state.poolLoading || state.quizTransitionLock) return;
 
   if (state.mode === "endless") {
     const total = state.poolEntries.length;
-    void (async () => {
-      if (state.currentIdx < total - 1) {
-        state.currentIdx++;
-        await ensurePoolSetAt(state.currentIdx);
+    try {
+      await runQuizSetTransition(async () => {
+        if (state.currentIdx < total - 1) {
+          state.currentIdx++;
+          await ensurePoolSetAt(state.currentIdx);
+        } else {
+          state.currentIdx = 0;
+          state.juryAnswers = new Array(total).fill(null);
+          await ensurePoolSetAt(0);
+        }
         renderCurrentSet();
-      } else {
-        state.currentIdx = 0;
-        state.juryAnswers = new Array(total).fill(null);
-        await ensurePoolSetAt(0);
-        renderCurrentSet();
-      }
-    })().catch((err) => {
+        window.scrollTo(0, 0);
+      });
+    } catch (err) {
       console.error(err);
       showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
-    });
+    }
     return;
   }
 
   if (state.currentIdx < state.sets.length - 1) {
-    state.currentIdx++;
-    renderCurrentSet();
+    await runQuizSetTransition(() => {
+      state.currentIdx++;
+      renderCurrentSet();
+      window.scrollTo(0, 0);
+    });
   } else {
     showOutro();
   }
 }
 
-function goPrev() {
-  if (state.poolLoading) return;
+async function goPrev() {
+  if (state.poolLoading || state.quizTransitionLock) return;
   if (state.currentIdx === 0) return;
 
   if (state.mode === "endless") {
-    void (async () => {
-      state.currentIdx--;
-      await ensurePoolSetAt(state.currentIdx);
-      renderCurrentSet();
-    })().catch((err) => {
+    try {
+      await runQuizSetTransition(async () => {
+        state.currentIdx--;
+        await ensurePoolSetAt(state.currentIdx);
+        renderCurrentSet();
+        window.scrollTo(0, 0);
+      });
+    } catch (err) {
       console.error(err);
       showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
-    });
+    }
     return;
   }
 
-  state.currentIdx--;
-  renderCurrentSet();
+  await runQuizSetTransition(() => {
+    state.currentIdx--;
+    renderCurrentSet();
+    window.scrollTo(0, 0);
+  });
 }
 
 function showOutro() {
@@ -962,6 +986,7 @@ function bindQuizControls() {
   document.getElementById("btn-next")?.addEventListener("click", goNext);
   document.getElementById("btn-prev")?.addEventListener("click", goPrev);
   document.getElementById("btn-home")?.addEventListener("click", goHome);
+  document.getElementById("btn-outro-home")?.addEventListener("click", goHome);
   document.getElementById("btn-restart")?.addEventListener("click", onStartClick);
   document.getElementById("btn-endless")?.addEventListener("click", onEndlessClick);
   document.getElementById("btn-intro-endless")?.addEventListener("click", onEndlessClick);
@@ -975,6 +1000,7 @@ function bindQuizControls() {
     try {
       clearAllSetsCache();
       state.config = await loadConfig();
+      updateLayoutFlags(state.config);
       state.curatedSets = await loadConfiguredSets(state.config);
       state.sets = state.curatedSets;
       state.loadError = null;
@@ -1025,7 +1051,9 @@ function setPoolButtonsLoading(loading) {
 }
 
 function goHome() {
+  closeGlossary();
   showScreen("intro");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function startQuiz() {
@@ -1035,6 +1063,7 @@ function startQuiz() {
   state.juryAnswers = new Array(state.sets.length).fill(null);
   showScreen("quiz");
   renderCurrentSet();
+  playQuizSetEnter();
 }
 
 async function startEndlessMode() {
@@ -1055,6 +1084,7 @@ async function startEndlessMode() {
     await ensurePoolSetAt(0);
     showScreen("quiz");
     renderCurrentSet();
+    playQuizSetEnter();
   } finally {
     setPoolButtonsLoading(false);
   }
@@ -1106,6 +1136,13 @@ function initKeyboard() {
     if (isCuratorMode() && SCREENS.curator.classList.contains("active")) return;
 
     if (SCREENS.quiz.classList.contains("active")) {
+      if (e.key === "d" || e.key === "D") {
+        if (state.resolved) {
+          e.preventDefault();
+          toggleResolutionDetails();
+        }
+        return;
+      }
       if (e.key === "h" || e.key === "H") {
         e.preventDefault();
         goHome();
@@ -1145,6 +1182,11 @@ function initKeyboard() {
     }
 
     if (SCREENS.outro.classList.contains("active")) {
+      if (e.key === "h" || e.key === "H") {
+        e.preventDefault();
+        goHome();
+        return;
+      }
       if (e.key === "1" || (e.key === "Enter" && !e.shiftKey)) {
         e.preventDefault();
         clickById("btn-restart");
@@ -1225,6 +1267,11 @@ function applyTheme(theme, persist = false) {
   updateThemeButton(theme, !localStorage.getItem(THEME_KEY));
 }
 
+function updateLayoutFlags(config) {
+  const compact = !config?.show_properties && !config?.show_iupac;
+  document.body.classList.toggle("compact-mol", compact);
+}
+
 function initTheme() {
   const stored = localStorage.getItem(THEME_KEY);
   const followsSystem = stored !== "light" && stored !== "dark";
@@ -1263,6 +1310,7 @@ async function init() {
   try {
     clearAllSetsCache();
     state.config = await loadConfig();
+    updateLayoutFlags(state.config);
     state.curatedSets = await loadConfiguredSets(state.config);
 
     if (!state.curatedSets.length) {
@@ -1272,6 +1320,7 @@ async function init() {
         const fallbackSets = await loadConfiguredSets(fallbackConfig);
         if (fallbackSets.length) {
           state.config = fallbackConfig;
+          updateLayoutFlags(state.config);
           state.curatedSets = fallbackSets;
         }
       }
@@ -1295,6 +1344,7 @@ async function init() {
 
   window.addEventListener("jufo-config-updated", async (e) => {
     state.config = e.detail;
+    updateLayoutFlags(state.config);
     state.curatedSets = await loadConfiguredSets(state.config);
     if (state.mode === "curated") state.sets = state.curatedSets;
     setStartButtonState(false, state.curatedSets.length ? null : "Keine Sets geladen");

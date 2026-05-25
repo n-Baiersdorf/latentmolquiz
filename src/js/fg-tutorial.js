@@ -24,7 +24,7 @@ const PAIRS = [
     title: "Carbonsäure vs. Ester",
     left: { label: "Carbonsäure", caption: "-COOH" },
     right: { label: "Ester", caption: "-COO- an der Kette" },
-    note: "Ester: Carbonyl plus -O- zu einem zweiten Kohlenstoff.",
+    note: "Carbonsäure: –COOH (C=O und –OH am selben C). Ester: C=O mit –O– zu einem zweiten Kohlenstoff.",
   },
   {
     id: "p4",

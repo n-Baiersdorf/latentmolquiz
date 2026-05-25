@@ -897,16 +897,21 @@
       "O im aromatischen Ring"
     ],
     "gt_extra_fgs_de": [
-      "C=O am Kettenende (Aldehyd)",
-      "C=O in der Kette (Keton)"
+      "C=O am Kettenende (Aldehyd)"
     ],
     "gt_instead_fgs_de": [
-      "C=O am Kettenende (Aldehyd)",
-      "C=O in der Kette (Keton)"
+      "C=O am Kettenende (Aldehyd)"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "O im aromatischen Ring"
+    ],
+    "highlight_instead_de": [
+      "C=O am Kettenende (Aldehyd)"
+    ],
+    "highlight_mode": "lacks",
     "glossary": {
       "C=N–H (Imin)": {
         "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
@@ -952,6 +957,14 @@
         "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
         "image": "fg_ref/ring_n_coarse.png"
       },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
+      },
       "N und O im Ring (N,O-Heterocycl)": {
         "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
         "image": "fg_ref/ring_no.png"
@@ -978,7 +991,18 @@
       "–OH (Alkohol)"
     ],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [],
+    "model_criterion_mode": "no_n",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #2. Möglicherweise weil es — anders als #1, #3 und #4 — kein Stickstoff-Fragment hat."
+      ],
+      "auto": true
+    },
+    "model_plausible_hint_de": null,
     "model_without_n_fg": true,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 5
   }
 }

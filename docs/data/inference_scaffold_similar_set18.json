@@ -882,18 +882,23 @@
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "N–H im Ring (Heterocycl)",
-      "–OH im Ring (Heterocycl)"
+      "N–H im Ring (Heterocycl)"
     ],
     "gt_instead_fgs_de": [
-      "N–H im Ring (Heterocycl)",
-      "–OH im Ring (Heterocycl)"
+      "N–H im Ring (Heterocycl)"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [
       "N im Ring"
     ],
     "coarse_criterion_de": "N im Ring",
+    "highlight_criterion_de": [
+      "N–H im Ring (Heterocycl)"
+    ],
+    "highlight_instead_de": [
+      "N–H im Ring (Heterocycl)"
+    ],
+    "highlight_mode": "extra",
     "glossary": {
       "C=N–C (Imin)": {
         "text": "Struktur: C=N–C (kein N–H). Typisch: Imin.",
@@ -930,6 +935,14 @@
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
         "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (heterocycl.)": {
+        "text": "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N im Ring (ohne N–H)": {
+        "text": "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H).",
+        "image": "fg_ref/ring_n_1.png"
       }
     },
     "alt_gt_indices": [
@@ -950,7 +963,20 @@
       "C=C (Alken)"
     ],
     "model_lacks_fgs_de": [],
+    "model_criterion_de": [
+      "C=C (Alken)"
+    ],
+    "model_criterion_mode": "exclusive",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #1. Möglicherweise weil es — anders als #2 und #3 — kein Stickstoff-Fragment hat."
+      ],
+      "auto": true
+    },
+    "model_plausible_hint_de": null,
     "model_without_n_fg": false,
-    "source": "rdkit"
+    "source": "rdkit",
+    "model_seed_votes": 5
   }
 }

@@ -97,6 +97,8 @@ IMINE_EN = frozenset({"Imine C=N-C", "Imine C=N-H"})
 RING_NO_COMBINED_KEY = "_RING_NO_COMBINED"
 RING_N_DISPLAY_DE = {"Ring N": "N im Ring", "Ring N-H": "N–H im Ring"}
 COARSE_RING_N_DE = "N im Ring"
+COARSE_RING_N_HETERO_DE = "N im Ring (heterocycl.)"
+COARSE_RING_N_NO_NH_DE = "N im Ring (ohne N–H)"
 RING_NO_COMBINED_DE = "N und O im Ring (N,O-Heterocycl)"
 MAX_JURY_LABELS = 3
 
@@ -139,6 +141,8 @@ FG_CHIP_REFERENCES: dict[str, tuple[str, str]] = {
     "2× N im Ring": ("ring_n_2x", "c1cncnc1"),
     "N–H im Ring": ("ring_n_h", "c1ccc[nH]1"),
     COARSE_RING_N_DE: ("ring_n_coarse", "c1ccncc1"),
+    COARSE_RING_N_HETERO_DE: ("ring_n_coarse", "c1ccncc1"),
+    COARSE_RING_N_NO_NH_DE: ("ring_n_1", "c1ccncc1"),
 }
 
 # Display order for jury-facing chips (max MAX_JURY_LABELS per molecule)
@@ -386,6 +390,12 @@ RING_N_PLURAL_GLOSSARY_DE: dict[str, str] = {
 COARSE_RING_N_GLOSSARY = (
     "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle."
 )
+COARSE_RING_N_HETERO_GLOSSARY = (
+    "Grobe Einordnung: heterocyclisches Ring-N (mit oder ohne N–H) — Details in der Tabelle."
+)
+COARSE_RING_N_NO_NH_GLOSSARY = (
+    "Aromatischer Ring-N ohne N–H (z. B. Pyridin-typ) — nicht Pyrrol (N–H)."
+)
 
 FG_ORDER = {name: i for i, (name, _) in enumerate(FG_DETECTORS)}
 
@@ -483,6 +493,14 @@ def build_set_glossary(
             glossary[chip] = glossary_entry(entry, chip)
     if COARSE_RING_N_DE not in glossary:
         glossary[COARSE_RING_N_DE] = glossary_entry(COARSE_RING_N_GLOSSARY, COARSE_RING_N_DE)
+    if COARSE_RING_N_HETERO_DE not in glossary:
+        glossary[COARSE_RING_N_HETERO_DE] = glossary_entry(
+            COARSE_RING_N_HETERO_GLOSSARY, COARSE_RING_N_HETERO_DE
+        )
+    if COARSE_RING_N_NO_NH_DE not in glossary:
+        glossary[COARSE_RING_N_NO_NH_DE] = glossary_entry(
+            COARSE_RING_N_NO_NH_GLOSSARY, COARSE_RING_N_NO_NH_DE
+        )
     return glossary
 
 
@@ -802,11 +820,54 @@ FG_INSTEAD_PRIORITY_DE = [
     fg_display_de(name) for name in FG_INSTEAD_PRIORITY if fg_display_de(name)
 ]
 _instead_priority_order = {name: i for i, name in enumerate(FG_INSTEAD_PRIORITY_DE)}
-_ALKENE_CHIP = fg_display_de("Alkene")
+_ETHER_CHIP = fg_display_de("Ether")
 _RING_O_CHIPS = frozenset(
     c for c in (fg_display_de("Ring O arom"), fg_display_de("Ring O aliph")) if c
 )
-_ETHER_CHIP = fg_display_de("Ether")
+_ALKENE_CHIP = fg_display_de("Alkene")
+_ALCOHOL_CHIP = fg_display_de("Alcohol")
+_HETERO_OH_CHIP = fg_display_de("Heterocyclic OH")
+_OH_INSTEAD_CHIPS = frozenset(c for c in (_ALCOHOL_CHIP, _HETERO_OH_CHIP) if c)
+_OXY_INSTEAD_ALTERNATIVES = frozenset(
+    c
+    for c in (
+        fg_display_de("Ring O aliph"),
+        fg_display_de("Ring O arom"),
+        _ETHER_CHIP,
+        fg_display_de("Aldehyde"),
+        fg_display_de("Ketone"),
+        fg_display_de("Ester"),
+    )
+    if c
+)
+
+
+def others_have_label(all_labels_en: list[list[str]], gt_idx: int, en_name: str) -> bool:
+    return any(
+        en_name in all_labels_en[i]
+        for i in range(len(all_labels_en))
+        if i != gt_idx
+    )
+
+
+def prefer_alcohol_instead_de(
+    filtered: list[str],
+    gt_idx: int,
+    all_labels_en: list[list[str]],
+) -> list[str]:
+    """Prefer –OH when only the outlier has it and O/Ether/C=O labels compete."""
+    oh_candidates = [label for label in filtered if label in _OH_INSTEAD_CHIPS]
+    if not oh_candidates:
+        return filtered
+    if others_have_label(all_labels_en, gt_idx, "Alcohol"):
+        return filtered
+    if others_have_label(all_labels_en, gt_idx, "Heterocyclic OH"):
+        return filtered
+    if not any(label in filtered for label in _OXY_INSTEAD_ALTERNATIVES):
+        return filtered
+    if _ALCOHOL_CHIP and _ALCOHOL_CHIP in oh_candidates:
+        return [_ALCOHOL_CHIP]
+    return [oh_candidates[0]]
 
 
 _highlight_exclusive_order = {
@@ -843,7 +904,7 @@ def refine_gt_extra_highlight_en(
         return []
     if ranked[0] in ("Halogen", "Nitro"):
         return [ranked[0]]
-    return ranked[:2]
+    return ranked[:1]
 
 
 def gt_extra_highlight_de(highlight_en: list[str]) -> list[str]:
@@ -858,28 +919,419 @@ def gt_extra_highlight_de(highlight_en: list[str]) -> list[str]:
     return out
 
 
+_jury_priority_order_de = {
+    fg_display_de(name): i
+    for i, name in enumerate(FG_JURY_PRIORITY)
+    if fg_display_de(name)
+}
+_highlight_exclusive_order_de = {
+    fg_display_de(name): i
+    for i, name in enumerate(FG_HIGHLIGHT_EXCLUSIVE_PRIORITY)
+    if fg_display_de(name)
+}
+_highlight_exclusive_order_de[RING_NO_COMBINED_DE] = _highlight_exclusive_order_de.get(
+    fg_display_de(RING_O_AROM_EN), 5
+)
+_RING_N_CRITERION_CHIPS = frozenset(
+    c
+    for c in (
+        fg_display_de("Ring N"),
+        fg_display_de("Ring N-H"),
+        COARSE_RING_N_DE,
+        COARSE_RING_N_HETERO_DE,
+        COARSE_RING_N_NO_NH_DE,
+    )
+    if c
+)
+
+
+def pick_one_highlight_de(
+    labels_de: list[str], order: dict[str, int] | None = None
+) -> list[str]:
+    if not labels_de:
+        return []
+    order = order or _jury_priority_order_de
+    ranked = sorted(labels_de, key=lambda label: order.get(label, 999))
+    return [ranked[0]]
+
+
+def collapse_ring_n_lacks_de(lacks_de: list[str]) -> list[str]:
+    hits = [label for label in lacks_de if label in _RING_N_CRITERION_CHIPS]
+    if len(hits) >= 2:
+        return [COARSE_RING_N_HETERO_DE]
+    return lacks_de
+
+
+def coarse_lacks_chip_de(
+    all_labels_en: list[list[str]], non_gt_indices: list[int]
+) -> str:
+    others_have_nh = any("Ring N-H" in all_labels_en[i] for i in non_gt_indices)
+    if others_have_nh:
+        return COARSE_RING_N_HETERO_DE
+    return COARSE_RING_N_DE
+
+
+def clarify_ring_n_chip(
+    chip: str,
+    all_labels_en: list[list[str]],
+    non_gt_indices: list[int],
+) -> str:
+    ring_n_de = fg_display_de("Ring N")
+    if chip != ring_n_de:
+        return chip
+    others_have_nh = any("Ring N-H" in all_labels_en[i] for i in non_gt_indices)
+    if others_have_nh:
+        return COARSE_RING_N_NO_NH_DE
+    return chip
+
+
 def pick_instead_labels_de(
     gt_labels_de: list[str],
     all_labels_en: list[list[str]],
     gt_idx: int,
 ) -> list[str]:
-    """Pick distinctive 'Stattdessen' chips — avoid weak Alken if others are heterocycles."""
+    """Pick one verified exclusive 'Stattdessen' chip for the outlier."""
+    excl_de = [
+        fg_display_de(f)
+        for f in sort_fgs_en(list(exclusive_labels(gt_idx, all_labels_en)))
+        if fg_display_de(f)
+    ]
+    candidates = excl_de if excl_de else list(gt_labels_de)
     others_have_ring_n = any(
         has_ring_n(all_labels_en[i])
         for i in range(len(all_labels_en))
         if i != gt_idx
     )
-    filtered = list(gt_labels_de)
+    filtered = list(candidates)
     if others_have_ring_n and _ALKENE_CHIP:
         filtered = [label for label in filtered if label != _ALKENE_CHIP]
     if _RING_O_CHIPS and _ETHER_CHIP and any(
         label in filtered for label in (*_RING_O_CHIPS, _ETHER_CHIP)
     ):
         filtered = [label for label in filtered if label != _ALKENE_CHIP]
-    ranked = sorted(
-        filtered, key=lambda label: _instead_priority_order.get(label, 999)
+    filtered = prefer_alcohol_instead_de(filtered, gt_idx, all_labels_en)
+    return pick_one_highlight_de(filtered, _instead_priority_order)
+
+
+def build_highlight_fields(
+    gt_idx: int,
+    all_labels_en: list[list[str]],
+    gt_lacks_coarse_de: list[str],
+    gt_lacks_fgs_de: list[str],
+    shared_fgs_de: list[str],
+    gt_extra_fgs_de: list[str],
+    gt_instead_fgs_de: list[str],
+    primary_fgs: list[str | None],
+) -> tuple[list[str], list[str], str]:
+    """Single jury chip (+ optional Stattdessen) for the resolution highlight."""
+    non_gt_indices = [i for i in range(len(all_labels_en)) if i != gt_idx]
+    instead = gt_instead_fgs_de[:1]
+
+    if gt_lacks_coarse_de:
+        chip = coarse_lacks_chip_de(all_labels_en, non_gt_indices)
+        return [chip], instead, "lacks_coarse"
+
+    lacks = pick_one_highlight_de(
+        collapse_ring_n_lacks_de(list(gt_lacks_fgs_de)), _jury_priority_order_de
     )
-    return ranked[:2]
+    if lacks:
+        chip = clarify_ring_n_chip(lacks[0], all_labels_en, non_gt_indices)
+        return [chip], instead, "lacks"
+
+    if shared_fgs_de and gt_extra_fgs_de:
+        extra = pick_one_highlight_de(gt_extra_fgs_de, _highlight_exclusive_order_de)
+        if extra:
+            return extra, instead, "shared_extra"
+
+    if gt_extra_fgs_de:
+        extra = pick_one_highlight_de(gt_extra_fgs_de, _highlight_exclusive_order_de)
+        if extra:
+            return extra, instead, "extra"
+
+    gt_fg_de = fg_display_de(primary_fgs[gt_idx] if gt_idx < len(primary_fgs) else None)
+    if gt_fg_de:
+        return [gt_fg_de], instead, "primary"
+
+    return [], instead, "fallback"
+
+
+def pick_model_criterion_de(
+    model_idx: int,
+    gt_idx: int,
+    all_labels_en: list[list[str]],
+    primary_fgs: list[str | None],
+) -> tuple[list[str], str]:
+    if model_idx == gt_idx:
+        return [], ""
+
+    model_without_n = (
+        not has_nitrogen_fg(all_labels_en[model_idx])
+        and all(
+            has_nitrogen_fg(all_labels_en[j])
+            for j in range(len(all_labels_en))
+            if j != model_idx
+        )
+    )
+    if model_without_n:
+        return [], "no_n"
+
+    model_excl_en = exclusive_labels(model_idx, all_labels_en)
+    excl_de = [
+        fg_display_de(f) for f in sort_fgs_en(list(model_excl_en)) if fg_display_de(f)
+    ]
+    if excl_de:
+        return pick_one_highlight_de(excl_de, _highlight_exclusive_order_de), "exclusive"
+
+    model_lacks_en = lacks_shared_labels(model_idx, all_labels_en)
+    lacks_de = collapse_ring_n_lacks_de(
+        [fg_display_de(f) for f in sort_fgs_en(list(model_lacks_en)) if fg_display_de(f)]
+    )
+    if lacks_de:
+        return pick_one_highlight_de(lacks_de, _jury_priority_order_de), "lacks"
+
+    prim = fg_display_de(primary_fgs[model_idx] if model_idx < len(primary_fgs) else None)
+    if prim:
+        return [prim], "primary"
+    return [], ""
+
+
+MIN_MODEL_SEED_VOTES = 4
+
+# Auto „Sicht des Modells“ — zu schwache oder kuratierte Pool-Ausnahmen
+_WEAK_MODEL_PERSPECTIVE_FGS_DE = frozenset(
+    {
+        _ALKENE_CHIP,
+        _ETHER_CHIP,
+    }
+)
+
+POOL_MODEL_PERSPECTIVE_OVERRIDES: dict[str, dict | None] = {
+    # Pool 2 — random_set1: eher fehlendes N als Ring-Ether
+    "random_1": {
+        "title": "Sicht des Modells",
+        "paragraphs": [
+            "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil es — anders als #1, #2 und #3 — kein Stickstoff-Fragment hat."
+        ],
+        "auto": True,
+    },
+    # Pool 11 — random_set10: Ketten-Ether zu unscharf
+    "random_10": None,
+    # Pool 3 — random_set2: sek. Amin-Chip irreführend (N–H auch in #2–#4)
+    "random_2": None,
+    # set_idx 18 — eher fehlendes N als Alken
+    "scaffold_similar_18": {
+        "title": "Sicht des Modells",
+        "paragraphs": [
+            "Das Modell wählt überwiegend Molekül #1. Möglicherweise weil es — anders als #2 und #3 — kein Stickstoff-Fragment hat."
+        ],
+        "auto": True,
+    },
+}
+
+
+def is_weak_model_perspective(criterion_de: list[str], mode: str) -> bool:
+    if mode != "exclusive" or not criterion_de:
+        return False
+    return criterion_de[0] in _WEAK_MODEL_PERSPECTIVE_FGS_DE
+
+
+def exclusive_fg_is_unique_in_labels(data: dict, model_idx: int, fg_de: str) -> bool:
+    for i, mol in enumerate(data.get("molecules") or []):
+        if i == model_idx:
+            continue
+        if fg_de in (mol.get("fg_labels_de") or []):
+            return False
+    return True
+
+
+def format_mol_nums_de(indices: list[int]) -> str:
+    nums = [f"#{i + 1}" for i in sorted(indices)]
+    if not nums:
+        return ""
+    if len(nums) == 1:
+        return nums[0]
+    if len(nums) == 2:
+        return f"{nums[0]} und {nums[1]}"
+    return ", ".join(nums[:-1]) + f" und {nums[-1]}"
+
+
+def model_seed_vote_count(data: dict, mol_idx: int) -> int:
+    return sum(
+        1
+        for s in data.get("per_seed", {}).values()
+        if s.get("ooo_pred_idx") == mol_idx
+    )
+
+
+def perspective_chip_token(fg_de: str) -> str:
+    return f"[[{fg_de}]]"
+
+
+def resolve_model_criterion(fg: dict) -> tuple[list[str], str]:
+    if fg.get("model_without_n_fg"):
+        return [], "no_n"
+    criterion = fg.get("model_criterion_de") or []
+    mode = fg.get("model_criterion_mode") or ""
+    if criterion and mode and not is_weak_model_perspective(criterion, mode):
+        return criterion, mode
+    if mode == "no_n":
+        return [], "no_n"
+    lacks = fg.get("model_lacks_fgs_de") or []
+    if lacks:
+        return lacks[:1], "lacks"
+    exclusive = fg.get("model_exclusive_fgs_de") or []
+    if exclusive and not is_weak_model_perspective(exclusive[:1], "exclusive"):
+        return exclusive[:1], "exclusive"
+    if fg.get("model_without_n_fg"):
+        return [], "no_n"
+    return [], ""
+
+
+def build_auto_model_perspective_de(
+    data: dict,
+    gt_idx: int,
+    model_pred_idx: int,
+    model_alt_correct: bool,
+    model_criterion_de: list[str],
+    model_criterion_mode: str,
+    n_mols: int,
+) -> dict | None:
+    """Cautious auto text when ≥4 seeds agree on a wrong pick explainable by one FG rule."""
+    if model_pred_idx == gt_idx or not model_alt_correct:
+        return None
+    if model_seed_vote_count(data, model_pred_idx) < MIN_MODEL_SEED_VOTES:
+        return None
+    if is_weak_model_perspective(model_criterion_de, model_criterion_mode):
+        return None
+
+    model_num = model_pred_idx + 1
+    other_indices = [i for i in range(n_mols) if i != model_pred_idx]
+    others_str = format_mol_nums_de(other_indices)
+    lead = f"Das Modell wählt überwiegend Molekül #{model_num}. Möglicherweise weil "
+
+    if model_criterion_mode == "exclusive" and model_criterion_de:
+        fg = model_criterion_de[0]
+        if not exclusive_fg_is_unique_in_labels(data, model_pred_idx, fg):
+            return None
+        text = f"{lead}{perspective_chip_token(fg)} nur in #{model_num} ist."
+    elif model_criterion_mode == "lacks" and model_criterion_de:
+        fg = model_criterion_de[0]
+        text = (
+            f"{lead}{others_str} {perspective_chip_token(fg)} haben — "
+            f"#{model_num} nicht."
+        )
+    elif model_criterion_mode == "no_n":
+        text = (
+            f"{lead}es — anders als {others_str} — kein Stickstoff-Fragment hat."
+        )
+    else:
+        return None
+
+    return {
+        "title": "Sicht des Modells",
+        "paragraphs": [text],
+        "auto": True,
+    }
+
+
+def seeds_split_wrong(data: dict, gt_idx: int) -> bool:
+    from collections import Counter
+
+    seed_preds = [s["ooo_pred_idx"] for s in data.get("per_seed", {}).values()]
+    wrong = [p for p in seed_preds if p != gt_idx]
+    if len(set(wrong)) < 2:
+        return False
+    counts = Counter(wrong)
+    return sum(1 for n in counts.values() if n >= 2) >= 2
+
+
+def pick_model_plausible_hint_de(
+    data: dict,
+    gt_idx: int,
+    model_pred_idx: int,
+    model_alt_correct: bool,
+    model_without_n: bool,
+    highlight_mode: str,
+    highlight_criterion_de: list[str],
+    model_criterion_de: list[str],
+) -> str | None:
+    """Short note only for genuinely ambiguous seed splits (not generic alt-picks)."""
+    if model_pred_idx == gt_idx or not model_alt_correct:
+        return None
+
+    if seeds_split_wrong(data, gt_idx):
+        return (
+            "Die Seeds sind sich nicht einig — mehrere Einordnungen sind chemisch vertretbar. "
+            "Solche Fälle zeigen, wie fein Molekül-Muster sein können."
+        )
+
+    return None
+
+
+def load_curated_model_perspectives(config_path: Path) -> dict[str, dict]:
+    if not config_path.exists():
+        return {}
+    try:
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    out: dict[str, dict] = {}
+    for entry in config.get("sets") or []:
+        persp = entry.get("model_perspective")
+        if not isinstance(persp, dict):
+            continue
+        raw_paragraphs = persp.get("paragraphs")
+        if isinstance(raw_paragraphs, list):
+            paragraphs = [str(p).strip() for p in raw_paragraphs if str(p).strip()]
+        else:
+            body = (persp.get("body") or persp.get("text") or "").strip()
+            paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
+        if not paragraphs:
+            continue
+        key = f"{entry['strategy']}_{entry['set_idx']}"
+        out[key] = {
+            "title": (persp.get("title") or "Sicht des Modells").strip(),
+            "paragraphs": paragraphs,
+        }
+    return out
+
+
+def apply_curated_perspective(data: dict, perspectives: dict[str, dict]) -> None:
+    key = f"{data['strategy']}_{data['set_idx']}"
+    persp = perspectives.get(key)
+    fg = data.get("fg_analysis")
+    if not persp or not fg:
+        return
+    fg["model_perspective_de"] = persp
+    fg["model_plausible_hint_de"] = None
+
+
+def apply_auto_model_perspective(data: dict, curated_perspectives: dict[str, dict]) -> None:
+    fg = data.get("fg_analysis")
+    if not fg:
+        return
+    key = f"{data['strategy']}_{data['set_idx']}"
+    if key in curated_perspectives:
+        return
+
+    model_pred_idx = fg.get("model_pred_idx", data["ground_truth_ooo_idx"])
+    fg["model_seed_votes"] = model_seed_vote_count(data, model_pred_idx)
+
+    if key in POOL_MODEL_PERSPECTIVE_OVERRIDES:
+        fg["model_perspective_de"] = POOL_MODEL_PERSPECTIVE_OVERRIDES[key]
+        return
+
+    criterion_de, criterion_mode = resolve_model_criterion(fg)
+    auto = build_auto_model_perspective_de(
+        data,
+        data["ground_truth_ooo_idx"],
+        model_pred_idx,
+        bool(fg.get("model_alt_correct")),
+        criterion_de,
+        criterion_mode,
+        len(data["molecules"]),
+    )
+    fg["model_perspective_de"] = auto
 
 
 def detect_molecule_fgs(smiles: str, Chem) -> tuple[str | None, list[str]]:
@@ -1031,9 +1483,6 @@ def compute_fg_analysis(
     gt_labels_de_all = [
         fg_display_de(f) for f in all_labels_en[gt_idx] if fg_display_de(f)
     ] if gt_idx < len(all_labels_en) else []
-    gt_instead_fgs_de = pick_instead_labels_de(
-        gt_extra_fgs_de or gt_labels_de_all, all_labels_en, gt_idx
-    )
 
     non_gt_shared_en: set[str] = set()
     if others:
@@ -1045,6 +1494,7 @@ def compute_fg_analysis(
     gt_lacks_fgs_de = [
         fg_display_de(f) for f in sort_fgs_en(gt_lacks_en) if fg_display_de(f)
     ]
+    gt_lacks_fgs_de = collapse_ring_n_lacks_de(gt_lacks_fgs_de)
 
     non_gt_indices = [i for i in range(n) if i != gt_idx]
     non_gt_all_have_ring_n = bool(non_gt_indices) and all(
@@ -1060,6 +1510,43 @@ def compute_fg_analysis(
         has_ring_n(all_labels_en[i]) for i in non_gt_indices
     ):
         gt_extra_coarse_de = [COARSE_RING_N_DE]
+
+    gt_instead_fgs_de = pick_instead_labels_de(
+        [
+            fg_display_de(f)
+            for f in sort_fgs_en(list(exclusive_labels(gt_idx, all_labels_en)))
+            if fg_display_de(f)
+        ]
+        or gt_labels_de_all,
+        all_labels_en,
+        gt_idx,
+    )
+
+    highlight_criterion_de, highlight_instead_de, highlight_mode = build_highlight_fields(
+        gt_idx,
+        all_labels_en,
+        gt_lacks_coarse_de,
+        gt_lacks_fgs_de,
+        shared_fgs_de,
+        gt_extra_fgs_de,
+        gt_instead_fgs_de,
+        primary_fgs,
+    )
+
+    model_criterion_de, model_criterion_mode = pick_model_criterion_de(
+        model_pred_idx, gt_idx, all_labels_en, primary_fgs
+    )
+
+    model_plausible_hint_de = pick_model_plausible_hint_de(
+        data,
+        gt_idx,
+        model_pred_idx,
+        model_alt_correct,
+        model_without_n,
+        highlight_mode,
+        highlight_criterion_de,
+        model_criterion_de,
+    )
 
     all_en: set[str] = set()
     for labels in all_labels_en:
@@ -1081,18 +1568,37 @@ def compute_fg_analysis(
         "gt_lacks_coarse_de": gt_lacks_coarse_de,
         "gt_extra_coarse_de": gt_extra_coarse_de,
         "coarse_criterion_de": COARSE_RING_N_DE,
+        "highlight_criterion_de": highlight_criterion_de,
+        "highlight_instead_de": highlight_instead_de,
+        "highlight_mode": highlight_mode,
         "glossary": {},
         "alt_gt_indices": alt_gt_indices,
         "alt_gt_fgs": alt_gt_fgs,
         "alt_gt_fgs_de": {k: fg_display_de(v) for k, v in alt_gt_fgs.items()},
         "model_pred_idx": model_pred_idx,
         "model_alt_correct": model_alt_correct,
-        "model_exclusive_fgs_de": [
-            fg_display_de(f) for f in sort_fgs_en(list(model_excl_en)) if fg_display_de(f)
-        ],
-        "model_lacks_fgs_de": [
-            fg_display_de(f) for f in sort_fgs_en(list(model_lacks_en)) if fg_display_de(f)
-        ],
+        "model_exclusive_fgs_de": pick_one_highlight_de(
+            [
+                fg_display_de(f)
+                for f in sort_fgs_en(list(model_excl_en))
+                if fg_display_de(f)
+            ],
+            _highlight_exclusive_order_de,
+        ),
+        "model_lacks_fgs_de": pick_one_highlight_de(
+            collapse_ring_n_lacks_de(
+                [
+                    fg_display_de(f)
+                    for f in sort_fgs_en(list(model_lacks_en))
+                    if fg_display_de(f)
+                ]
+            ),
+            _jury_priority_order_de,
+        ),
+        "model_criterion_de": model_criterion_de,
+        "model_criterion_mode": model_criterion_mode,
+        "model_perspective_de": None,
+        "model_plausible_hint_de": model_plausible_hint_de,
         "model_without_n_fg": model_without_n,
         "source": "rdkit",
     }
@@ -1227,7 +1733,7 @@ def copy_tree(src: Path, dst: Path) -> None:
     shutil.copytree(src, dst)
 
 
-def build_bundle(target: Path, inference_files: list[Path]) -> None:
+def build_bundle(target: Path, inference_files: list[Path], preserve_data_from: Path | None = None) -> None:
     if target.exists():
         shutil.rmtree(target)
     target.mkdir(parents=True)
@@ -1264,11 +1770,25 @@ def build_bundle(target: Path, inference_files: list[Path]) -> None:
 
     needed = set()
     manifest: dict[str, list[int]] = {}
+    curated_perspectives = load_curated_model_perspectives(ROOT / "config.json")
     for json_path in inference_files:
         data = json.loads(json_path.read_text(encoding="utf-8"))
         data = backfill_pea_from_scaffold_twin(data)
+        dest_path = data_dir / json_path.name
         if Chem is not None:
             data = enrich_functional_groups(data, Chem)
+        elif preserve_data_from is not None:
+            preserve_path = preserve_data_from / "data" / json_path.name
+            if preserve_path.is_file():
+                try:
+                    preserved = json.loads(preserve_path.read_text(encoding="utf-8"))
+                    if preserved.get("fg_analysis"):
+                        data = preserved
+                        data = backfill_pea_from_scaffold_twin(data)
+                except (json.JSONDecodeError, OSError):
+                    pass
+        apply_auto_model_perspective(data, curated_perspectives)
+        apply_curated_perspective(data, curated_perspectives)
         strategy = data["strategy"]
         set_idx = data["set_idx"]
         if strategy in ("scaffold_similar", "random"):
@@ -1411,7 +1931,8 @@ def deploy_bundle(target: Path, inference_files: list[Path]) -> None:
 
     if staging.exists():
         shutil.rmtree(staging)
-    build_bundle(staging, inference_files)
+    preserve_data = target if target.is_dir() else None
+    build_bundle(staging, inference_files, preserve_data_from=preserve_data)
 
     if backup.exists():
         shutil.rmtree(backup)
