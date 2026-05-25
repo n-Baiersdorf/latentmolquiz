@@ -40,6 +40,30 @@ export function clearAllSetsCache() {
   allSetsCache = null;
 }
 
+export async function loadPoolManifest() {
+  const resp = await fetch(`${DATA_BASE}set_manifest.json`, { cache: "no-store" });
+  if (!resp.ok) throw new Error("Set-Pool (Manifest) konnte nicht geladen werden");
+  return resp.json();
+}
+
+export function buildPoolEntries(manifest, curatedKeys) {
+  const curated = new Set(curatedKeys);
+  const entries = [];
+  for (const strategy of POOL_STRATEGIES) {
+    for (const setIdx of manifest.strategies?.[strategy] || []) {
+      const key = `${strategy}_${setIdx}`;
+      if (!curated.has(key)) entries.push({ strategy, set_idx: setIdx });
+    }
+  }
+  return entries;
+}
+
+export async function loadPoolSetEntry(entry) {
+  const data = await loadSetData(entry.strategy, entry.set_idx);
+  if (!data) return null;
+  return enrichSetMeta(data);
+}
+
 export async function loadAllInferenceSets(onProgress) {
   if (allSetsCache) return allSetsCache;
 

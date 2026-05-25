@@ -5,7 +5,9 @@
 import {
   loadConfig,
   loadConfiguredSets,
-  loadAllInferenceSets,
+  loadPoolManifest,
+  buildPoolEntries,
+  loadPoolSetEntry,
   clearAllSetsCache,
   moleculeImagePath,
   formatProperty,
@@ -29,6 +31,10 @@ const state = {
   config: null,
   curatedSets: [],
   sets: [],
+  poolEntries: [],
+  poolSetData: null,
+  poolCache: new Map(),
+  poolLoading: false,
   currentIdx: 0,
   juryAnswers: [],
   resolved: false,
@@ -46,7 +52,7 @@ function showScreen(name) {
 }
 
 function updateProgress() {
-  const total = state.sets.length;
+  const total = state.mode === "endless" ? state.poolEntries.length : state.sets.length;
   const current = state.currentIdx + 1;
   const label = document.getElementById("progress-label");
   if (!label) return;
@@ -54,6 +60,38 @@ function updateProgress() {
     label.textContent = `${current} / ${total} · Pool`;
   } else {
     label.textContent = `${current} / ${total}`;
+  }
+}
+
+function getCurrentSetData() {
+  if (state.mode === "endless") return state.poolSetData;
+  return state.sets[state.currentIdx];
+}
+
+function poolEntryKey(entry) {
+  return `${entry.strategy}_${entry.set_idx}`;
+}
+
+async function ensurePoolSetAt(idx) {
+  const entry = state.poolEntries[idx];
+  if (!entry) throw new Error("Set nicht im Pool");
+
+  const key = poolEntryKey(entry);
+  if (state.poolCache.has(key)) {
+    state.poolSetData = state.poolCache.get(key);
+    return;
+  }
+
+  const label = document.getElementById("progress-label");
+  if (label) label.textContent = "Lade Set …";
+  state.poolLoading = true;
+  try {
+    const enriched = await loadPoolSetEntry(entry);
+    if (!enriched) throw new Error(`Set ${key} nicht verfügbar`);
+    state.poolCache.set(key, enriched);
+    state.poolSetData = enriched;
+  } finally {
+    state.poolLoading = false;
   }
 }
 
@@ -665,7 +703,7 @@ function renderFgSummary(setData) {
 }
 
 function renderCurrentSet() {
-  const setData = state.sets[state.currentIdx];
+  const setData = getCurrentSetData();
   if (!setData) return;
 
   const juryIdx = state.juryAnswers[state.currentIdx];
@@ -742,12 +780,30 @@ function onMoleculeClick(molIdx) {
 }
 
 function goNext() {
+  if (state.poolLoading) return;
+
+  if (state.mode === "endless") {
+    const total = state.poolEntries.length;
+    void (async () => {
+      if (state.currentIdx < total - 1) {
+        state.currentIdx++;
+        await ensurePoolSetAt(state.currentIdx);
+        renderCurrentSet();
+      } else {
+        state.currentIdx = 0;
+        state.juryAnswers = new Array(total).fill(null);
+        await ensurePoolSetAt(0);
+        renderCurrentSet();
+      }
+    })().catch((err) => {
+      console.error(err);
+      showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
+    });
+    return;
+  }
+
   if (state.currentIdx < state.sets.length - 1) {
     state.currentIdx++;
-    renderCurrentSet();
-  } else if (state.mode === "endless") {
-    state.currentIdx = 0;
-    state.juryAnswers = new Array(state.sets.length).fill(null);
     renderCurrentSet();
   } else {
     showOutro();
@@ -755,10 +811,23 @@ function goNext() {
 }
 
 function goPrev() {
-  if (state.currentIdx > 0) {
-    state.currentIdx--;
-    renderCurrentSet();
+  if (state.poolLoading) return;
+  if (state.currentIdx === 0) return;
+
+  if (state.mode === "endless") {
+    void (async () => {
+      state.currentIdx--;
+      await ensurePoolSetAt(state.currentIdx);
+      renderCurrentSet();
+    })().catch((err) => {
+      console.error(err);
+      showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
+    });
+    return;
   }
+
+  state.currentIdx--;
+  renderCurrentSet();
 }
 
 function showOutro() {
@@ -887,18 +956,19 @@ function startQuiz() {
 async function startEndlessMode() {
   setPoolButtonsLoading(true);
   try {
-    const curated = new Set(state.config.sets.map((e) => `${e.strategy}_${e.set_idx}`));
-    const all = await loadAllInferenceSets((done, total) => {
-      const btn = document.getElementById("btn-intro-endless");
-      if (btn) btn.textContent = `Lade … ${done}/${total}`;
-    });
-    state.sets = all.filter((s) => !curated.has(setKey(s)));
-    if (!state.sets.length) {
+    const manifest = await loadPoolManifest();
+    const curated = state.config.sets.map((e) => `${e.strategy}_${e.set_idx}`);
+    state.poolEntries = buildPoolEntries(manifest, curated);
+    if (!state.poolEntries.length) {
       throw new Error("Keine zusätzlichen Sets im Pool.");
     }
+    state.poolCache = new Map();
+    state.poolSetData = null;
     state.mode = "endless";
     state.currentIdx = 0;
-    state.juryAnswers = new Array(state.sets.length).fill(null);
+    state.juryAnswers = new Array(state.poolEntries.length).fill(null);
+    state.sets = [];
+    await ensurePoolSetAt(0);
     showScreen("quiz");
     renderCurrentSet();
   } finally {
