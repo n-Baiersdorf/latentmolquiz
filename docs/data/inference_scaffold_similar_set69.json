@@ -40,17 +40,21 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
+        "Ether (–O–)",
+        "C=O in der Kette (Keton)",
+        "C≡N (Nitril)"
+      ],
+      "fg_labels_full": [
         "Nitrile",
-        "Tertiary amine",
         "Ether",
         "Ketone"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Tertiäres Amin",
-        "Ether",
-        "Keton"
+        "Ether (–O–)",
+        "C=O in der Kette (Keton)",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C6H7NO2"
     },
@@ -89,13 +93,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Alkyne",
       "fg_labels": [
-        "unknown"
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Unbekannt",
+      "fg_labels_full": [
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡C (Alkin)",
       "fg_labels_de": [
-        "Unbekannt"
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C9H14"
     },
@@ -136,13 +144,18 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
+        "–NH– (sekundäres Amin)",
+        "C=O am Kettenende (Aldehyd)"
+      ],
+      "fg_labels_full": [
         "Secondary amine",
         "Aldehyde"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Aldehyd"
+        "–NH– (sekundäres Amin)",
+        "C=O am Kettenende (Aldehyd)"
       ],
       "mol_formula": "C5H7NO"
     },
@@ -183,15 +196,21 @@
       },
       "fg_primary": "Carboxylic acid",
       "fg_labels": [
+        "O im Ring (cycl. Ether)",
+        "–COOH (Carbonsäure)",
+        "–COO⁻ (Carboxylat)"
+      ],
+      "fg_labels_full": [
         "Carboxylic acid",
         "Carboxylate",
-        "Ether"
+        "Ring O aliph"
       ],
-      "fg_primary_de": "Carbonsäure",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–COOH (Carbonsäure)",
       "fg_labels_de": [
-        "Carbonsäure",
-        "Carboxylat",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–COOH (Carbonsäure)",
+        "–COO⁻ (Carboxylat)"
       ],
       "mol_formula": "C5H7NO3"
     }
@@ -851,32 +870,69 @@
   ],
   "fg_analysis": {
     "majority_fg": "Nitrile",
-    "majority_fg_de": "Nitril",
+    "majority_fg_de": "C≡N (Nitril)",
     "majority_count": 1,
     "other_primaries_de": [
-      "Nitril",
-      "Sekundäres Amin",
-      "Carbonsäure"
+      "C≡N (Nitril)",
+      "–NH– (sekundäres Amin)",
+      "–COOH (Carbonsäure)"
     ],
-    "gt_fg": "unknown",
-    "gt_fg_de": "Unbekannt",
+    "gt_fg": "Alkyne",
+    "gt_fg_de": "C≡C (Alkin)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Unbekannt"
+      "C≡C (Alkin)"
     ],
+    "gt_instead_fgs_de": [
+      "C≡C (Alkin)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Carbonsäure": "Carbonsäure (-COOH): sauer, polare Gruppe",
-      "Carboxylat": "Carboxylat (-COO⁻): salzartige, polare Form der Carbonsäure",
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen",
-      "Aldehyd": "Aldehyd (-CHO): Carbonylgruppe am Kettenende",
-      "Unbekannt": "Keine typische Gruppe erkannt"
+      "–COOH (Carbonsäure)": {
+        "text": "Struktur: –COOH (C=O plus –OH am selben C). Typisch: Carbonsäure.",
+        "image": "fg_ref/carboxylic_acid.png"
+      },
+      "–COO⁻ (Carboxylat)": {
+        "text": "Struktur: –COO⁻ (deprotonierte Carboxylgruppe). Typisch: Carboxylat-Anion.",
+        "image": "fg_ref/carboxylate.png"
+      },
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=O am Kettenende (Aldehyd)": {
+        "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
+        "image": "fg_ref/aldehyde.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       0,
@@ -889,9 +945,9 @@
       "3": "Carboxylic acid"
     },
     "alt_gt_fgs_de": {
-      "0": "Nitril",
-      "2": "Sekundäres Amin",
-      "3": "Carbonsäure"
+      "0": "C≡N (Nitril)",
+      "2": "–NH– (sekundäres Amin)",
+      "3": "–COOH (Carbonsäure)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": false,

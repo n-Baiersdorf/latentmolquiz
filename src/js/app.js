@@ -13,6 +13,7 @@ import {
   formatProperty,
   isCuratorMode,
 } from "./data-loader.js";
+import { initFgTutorial } from "./fg-tutorial.js";
 import { renderPeaHeatmap } from "./pea-heatmap.js";
 import { showCuratorScreen, ensureCuratorReady } from "./curator.js";
 
@@ -109,11 +110,36 @@ function fgPrimaryDe(mol) {
   return mol?.fg_primary_de || null;
 }
 
+const GLOSSARY_IMG_BASE = "./gallery/";
+const GLOSSARY_NOTE =
+  "Die Einordnung folgt RDKit-Heuristiken für dieses Quiz, nicht der IUPAC-Nomenklatur. Referenzbilder sind schematische Beispiele.";
+
+const LEGACY_GLOSSARY_DISCLAIMER =
+  /^Hinweis: Chips folgen RDKit-Heuristiken für dieses Quiz, nicht IUPAC-Nomenklatur\.?\s*/;
+
+function normalizeGlossaryEntry(raw) {
+  if (raw == null) return null;
+  let text = "";
+  let image = null;
+  if (typeof raw === "string") {
+    text = raw;
+  } else {
+    text = raw.text || "";
+    image = raw.image || null;
+  }
+  text = text.replace(LEGACY_GLOSSARY_DISCLAIMER, "");
+  return { text, image };
+}
+
+function hasGlossaryTerm(glossary, term) {
+  return normalizeGlossaryEntry(glossary?.[term]) != null;
+}
+
 function fgChips(labels, glossary = null) {
   return labels
     .map((l) => {
       const text = escapeHtml(l);
-      if (glossary?.[l]) {
+      if (hasGlossaryTerm(glossary, l)) {
         return `<button type="button" class="fg-chip fg-chip-btn" data-fg="${text}" aria-label="${text} — Erklärung">${text}</button>`;
       }
       return `<span class="fg-chip">${text}</span>`;
@@ -153,16 +179,45 @@ function buildHighlightContent(setData) {
 
   const shared = fg?.shared_fgs_de || [];
   const extra = fg?.gt_extra_fgs_de || [];
+  const gtLacksCoarse = fg?.gt_lacks_coarse_de || [];
   const gtLacks = fg?.gt_lacks_fgs_de || [];
   const gtFgDe = fg?.gt_fg_de || fgPrimaryDe(gtMol);
   const gtLabels = fgLabelsDe(gtMol);
   const glossary = fg?.glossary || {};
 
+  // Fall 0: Grobes Kriterium (z. B. N im Ring) — zuerst für die Jury
+  if (gtLacksCoarse.length) {
+    const lacksChips = fgChips(gtLacksCoarse, glossary);
+    const insteadList =
+      fg?.gt_instead_fgs_de?.length
+        ? fg.gt_instead_fgs_de
+        : gtLabels.length
+          ? gtLabels
+          : gtFgDe
+            ? [gtFgDe]
+            : [];
+    const subHtml = insteadList.length
+      ? `Stattdessen: ${fgChips(insteadList, glossary)}`
+      : null;
+    return {
+      gtIdx,
+      bodyHtml: `${others} haben ${lacksChips} — ${molNum(gtNum)} hat das nicht.`,
+      subHtml,
+    };
+  }
+
   // Fall 1: Die anderen teilen X, Ausreißer fehlt X
   if (gtLacks.length) {
     const lacksChips = fgChips(gtLacks, glossary);
     let subHtml = null;
-    const instead = gtLabels.length ? gtLabels : gtFgDe ? [gtFgDe] : [];
+    const instead =
+      fg?.gt_instead_fgs_de?.length
+        ? fg.gt_instead_fgs_de
+        : gtLabels.length
+          ? gtLabels
+          : gtFgDe
+            ? [gtFgDe]
+            : [];
     if (instead.length) {
       subHtml = `Stattdessen: ${fgChips(instead, glossary)}`;
     }
@@ -233,10 +288,12 @@ function moleculesAllOxygenVaried(setData) {
   const oxygenFgs = new Set([
     "Ether",
     "Alkohol",
+    "–OH",
     "Aldehyd",
     "Keton",
     "Ester",
     "Phenol",
+    "Heterocycl-OH",
     "Carbonsäure",
   ]);
   const mols = setData.molecules || [];
@@ -287,10 +344,14 @@ function buildModelPerspectiveHtml(setData) {
     intro = `${modelVotes} von ${total} Seeds wählen ${molNum(modelNum)}; Ground Truth ist ${molNum(gtNum)}.`;
   }
 
+  const gtCoarse = fg?.gt_lacks_coarse_de || [];
   const gtLacks = fg?.gt_lacks_fgs_de || [];
   const gtExtra = fg?.gt_extra_fgs_de || [];
   let gtPart = "";
-  if (gtLacks.length) {
+  if (gtCoarse.length) {
+    const others = formatOtherMolNums(setData, gtIdx);
+    gtPart = `${others} haben ${fgChips(gtCoarse, glossary)} — ${molNum(gtNum)} nicht`;
+  } else if (gtLacks.length) {
     const others = formatOtherMolNums(setData, gtIdx);
     gtPart = `${others} teilen ${fgChips(gtLacks, glossary)} — ${molNum(gtNum)} nicht`;
   } else if (gtExtra.length) {
@@ -325,8 +386,9 @@ function buildModelPerspectiveHtml(setData) {
 
   if (!modelPart) return null;
 
-  const closing =
-    "Beide Sichtweisen sind chemisch korrekt — nur das Kriterium unterscheidet sich.";
+  const closing = gtCoarse.length
+    ? "Für die Auswertung zählt die Ground-Truth-Begründung (grob: fehlendes Ring-N)."
+    : "Das Modell und die Ground Truth setzen hier verschiedene Schwerpunkte — beide können plausibel wirken.";
 
   return `${intro} Modell-Sicht: ${modelPart}. Ground-Truth-Sicht: ${gtPart}. ${closing}`;
 }
@@ -428,19 +490,20 @@ function fgLabelsDe(mol) {
   return [];
 }
 
-function formatFgCell(labels, uniqueSet, isGtRow, altPlausibleSet, isModelAltRow) {
+function formatFgCell(labels, uniqueSet, isGtRow, altPlausibleSet, isModelAltRow, glossary = null) {
   if (!labels.length) return "—";
   return labels
     .map((fg) => {
-      if (isGtRow && uniqueSet.has(fg)) {
-        return `<span class="fg-unique">${escapeHtml(fg)}</span>`;
+      const text = escapeHtml(fg);
+      let cls = "fg-chip";
+      if (isGtRow && uniqueSet.has(fg)) cls += " fg-unique";
+      if (isModelAltRow && altPlausibleSet?.has(fg)) cls += " fg-alt-plausible";
+      if (hasGlossaryTerm(glossary, fg)) {
+        return `<button type="button" class="${cls} fg-chip-btn" data-fg="${text}" aria-label="${text} — Erklärung">${text}</button>`;
       }
-      if (isModelAltRow && altPlausibleSet?.has(fg)) {
-        return `<span class="fg-alt-plausible">${escapeHtml(fg)}</span>`;
-      }
-      return escapeHtml(fg);
+      return `<span class="${cls}">${text}</span>`;
     })
-    .join(", ");
+    .join(" ");
 }
 
 function renderSeedDots(setData, molIdx, gtIdx) {
@@ -477,15 +540,29 @@ function renderSeedDots(setData, molIdx, gtIdx) {
 
 function openGlossary(glossary) {
   if (!GLOSSARY_BACKDROP || !GLOSSARY_BODY || !glossary) return;
-  const entries = Object.entries(glossary);
+  const entries = Object.entries(glossary)
+    .map(([name, raw]) => [name, normalizeGlossaryEntry(raw)])
+    .filter(([, entry]) => entry);
   if (!entries.length) return;
 
-  GLOSSARY_BODY.innerHTML = entries
-    .map(
-      ([name, explain]) =>
-        `<div class="fg-glossary-item"><strong>${escapeHtml(name)}</strong><p>${escapeHtml(explain)}</p></div>`
-    )
+  const itemsHtml = entries
+    .map(([name, entry]) => {
+      const imgHtml = entry.image
+        ? `<img class="fg-glossary-img" src="${escapeHtml(GLOSSARY_IMG_BASE + entry.image)}" alt="Beispielstruktur" loading="lazy">`
+        : "";
+      return `<div class="fg-glossary-item">
+        <div class="fg-glossary-item-body">
+          ${imgHtml}
+          <div class="fg-glossary-item-text">
+            <strong>${escapeHtml(name)}</strong>
+            <p>${escapeHtml(entry.text)}</p>
+          </div>
+        </div>
+      </div>`;
+    })
     .join("");
+
+  GLOSSARY_BODY.innerHTML = `${itemsHtml}<p class="fg-glossary-footnote">${escapeHtml(GLOSSARY_NOTE)}</p>`;
 
   GLOSSARY_BACKDROP.classList.remove("hidden");
   GLOSSARY_BACKDROP.setAttribute("aria-hidden", "false");
@@ -493,8 +570,9 @@ function openGlossary(glossary) {
 }
 
 function openGlossaryTerm(glossary, term) {
-  if (!glossary?.[term]) return;
-  openGlossary({ [term]: glossary[term] });
+  const entry = normalizeGlossaryEntry(glossary?.[term]);
+  if (!entry) return;
+  openGlossary({ [term]: entry });
 }
 
 function bindFgChipClicks(container, glossary) {
@@ -663,9 +741,9 @@ function renderFgSummary(setData) {
   }
   state.currentGlossary = fg?.glossary || null;
 
-  let html = `<div class="fg-table-head">
-    <p class="fg-section-title">Funktionelle Gruppen</p>
-    <button type="button" id="btn-fg-glossary" class="info-btn">ⓘ Begriffe dieses Sets</button>
+  let html = `<div class="fg-table-block">
+  <div class="fg-table-head">
+    <p class="fg-section-title">Alle funktionellen Gruppen je Molekül</p>
   </div>`;
 
   if (!hasFgData(setData)) {
@@ -684,7 +762,8 @@ function renderFgSummary(setData) {
           uniqueSet,
           isGtRow,
           altPlausibleSet,
-          setData._modelAltCorrect && i === modelIdx
+          setData._modelAltCorrect && i === modelIdx,
+          fg?.glossary
         )}</td>
       </tr>`;
     })
@@ -693,13 +772,13 @@ function renderFgSummary(setData) {
   html += `
     <table class="mol-compare-table">
       <tbody>${rows}</tbody>
-    </table>`;
+    </table>
+    <p class="fg-section-hint muted">Tippe auf einen Begriff für Erklärung und Beispielstruktur.</p>
+  </div>`;
 
   el.innerHTML = html;
 
-  document.getElementById("btn-fg-glossary")?.addEventListener("click", () => {
-    openGlossary(state.currentGlossary);
-  });
+  bindFgChipClicks(el, fg?.glossary || null);
 }
 
 function renderCurrentSet() {
@@ -843,6 +922,11 @@ function showOutro() {
   showScreen("outro");
 }
 
+function actionButtonHtml(label, hint = null) {
+  if (!hint) return label;
+  return `${label} <span class="key-hint key-hint-suffix" aria-hidden="true">(${hint})</span>`;
+}
+
 function setStartButtonState(loading, errorMsg = null) {
   const btn = document.getElementById("btn-start");
   if (!btn) return;
@@ -855,7 +939,7 @@ function setStartButtonState(loading, errorMsg = null) {
   }
 
   btn.removeAttribute("aria-busy");
-  btn.textContent = "Los geht's";
+  btn.innerHTML = actionButtonHtml("Los geht's", "1");
   btn.disabled = Boolean(errorMsg) || !state.curatedSets.length;
 }
 
@@ -996,26 +1080,89 @@ function initGlossary() {
   });
 }
 
+function isTypingTarget(el) {
+  if (!el || !(el instanceof Element)) return false;
+  const tag = el.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable;
+}
+
+function clickById(id) {
+  document.getElementById(id)?.click();
+}
+
 function initKeyboard() {
   document.addEventListener("keydown", (e) => {
+    if (isTypingTarget(e.target)) return;
+
     if (e.key === "Escape" && GLOSSARY_BACKDROP && !GLOSSARY_BACKDROP.classList.contains("hidden")) {
       e.preventDefault();
       closeGlossary();
       return;
     }
 
-    if (isCuratorMode() && SCREENS.curator.classList.contains("active")) return;
-    if (!SCREENS.quiz.classList.contains("active")) return;
+    const tutorialBackdrop = document.getElementById("fg-tutorial-backdrop");
+    if (tutorialBackdrop && !tutorialBackdrop.classList.contains("hidden")) return;
 
-    if (e.key === "ArrowRight" && state.resolved) {
-      e.preventDefault();
-      goNext();
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      goPrev();
-    } else if (!state.resolved && e.key >= "1" && e.key <= "4") {
-      e.preventDefault();
-      onMoleculeClick(parseInt(e.key, 10) - 1);
+    if (isCuratorMode() && SCREENS.curator.classList.contains("active")) return;
+
+    if (SCREENS.quiz.classList.contains("active")) {
+      if (e.key === "h" || e.key === "H") {
+        e.preventDefault();
+        goHome();
+        return;
+      }
+      if (e.key === "ArrowRight" && state.resolved) {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === "Enter" && state.resolved) {
+        e.preventDefault();
+        goNext();
+      } else if (!state.resolved && e.key >= "1" && e.key <= "4") {
+        e.preventDefault();
+        onMoleculeClick(parseInt(e.key, 10) - 1);
+      }
+      return;
+    }
+
+    if (SCREENS.intro.classList.contains("active")) {
+      if (e.key === "1" || (e.key === "Enter" && !e.shiftKey)) {
+        e.preventDefault();
+        clickById("btn-start");
+      } else if (e.key === "2") {
+        e.preventDefault();
+        clickById("btn-intro-fg-tutorial");
+      } else if (e.key === "3") {
+        e.preventDefault();
+        clickById("btn-intro-endless");
+      } else if (e.key === "4") {
+        e.preventDefault();
+        clickById("btn-intro-more-info");
+      }
+      return;
+    }
+
+    if (SCREENS.outro.classList.contains("active")) {
+      if (e.key === "1" || (e.key === "Enter" && !e.shiftKey)) {
+        e.preventDefault();
+        clickById("btn-restart");
+      } else if (e.key === "2") {
+        e.preventDefault();
+        clickById("btn-endless");
+      } else if (e.key === "3") {
+        e.preventDefault();
+        clickById("btn-more-info");
+      }
+      return;
+    }
+
+    if (SCREENS.info.classList.contains("active")) {
+      if (e.key === "Escape" || e.key === "b" || e.key === "B") {
+        e.preventDefault();
+        goHome();
+      }
     }
   });
 }
@@ -1108,6 +1255,7 @@ async function init() {
   initTheme();
   initKeyboard();
   initGlossary();
+  initFgTutorial();
   initCuratorEntry();
   bindQuizControls();
   setStartButtonState(true);

@@ -40,13 +40,18 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
+        "–NH– (sekundäres Amin)",
+        "C=O in der Kette (Keton)"
+      ],
+      "fg_labels_full": [
         "Secondary amine",
         "Ketone"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Keton"
+        "–NH– (sekundäres Amin)",
+        "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -85,13 +90,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H12O"
     },
@@ -130,15 +139,21 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Imine C=N-H",
       "fg_labels": [
-        "Secondary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C=N–H (Imin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Imine C=N-H",
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=N–H (Imin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C=N–H (Imin)"
       ],
       "mol_formula": "C6H7NO2"
     },
@@ -177,13 +192,18 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C8H12O"
     }
@@ -842,37 +862,74 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Ether",
-      "Sekundäres Amin"
+      "O im Ring (cycl. Ether)",
+      "C=N–H (Imin)"
     ],
     "gt_fg": "Secondary amine",
-    "gt_fg_de": "Sekundäres Amin",
+    "gt_fg_de": "–NH– (sekundäres Amin)",
     "gt_idx": 0,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_lacks_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_extra_fgs_de": [
-      "Keton"
+      "C=O in der Kette (Keton)",
+      "–NH– (sekundäres Amin)"
     ],
+    "gt_instead_fgs_de": [
+      "C=O in der Kette (Keton)",
+      "–NH– (sekundäres Amin)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen"
+      "C=N–H (Imin)": {
+        "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
+        "image": "fg_ref/imine_nh.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
-    "alt_gt_indices": [],
-    "alt_gt_fgs": {},
-    "alt_gt_fgs_de": {},
+    "alt_gt_indices": [
+      2
+    ],
+    "alt_gt_fgs": {
+      "2": "Imine C=N-H"
+    },
+    "alt_gt_fgs_de": {
+      "2": "C=N–H (Imin)"
+    },
     "model_pred_idx": 2,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "C=N–H (Imin)"
+    ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"

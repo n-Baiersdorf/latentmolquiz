@@ -40,13 +40,18 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
+        "Ether (–O–)",
+        "–OH (Alkohol)"
+      ],
+      "fg_labels_full": [
         "Alcohol",
         "Ether"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol",
-        "Ether"
+        "Ether (–O–)",
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C7H14O2"
     },
@@ -85,15 +90,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alcohol",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Alcohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alcohol"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Alkohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C6H8O3"
     },
@@ -134,17 +144,15 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
-        "Nitrile",
-        "Primary amine",
-        "Secondary amine",
-        "Tertiary amine"
+        "C≡N (Nitril)"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_labels_full": [
+        "Nitrile"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Primäres Amin",
-        "Sekundäres Amin",
-        "Tertiäres Amin"
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C6H9N3"
     },
@@ -185,11 +193,15 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
+        "–OH (Alkohol)"
+      ],
+      "fg_labels_full": [
         "Alcohol"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol"
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C7H14O2"
     }
@@ -665,43 +677,124 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.0872852236032486,
+      0.06742376908659935,
+      0.08451108634471893
+    ],
+    [
+      0.07589810788631439,
+      1.0,
+      0.09904923737049103,
+      0.09878864139318466
+    ],
+    [
+      0.11388268321752548,
+      0.20340383052825928,
+      1.0,
+      0.08387697786092758
+    ],
+    [
+      0.08817346096038818,
+      0.11412148028612137,
+      0.05261106118559837,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.002491520847877448,
+      0.007859655891209013,
+      0.002954348119976696
+    ],
+    [
+      0.004073542828266757,
+      0.0,
+      0.011487393227060059,
+      0.002612903337518782
+    ],
+    [
+      0.013700336792169927,
+      0.024927611933577846,
+      0.0,
+      0.010250190825044138
+    ],
+    [
+      0.0026216131591312963,
+      0.0009981640066775103,
+      0.00490628008922606,
+      0.0
+    ]
+  ],
   "fg_analysis": {
     "majority_fg": "Alcohol",
-    "majority_fg_de": "Alkohol",
-    "majority_count": 3,
+    "majority_fg_de": "–OH (Alkohol)",
+    "majority_count": 2,
     "other_primaries_de": [
-      "Alkohol"
+      "–OH (Alkohol)",
+      "O im Ring (cycl. Ether)"
     ],
     "gt_fg": "Nitrile",
-    "gt_fg_de": "Nitril",
+    "gt_fg_de": "C≡N (Nitril)",
     "gt_idx": 2,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Alkohol"
+      "–OH (Alkohol)"
     ],
     "gt_lacks_fgs_de": [
-      "Alkohol"
+      "–OH (Alkohol)"
     ],
     "gt_extra_fgs_de": [
-      "Nitril",
-      "Primäres Amin",
-      "Sekundäres Amin",
-      "Tertiäres Amin"
+      "C≡N (Nitril)"
     ],
+    "gt_instead_fgs_de": [
+      "C≡N (Nitril)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Primäres Amin": "Primäres Amin (-NH₂): Stickstoff mit zwei Wasserstoffen",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
-    "alt_gt_indices": [],
-    "alt_gt_fgs": {},
-    "alt_gt_fgs_de": {},
+    "alt_gt_indices": [
+      0,
+      1
+    ],
+    "alt_gt_fgs": {
+      "0": "Ether",
+      "1": "Ring O aliph"
+    },
+    "alt_gt_fgs_de": {
+      "0": "Ether (–O–)",
+      "1": "O im Ring (cycl. Ether)"
+    },
     "model_pred_idx": 1,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "O im Ring (cycl. Ether)"
+    ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"

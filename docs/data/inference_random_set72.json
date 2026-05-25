@@ -40,17 +40,21 @@
       },
       "fg_primary": "Ester",
       "fg_labels": [
+        "Ether (–O–)",
+        "–COOR (Ester)",
+        "C≡N (Nitril)"
+      ],
+      "fg_labels_full": [
         "Ester",
         "Nitrile",
-        "Tertiary amine",
         "Ether"
       ],
-      "fg_primary_de": "Ester",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–COOR (Ester)",
       "fg_labels_de": [
-        "Ester",
-        "Nitril",
-        "Tertiäres Amin",
-        "Ether"
+        "Ether (–O–)",
+        "–COOR (Ester)",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C6H7NO2"
     },
@@ -91,11 +95,15 @@
       },
       "fg_primary": "Ketone",
       "fg_labels": [
+        "C=O in der Kette (Keton)"
+      ],
+      "fg_labels_full": [
         "Ketone"
       ],
-      "fg_primary_de": "Keton",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=O in der Kette (Keton)",
       "fg_labels_de": [
-        "Keton"
+        "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C8H12O"
     },
@@ -136,13 +144,18 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "Amide",
-        "Tertiary amine"
+        "C=O im Ring (Lactam)",
+        "–CONR– (Amid)"
       ],
-      "fg_primary_de": "Amid",
+      "fg_labels_full": [
+        "Amide",
+        "Lactam"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid",
-        "Tertiäres Amin"
+        "C=O im Ring (Lactam)",
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -181,13 +194,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alkene",
       "fg_labels": [
-        "Tertiary amine"
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=C (Alken)",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "C=C (Alken)"
       ],
       "mol_formula": "C7H9N"
     }
@@ -663,29 +680,115 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.18291921317577362,
+      0.1701243668794632,
+      0.20869333446025848
+    ],
+    [
+      0.11115638464689255,
+      1.0,
+      0.12510721683502196,
+      0.11441310942173004
+    ],
+    [
+      0.13558453619480132,
+      0.17068142294883729,
+      1.0,
+      0.11006238609552384
+    ],
+    [
+      0.14802936613559722,
+      0.14818106293678285,
+      0.10181612968444824,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.009482458028818912,
+      0.006989679922678547,
+      0.013164709034167079
+    ],
+    [
+      0.003923123323019124,
+      0.0,
+      0.002658241113063591,
+      0.003729135033286034
+    ],
+    [
+      0.0019484461882599763,
+      0.0025089353863638605,
+      0.0,
+      0.0038180320074481053
+    ],
+    [
+      0.005030973480509837,
+      0.002820802668109177,
+      0.004288517651204364,
+      0.0
+    ]
+  ],
   "fg_analysis": {
     "majority_fg": "Ester",
-    "majority_fg_de": "Ester",
+    "majority_fg_de": "–COOR (Ester)",
     "majority_count": 1,
     "other_primaries_de": [
-      "Ester",
-      "Keton",
-      "Amid"
+      "–COOR (Ester)",
+      "C=O in der Kette (Keton)",
+      "–CONR– (Amid)"
     ],
-    "gt_fg": "Tertiary amine",
-    "gt_fg_de": "Tertiäres Amin",
+    "gt_fg": "Alkene",
+    "gt_fg_de": "C=C (Alken)",
     "gt_idx": 3,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
-    "gt_extra_fgs_de": [],
+    "gt_extra_fgs_de": [
+      "C=C (Alken)"
+    ],
+    "gt_instead_fgs_de": [
+      "C=C (Alken)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Ester": "Ester (-COO-): Sauerstoff zwischen zwei Kohlenstoff-Fragmenten",
-      "Amid": "Amid (-CONH-): Stickstoff direkt an einer Carbonylgruppe (C=O)",
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen"
+      "–COOR (Ester)": {
+        "text": "Struktur: C=O mit –O– zu einem zweiten C (–COOR). Typisch: Ester.",
+        "image": "fg_ref/ester.png"
+      },
+      "–CONR– (Amid)": {
+        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
+        "image": "fg_ref/amide.png"
+      },
+      "C=O im Ring (Lactam)": {
+        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
+        "image": "fg_ref/lactam.png"
+      },
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       0,
@@ -698,16 +801,16 @@
       "2": "Amide"
     },
     "alt_gt_fgs_de": {
-      "0": "Ester",
-      "1": "Keton",
-      "2": "Amid"
+      "0": "–COOR (Ester)",
+      "1": "C=O in der Kette (Keton)",
+      "2": "–CONR– (Amid)"
     },
     "model_pred_idx": 0,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "Ester",
-      "Nitril",
-      "Ether"
+      "–COOR (Ester)",
+      "C≡N (Nitril)",
+      "Ether (–O–)"
     ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,

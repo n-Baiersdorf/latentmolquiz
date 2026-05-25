@@ -40,13 +40,21 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
-        "Secondary amine",
-        "Alcohol"
+        "–OH (Alkohol)",
+        "C≡C (Alkin)",
+        "–NH– (sekundäres Amin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Secondary amine",
+        "Alcohol",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Alkohol"
+        "–OH (Alkohol)",
+        "C≡C (Alkin)",
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -87,13 +95,15 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
-        "Nitrile",
-        "Tertiary amine"
+        "C≡N (Nitril)"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_labels_full": [
+        "Nitrile"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Tertiäres Amin"
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C5H8N2"
     },
@@ -132,15 +142,23 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Secondary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)",
+        "–NH– (sekundäres Amin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Secondary amine",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)",
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C7H9NO"
     },
@@ -181,11 +199,18 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
-        "Secondary amine"
+        "–NH– (sekundäres Amin)",
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Secondary amine",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin"
+        "–NH– (sekundäres Amin)",
+        "C=C (Alken)"
       ],
       "mol_formula": "C8H11N"
     }
@@ -845,43 +870,75 @@
   ],
   "fg_analysis": {
     "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
-    "majority_count": 3,
+    "majority_fg_de": "–NH– (sekundäres Amin)",
+    "majority_count": 2,
     "other_primaries_de": [
-      "Sekundäres Amin"
+      "–NH– (sekundäres Amin)",
+      "O im Ring (cycl. Ether)"
     ],
     "gt_fg": "Nitrile",
-    "gt_fg_de": "Nitril",
+    "gt_fg_de": "C≡N (Nitril)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Sekundäres Amin"
+      "–NH– (sekundäres Amin)"
     ],
     "gt_lacks_fgs_de": [
-      "Sekundäres Amin"
+      "–NH– (sekundäres Amin)"
     ],
     "gt_extra_fgs_de": [
-      "Nitril",
-      "Tertiäres Amin"
+      "C≡N (Nitril)"
     ],
+    "gt_instead_fgs_de": [
+      "C≡N (Nitril)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       0,
-      2
+      2,
+      3
     ],
     "alt_gt_fgs": {
       "0": "Alcohol",
-      "2": "Ether"
+      "2": "Ring O aliph",
+      "3": "Alkene"
     },
     "alt_gt_fgs_de": {
-      "0": "Alkohol",
-      "2": "Ether"
+      "0": "–OH (Alkohol)",
+      "2": "O im Ring (cycl. Ether)",
+      "3": "C=C (Alken)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": false,

@@ -38,13 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C8H12O"
     },
@@ -85,8 +89,12 @@
       },
       "fg_primary": "unknown",
       "fg_labels": [
+        "Unbekannt"
+      ],
+      "fg_labels_full": [
         "unknown"
       ],
+      "fg_ring_n_detail_de": [],
       "fg_primary_de": "Unbekannt",
       "fg_labels_de": [
         "Unbekannt"
@@ -128,13 +136,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C8H12O"
     },
@@ -173,13 +188,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C8H10O"
     }
@@ -655,29 +677,100 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.12108452618122101,
+      0.11866772770881653,
+      0.12783671021461487
+    ],
+    [
+      0.10527079999446869,
+      1.0,
+      0.08707205355167388,
+      0.0722515881061554
+    ],
+    [
+      0.14061800837516786,
+      0.11910475343465805,
+      1.0,
+      0.11391953825950622
+    ],
+    [
+      0.14272596836090087,
+      0.09000963121652603,
+      0.10132143199443817,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.002251688702577673,
+      0.002578400856500905,
+      0.001277477820312749
+    ],
+    [
+      0.0028274919901915677,
+      0.0,
+      0.0033015504298980866,
+      0.00187593982438612
+    ],
+    [
+      0.0039668353430208705,
+      0.0021569383275302045,
+      0.0,
+      0.003828535672009901
+    ],
+    [
+      0.00424169591921827,
+      0.00195751879907284,
+      0.0028234756366480574,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Ether",
-    "majority_fg_de": "Ether",
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
     "majority_count": 3,
     "other_primaries_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_fg": "unknown",
     "gt_fg_de": "Unbekannt",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_lacks_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_extra_fgs_de": [
       "Unbekannt"
     ],
+    "gt_instead_fgs_de": [
+      "Unbekannt"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Unbekannt": "Keine typische Gruppe erkannt"
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "Unbekannt": {
+        "text": "Keine typische Gruppe erkannt."
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [],
     "alt_gt_fgs": {},

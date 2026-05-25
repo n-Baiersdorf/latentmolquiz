@@ -38,13 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alkyne",
       "fg_labels": [
-        "Tertiary amine"
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡C (Alkin)",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C8H9N"
     },
@@ -83,15 +87,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Tertiary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -130,13 +136,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Alkene",
       "fg_labels": [
-        "unknown"
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Unbekannt",
+      "fg_labels_full": [
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=C (Alken)",
       "fg_labels_de": [
-        "Unbekannt"
+        "C=C (Alken)"
       ],
       "mol_formula": "C8H14"
     },
@@ -175,13 +185,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "unknown",
       "fg_labels": [
-        "Tertiary amine"
+        "Unbekannt"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "unknown"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "Unbekannt",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "Unbekannt"
       ],
       "mol_formula": "C8H9N"
     }
@@ -657,46 +671,125 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.15659392774105071,
+      0.07923037707805633,
+      0.24335088431835175
+    ],
+    [
+      0.1756476104259491,
+      1.0,
+      0.14019844233989714,
+      0.12151827365159988
+    ],
+    [
+      0.08710214346647263,
+      0.13445982933044434,
+      1.0,
+      0.1968898057937622
+    ],
+    [
+      0.19560064673423766,
+      0.08789553195238113,
+      0.1579062432050705,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.0036899684755850324,
+      0.00520032089529301,
+      0.014701120751730636
+    ],
+    [
+      0.007532738071835273,
+      0.0,
+      0.0109753210812383,
+      0.005197241063302732
+    ],
+    [
+      0.0035154381534511633,
+      0.008542331700430113,
+      0.0,
+      0.011341219785924913
+    ],
+    [
+      0.007578543844316208,
+      0.003914432150651857,
+      0.011607443709531548,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Tertiary amine",
-    "majority_fg_de": "Tertiäres Amin",
-    "majority_count": 3,
+    "majority_fg": "Alkyne",
+    "majority_fg_de": "C≡C (Alkin)",
+    "majority_count": 1,
     "other_primaries_de": [
-      "Tertiäres Amin",
+      "C≡C (Alkin)",
+      "C=C (Alken)",
       "Unbekannt"
     ],
-    "gt_fg": "Tertiary amine",
-    "gt_fg_de": "Tertiäres Amin",
+    "gt_fg": "Ring O aliph",
+    "gt_fg_de": "O im Ring (cycl. Ether)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
+    "gt_instead_fgs_de": [
+      "O im Ring (cycl. Ether)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Unbekannt": "Keine typische Gruppe erkannt"
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "Unbekannt": {
+        "text": "Keine typische Gruppe erkannt."
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
-      2
+      0,
+      2,
+      3
     ],
     "alt_gt_fgs": {
-      "2": "unknown"
+      "0": "Alkyne",
+      "2": "Alkene",
+      "3": "unknown"
     },
     "alt_gt_fgs_de": {
-      "2": "Unbekannt"
+      "0": "C≡C (Alkin)",
+      "2": "C=C (Alken)",
+      "3": "Unbekannt"
     },
     "model_pred_idx": 2,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "Unbekannt"
+      "C=C (Alken)"
     ],
-    "model_lacks_fgs_de": [
-      "Tertiäres Amin"
-    ],
-    "model_without_n_fg": true,
+    "model_lacks_fgs_de": [],
+    "model_without_n_fg": false,
     "source": "rdkit"
   }
 }

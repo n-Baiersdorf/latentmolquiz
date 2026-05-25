@@ -89,8 +89,16 @@ export function renderPeaHeatmap(container, matrix, options = {}) {
       <p class="pea-title">PEA-Matrix</p>
       <p class="pea-subtitle">Perspective Ensemble Attention</p>
     </div>
-    <p class="pea-teaser">Die Matrix zeigt, wie das Modell entscheidet, die vier Moleküle miteinander zu vermischen.</p>
-    <details class="pea-more">
+    <p class="pea-teaser">Die Matrix zeigt, wie das Modell entscheidet, die vier Moleküle miteinander zu vermischen.</p>`;
+
+  const matrixWrap = document.createElement("div");
+  matrixWrap.className = "pea-matrix";
+  matrixWrap.appendChild(renderHeatmapTable(matrix, { gtIdx, wrongPredCols }));
+  block.appendChild(matrixWrap);
+
+  const more = document.createElement("details");
+  more.className = "pea-more";
+  more.innerHTML = `
       <summary class="info-btn">ⓘ Weitere Informationen</summary>
       <div class="pea-more-body">
         <p><strong>Zeile</strong> = Ziel-Molekül · <strong>Spalte</strong> = Quellen-Molekül. Jede Zelle: Anteil, mit dem die Quelle in die Ziel-Darstellung einfließt (Mittel über 5 Modell-Seeds).</p>
@@ -100,13 +108,8 @@ export function renderPeaHeatmap(container, matrix, options = {}) {
           <li><strong>Grau</strong> — Diagonale = 1 (Selbstanteil)</li>
           <li><strong>Gestrichelte Spalte</strong> — mindestens ein Seed wählte dieses Molekül fälschlich als Ausreißer</li>
         </ul>
-      </div>
-    </details>`;
-
-  const matrixWrap = document.createElement("div");
-  matrixWrap.className = "pea-matrix";
-  matrixWrap.appendChild(renderHeatmapTable(matrix, { gtIdx, wrongPredCols }));
-  block.appendChild(matrixWrap);
+      </div>`;
+  block.appendChild(more);
 
   container.appendChild(block);
   return { setHighlight: () => {}, clearHighlight: () => {} };

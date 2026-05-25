@@ -40,17 +40,21 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
+        "Ether (–O–)",
+        "C=O am Kettenende (Aldehyd)",
+        "C≡N (Nitril)"
+      ],
+      "fg_labels_full": [
         "Nitrile",
-        "Tertiary amine",
         "Ether",
         "Aldehyde"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Tertiäres Amin",
-        "Ether",
-        "Aldehyd"
+        "Ether (–O–)",
+        "C=O am Kettenende (Aldehyd)",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C4H5NO2"
     },
@@ -91,17 +95,21 @@
       },
       "fg_primary": "Carboxylic acid",
       "fg_labels": [
+        "C=N–H (Imin)",
+        "–COOH (Carbonsäure)",
+        "–COO⁻ (Carboxylat)"
+      ],
+      "fg_labels_full": [
         "Carboxylic acid",
         "Carboxylate",
-        "Primary amine",
-        "Secondary amine"
+        "Imine C=N-H"
       ],
-      "fg_primary_de": "Carbonsäure",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–COOH (Carbonsäure)",
       "fg_labels_de": [
-        "Carbonsäure",
-        "Carboxylat",
-        "Primäres Amin",
-        "Sekundäres Amin"
+        "C=N–H (Imin)",
+        "–COOH (Carbonsäure)",
+        "–COO⁻ (Carboxylat)"
       ],
       "mol_formula": "C4H9N3O2"
     },
@@ -140,15 +148,26 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Imine C=N-C",
       "fg_labels": [
-        "Tertiary amine",
+        "N und O im Ring (N,O-Heterocycl)",
+        "C=N–C (Imin)",
+        "Halogen (F/Cl/…)"
+      ],
+      "fg_labels_full": [
+        "Imine C=N-C",
+        "Ring N",
+        "Ring O arom",
         "Halogen"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_ring_n_detail_de": [
+        "N im Ring"
+      ],
+      "fg_primary_de": "C=N–C (Imin)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Halogen"
+        "N und O im Ring (N,O-Heterocycl)",
+        "C=N–C (Imin)",
+        "Halogen (F/Cl/…)"
       ],
       "mol_formula": "C5H5FN2O"
     },
@@ -187,15 +206,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether",
+        "O im Ring (cycl. Ether)",
+        "C=O am Kettenende (Aldehyd)"
+      ],
+      "fg_labels_full": [
+        "Ring O aliph",
         "Aldehyde"
       ],
-      "fg_primary_de": "Ether",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether",
-        "Aldehyd"
+        "O im Ring (cycl. Ether)",
+        "C=O am Kettenende (Aldehyd)"
       ],
       "mol_formula": "C7H8O2"
     }
@@ -855,32 +879,83 @@
   ],
   "fg_analysis": {
     "majority_fg": "Nitrile",
-    "majority_fg_de": "Nitril",
+    "majority_fg_de": "C≡N (Nitril)",
     "majority_count": 1,
     "other_primaries_de": [
-      "Nitril",
-      "Carbonsäure",
-      "Ether"
+      "C≡N (Nitril)",
+      "–COOH (Carbonsäure)",
+      "O im Ring (cycl. Ether)"
     ],
-    "gt_fg": "Tertiary amine",
-    "gt_fg_de": "Tertiäres Amin",
+    "gt_fg": "Imine C=N-C",
+    "gt_fg_de": "C=N–C (Imin)",
     "gt_idx": 2,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Halogen"
+      "Halogen (F/Cl/…)"
     ],
+    "gt_instead_fgs_de": [
+      "Halogen (F/Cl/…)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [
+      "N im Ring"
+    ],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Carbonsäure": "Carbonsäure (-COOH): sauer, polare Gruppe",
-      "Carboxylat": "Carboxylat (-COO⁻): salzartige, polare Form der Carbonsäure",
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Primäres Amin": "Primäres Amin (-NH₂): Stickstoff mit zwei Wasserstoffen",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Aldehyd": "Aldehyd (-CHO): Carbonylgruppe am Kettenende",
-      "Halogen": "Halogen (-F, -Cl, …): Fluor, Chlor oder ähnliches am Kohlenstoff"
+      "–COOH (Carbonsäure)": {
+        "text": "Struktur: –COOH (C=O plus –OH am selben C). Typisch: Carbonsäure.",
+        "image": "fg_ref/carboxylic_acid.png"
+      },
+      "–COO⁻ (Carboxylat)": {
+        "text": "Struktur: –COO⁻ (deprotonierte Carboxylgruppe). Typisch: Carboxylat-Anion.",
+        "image": "fg_ref/carboxylate.png"
+      },
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "C=N–C (Imin)": {
+        "text": "Struktur: C=N–C (kein N–H). Typisch: Imin.",
+        "image": "fg_ref/imine_cnc.png"
+      },
+      "C=N–H (Imin)": {
+        "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
+        "image": "fg_ref/imine_nh.png"
+      },
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "O im aromatischen Ring": {
+        "text": "sp2-O im aromatischen Ring (z. B. Furan). Nicht Ether und nicht gesättigtes Ring-O.",
+        "image": "fg_ref/ring_o_arom.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=O am Kettenende (Aldehyd)": {
+        "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
+        "image": "fg_ref/aldehyde.png"
+      },
+      "Halogen (F/Cl/…)": {
+        "text": "F/Cl/Br/I als Substituent.",
+        "image": "fg_ref/halogen.png"
+      },
+      "N im Ring": {
+        "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N und O im Ring (N,O-Heterocycl)": {
+        "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
+        "image": "fg_ref/ring_no.png"
+      }
     },
     "alt_gt_indices": [
       0,
@@ -890,16 +965,18 @@
     "alt_gt_fgs": {
       "0": "Nitrile",
       "1": "Carboxylic acid",
-      "3": "Ether"
+      "3": "Ring O aliph"
     },
     "alt_gt_fgs_de": {
-      "0": "Nitril",
-      "1": "Carbonsäure",
-      "3": "Ether"
+      "0": "C≡N (Nitril)",
+      "1": "–COOH (Carbonsäure)",
+      "3": "O im Ring (cycl. Ether)"
     },
     "model_pred_idx": 3,
     "model_alt_correct": true,
-    "model_exclusive_fgs_de": [],
+    "model_exclusive_fgs_de": [
+      "O im Ring (cycl. Ether)"
+    ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": true,
     "source": "rdkit"

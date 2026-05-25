@@ -40,13 +40,23 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "Amide",
-        "Tertiary amine"
+        "N und O im Ring (N,O-Heterocycl)",
+        "2× N im Ring",
+        "–CONR– (Amid)"
       ],
-      "fg_primary_de": "Amid",
+      "fg_labels_full": [
+        "Amide",
+        "Ring N",
+        "Ring O arom"
+      ],
+      "fg_ring_n_detail_de": [
+        "2× N im Ring"
+      ],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid",
-        "Tertiäres Amin"
+        "N und O im Ring (N,O-Heterocycl)",
+        "2× N im Ring",
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C3H4N4O2"
     },
@@ -87,15 +97,22 @@
       },
       "fg_primary": "Ether",
       "fg_labels": [
+        "Ether (–O–)",
+        "C≡C (Alkin)",
+        "C=O in der Kette (Keton)"
+      ],
+      "fg_labels_full": [
         "Ether",
         "Ketone",
-        "Aldehyde"
+        "Aldehyde",
+        "Alkyne"
       ],
-      "fg_primary_de": "Ether",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "Ether (–O–)",
       "fg_labels_de": [
-        "Ether",
-        "Keton",
-        "Aldehyd"
+        "Ether (–O–)",
+        "C≡C (Alkin)",
+        "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C6H6O3"
     },
@@ -136,13 +153,23 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
-        "Nitrile",
-        "Tertiary amine"
+        "N mit Alkyl am Ring",
+        "N mit N=N-Bindung",
+        "C≡N (Nitril)"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_labels_full": [
+        "Nitrile",
+        "Ring N"
+      ],
+      "fg_ring_n_detail_de": [
+        "N mit Alkyl am Ring",
+        "N mit N=N-Bindung"
+      ],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Tertiäres Amin"
+        "N mit Alkyl am Ring",
+        "N mit N=N-Bindung",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C5H4N4"
     },
@@ -181,15 +208,23 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring O arom",
       "fg_labels": [
-        "Secondary amine",
-        "Phenol"
+        "O im aromatischen Ring",
+        "–NH– (sekundäres Amin)",
+        "–OH im Ring (Heterocycl)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Ring O arom",
+        "Secondary amine",
+        "Heterocyclic OH"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im aromatischen Ring",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Phenol"
+        "O im aromatischen Ring",
+        "–NH– (sekundäres Amin)",
+        "–OH im Ring (Heterocycl)"
       ],
       "mol_formula": "C6H9NO2"
     }
@@ -665,35 +700,145 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.21755269169807434,
+      0.10075333341956139,
+      0.179365074634552
+    ],
+    [
+      0.11936903446912765,
+      1.0,
+      0.16129794120788574,
+      0.09261164218187332
+    ],
+    [
+      0.06464479640126228,
+      0.23454609513282776,
+      1.0,
+      0.17141748666763307
+    ],
+    [
+      0.08633830547332763,
+      0.0957178682088852,
+      0.11140339374542237,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.03116169164637359,
+      0.023446565226110175,
+      0.008772490717392828
+    ],
+    [
+      0.011739186989460675,
+      0.0,
+      0.02174046112485189,
+      0.002082402740931704
+    ],
+    [
+      0.012732191179457444,
+      0.04031478770890794,
+      0.0,
+      0.01588583569549636
+    ],
+    [
+      0.0032311337486739655,
+      0.0031096962436841565,
+      0.008347206754823281,
+      0.0
+    ]
+  ],
   "fg_analysis": {
     "majority_fg": "Amide",
-    "majority_fg_de": "Amid",
+    "majority_fg_de": "–CONR– (Amid)",
     "majority_count": 1,
     "other_primaries_de": [
-      "Amid",
-      "Nitril",
-      "Sekundäres Amin"
+      "–CONR– (Amid)",
+      "C≡N (Nitril)",
+      "O im aromatischen Ring"
     ],
     "gt_fg": "Ether",
-    "gt_fg_de": "Ether",
+    "gt_fg_de": "Ether (–O–)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Ether",
-      "Keton",
-      "Aldehyd"
+      "C≡C (Alkin)",
+      "Ether (–O–)"
     ],
+    "gt_instead_fgs_de": [
+      "Ether (–O–)",
+      "C≡C (Alkin)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Amid": "Amid (-CONH-): Stickstoff direkt an einer Carbonylgruppe (C=O)",
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Phenol": "Phenol (-OH am Ring): Hydroxylgruppe an einem aromatischen Ring",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen",
-      "Aldehyd": "Aldehyd (-CHO): Carbonylgruppe am Kettenende"
+      "–CONR– (Amid)": {
+        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
+        "image": "fg_ref/amide.png"
+      },
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "O im aromatischen Ring": {
+        "text": "sp2-O im aromatischen Ring (z. B. Furan). Nicht Ether und nicht gesättigtes Ring-O.",
+        "image": "fg_ref/ring_o_arom.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=O am Kettenende (Aldehyd)": {
+        "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
+        "image": "fg_ref/aldehyde.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "–OH im Ring (Heterocycl)": {
+        "text": "OH an heteroaromatischem Ring. Tautomerie möglich.",
+        "image": "fg_ref/heterocyclic_oh.png"
+      },
+      "2× N im Ring": {
+        "text": "2× N im Ring: Zwei oder mehr Ring-N ohne H (z. B. Pyrimidin).",
+        "image": "fg_ref/ring_n_2x.png"
+      },
+      "N mit Alkyl am Ring": {
+        "text": "Ring-N ohne H, mit Alkyl-Substituent (z. B. N-Methyl).",
+        "image": "fg_ref/ring_n_alkyl.png"
+      },
+      "N mit N=N-Bindung": {
+        "text": "Benachbarte Ring-N mit N=N (Kekulé). RDKit zählt je nach Darstellung; 2x = zwei solche Bindungen.",
+        "image": "fg_ref/ring_n_nn_eq.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N und O im Ring (N,O-Heterocycl)": {
+        "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
+        "image": "fg_ref/ring_no.png"
+      }
     },
     "alt_gt_indices": [
       0,
@@ -706,14 +851,14 @@
       "3": "Secondary amine"
     },
     "alt_gt_fgs_de": {
-      "0": "Amid",
-      "2": "Nitril",
-      "3": "Sekundäres Amin"
+      "0": "–CONR– (Amid)",
+      "2": "C≡N (Nitril)",
+      "3": "–NH– (sekundäres Amin)"
     },
     "model_pred_idx": 2,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "Nitril"
+      "C≡N (Nitril)"
     ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,

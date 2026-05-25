@@ -24,12 +24,14 @@
       <h1 class="title-spaced">Odd-One-Out-Quiz</h1>
       <div class="intro-body panel-double">
         <p class="lead">Vier Moleküle — eines passt nicht zur Gruppe. Findest du es?</p>
-        <p class="intro-text">Du vergleichst dich mit dem LatentMol-KI-Modell (MultiMol + PEA), das Moleküle als Ausreißer erkennt. Nach deiner Wahl siehst du, was das Modell sagt — und <strong>warum</strong> ein Molekül heraussticht (funktionelle Gruppen, Seed-Votes, PEA-Matrix).</p>
+        <p class="intro-text">Du spielst gegen eine KI, die genau das lernt: Moleküle vergleichen und Ausreißer finden. Nach deiner Wahl siehst du, ob die KI ähnlich denkt — und <strong>warum</strong> ein Molekül heraussticht (vor allem anhand <strong>funktioneller Gruppen</strong>).</p>
         <p class="intro-text muted">Kuratiertes Quiz: 5 Sets · ca. 2 Minuten · kein Chemie-Wissen nötig.</p>
       </div>
       <div class="intro-start">
-        <button type="button" id="btn-start" class="action">Los geht's</button>
+        <button type="button" id="btn-start" class="action">Los geht's <span class="key-hint key-hint-suffix" aria-hidden="true">(1)</span></button>
         <p class="intro-alt muted">
+          <button type="button" id="btn-intro-fg-tutorial" class="text-btn">Funktionelle Gruppen kurz erklärt</button>
+          <span class="intro-alt-sep" aria-hidden="true">·</span>
           <button type="button" id="btn-intro-endless" class="text-btn">Weitere Sets</button>
           <span class="intro-alt-sep" aria-hidden="true">·</span>
           <button type="button" id="btn-intro-more-info" class="text-btn">Mehr zum KI-Modell</button>
@@ -59,9 +61,9 @@
       <nav class="nav">
         <div class="nav-left">
           <button type="button" id="btn-prev" class="nav-btn" disabled aria-label="Vorheriges Set">←</button>
-          <button type="button" id="btn-home" class="nav-btn nav-btn-menu">Hauptmenü</button>
+          <button type="button" id="btn-home" class="nav-btn nav-btn-menu">Hauptmenü <span class="key-hint key-hint-suffix" aria-hidden="true">(H)</span></button>
         </div>
-        <button type="button" id="btn-next" class="nav-btn action hidden">Weiter →</button>
+        <button type="button" id="btn-next" class="nav-btn action hidden" aria-keyshortcuts="ArrowRight Enter">Weiter →</button>
       </nav>
     </section>
 
@@ -69,9 +71,9 @@
       <h1 class="title-spaced">Danke fürs Mitmachen!</h1>
       <p id="outro-score" class="lead"></p>
       <div class="outro-actions panel-single">
-        <button type="button" id="btn-restart" class="action">Nochmal</button>
-        <button type="button" id="btn-endless" class="action secondary">Weitere Sets</button>
-        <button type="button" id="btn-more-info" class="action secondary">Mehr zum KI-Modell</button>
+        <button type="button" id="btn-restart" class="action">Nochmal <span class="key-hint key-hint-suffix" aria-hidden="true">(1)</span></button>
+        <button type="button" id="btn-endless" class="action secondary">Weitere Sets <span class="key-hint key-hint-suffix" aria-hidden="true">(2)</span></button>
+        <button type="button" id="btn-more-info" class="action secondary">Mehr zum KI-Modell <span class="key-hint key-hint-suffix" aria-hidden="true">(3)</span></button>
       </div>
     </section>
 
@@ -87,11 +89,6 @@
 
   </main>
 
-  <footer class="site-footer">
-    <span class="footer-rule">────────────────────────</span>
-    LatentMol · Nora Baiersdorf · 2026
-  </footer>
-
   <div id="fg-glossary-backdrop" class="fg-glossary-backdrop hidden" aria-hidden="true">
     <div class="fg-glossary" role="dialog" aria-labelledby="fg-glossary-title">
       <div class="fg-glossary-head">
@@ -102,8 +99,24 @@
     </div>
   </div>
 
+  <div id="fg-tutorial-backdrop" class="fg-glossary-backdrop hidden" aria-hidden="true">
+    <div class="fg-tutorial fg-glossary" role="dialog" aria-labelledby="fg-tutorial-title">
+      <div class="fg-glossary-head">
+        <h2 id="fg-tutorial-title">Kurz erklärt</h2>
+        <span id="fg-tutorial-step" class="fg-tutorial-step muted">1 / 7</span>
+        <button type="button" id="btn-fg-tutorial-close" class="text-btn" aria-label="Schließen">×</button>
+      </div>
+      <div id="fg-tutorial-body" class="fg-glossary-body fg-tutorial-body"></div>
+      <nav class="fg-tutorial-nav">
+        <button type="button" id="btn-fg-tutorial-prev" class="text-btn" disabled><kbd class="key-hint" aria-hidden="true">←</kbd> Zurück</button>
+        <button type="button" id="btn-fg-tutorial-next" class="action small"><kbd class="key-hint" aria-hidden="true">→</kbd> Weiter</button>
+      </nav>
+    </div>
+  </div>
+
   <script type="module" src="js/data-loader.js"></script>
   <script type="module" src="js/pea-heatmap.js"></script>
+  <script type="module" src="js/fg-tutorial.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

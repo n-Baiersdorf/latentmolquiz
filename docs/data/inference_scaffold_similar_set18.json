@@ -40,11 +40,18 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
-        "Alcohol"
+        "–OH (Alkohol)",
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_labels_full": [
+        "Alcohol",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol"
+        "–OH (Alkohol)",
+        "C=C (Alken)"
       ],
       "mol_formula": "C8H12O"
     },
@@ -83,17 +90,23 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Imine C=N-C",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine",
+        "C=N–C (Imin)",
+        "C=N–H (Imin)",
+        "Ether (–O–)"
+      ],
+      "fg_labels_full": [
+        "Imine C=N-C",
+        "Imine C=N-H",
         "Ether"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=N–C (Imin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin",
-        "Ether"
+        "C=N–C (Imin)",
+        "C=N–H (Imin)",
+        "Ether (–O–)"
       ],
       "mol_formula": "C5H10N2O2"
     },
@@ -132,17 +145,22 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring N-H",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine",
-        "Phenol"
+        "N–H im Ring",
+        "–OH im Ring (Heterocycl)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Ring N-H",
+        "Heterocyclic OH"
+      ],
+      "fg_ring_n_detail_de": [
+        "N–H im Ring"
+      ],
+      "fg_primary_de": "N–H im Ring (Heterocycl)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin",
-        "Phenol"
+        "N–H im Ring",
+        "–OH im Ring (Heterocycl)"
       ],
       "mol_formula": "C6H8N2O"
     },
@@ -181,15 +199,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alcohol",
       "fg_labels": [
-        "Tertiary amine",
+        "–OH (Alkohol)"
+      ],
+      "fg_labels_full": [
         "Alcohol"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Alkohol"
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C6H9NO2"
     }
@@ -848,52 +868,89 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
+    "majority_fg": "Alcohol",
+    "majority_fg_de": "–OH (Alkohol)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Alkohol",
-      "Sekundäres Amin",
-      "Tertiäres Amin"
+      "–OH (Alkohol)",
+      "C=N–C (Imin)"
     ],
-    "gt_fg": "Secondary amine",
-    "gt_fg_de": "Sekundäres Amin",
+    "gt_fg": "Ring N-H",
+    "gt_fg_de": "N–H im Ring (Heterocycl)",
     "gt_idx": 2,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Phenol"
+      "N–H im Ring (Heterocycl)",
+      "–OH im Ring (Heterocycl)"
     ],
+    "gt_instead_fgs_de": [
+      "N–H im Ring (Heterocycl)",
+      "–OH im Ring (Heterocycl)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [
+      "N im Ring"
+    ],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Phenol": "Phenol (-OH am Ring): Hydroxylgruppe an einem aromatischen Ring",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "C=N–C (Imin)": {
+        "text": "Struktur: C=N–C (kein N–H). Typisch: Imin.",
+        "image": "fg_ref/imine_cnc.png"
+      },
+      "C=N–H (Imin)": {
+        "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
+        "image": "fg_ref/imine_nh.png"
+      },
+      "N–H im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N mit H (z. B. Pyrrol). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_h_arom.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "–OH im Ring (Heterocycl)": {
+        "text": "OH an heteroaromatischem Ring. Tautomerie möglich.",
+        "image": "fg_ref/heterocyclic_oh.png"
+      },
+      "N–H im Ring": {
+        "text": "Fein: aromatischer Ring-N mit H (Pyrrol-typ).",
+        "image": "fg_ref/ring_n_h.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       0,
-      1,
-      3
+      1
     ],
     "alt_gt_fgs": {
-      "0": "Tertiary amine",
-      "1": "Ether",
-      "3": "Tertiary amine"
+      "0": "Alkene",
+      "1": "Imine C=N-C"
     },
     "alt_gt_fgs_de": {
-      "0": "Tertiäres Amin",
-      "1": "Ether",
-      "3": "Tertiäres Amin"
+      "0": "C=C (Alken)",
+      "1": "C=N–C (Imin)"
     },
     "model_pred_idx": 0,
     "model_alt_correct": true,
-    "model_exclusive_fgs_de": [],
-    "model_lacks_fgs_de": [
-      "Tertiäres Amin"
+    "model_exclusive_fgs_de": [
+      "C=C (Alken)"
     ],
-    "model_without_n_fg": true,
+    "model_lacks_fgs_de": [],
+    "model_without_n_fg": false,
     "source": "rdkit"
   }
 }

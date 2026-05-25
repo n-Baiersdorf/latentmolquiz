@@ -38,13 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alkene",
       "fg_labels": [
-        "Tertiary amine"
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=C (Alken)",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "C=C (Alken)"
       ],
       "mol_formula": "C8H11N"
     },
@@ -83,15 +87,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Ether",
       "fg_labels": [
-        "Tertiary amine",
+        "Ether (–O–)"
+      ],
+      "fg_labels_full": [
         "Ether"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "Ether (–O–)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Ether"
+        "Ether (–O–)"
       ],
       "mol_formula": "C7H9NO"
     },
@@ -130,13 +136,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Alkene",
       "fg_labels": [
-        "unknown"
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Unbekannt",
+      "fg_labels_full": [
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=C (Alken)",
       "fg_labels_de": [
-        "Unbekannt"
+        "C=C (Alken)"
       ],
       "mol_formula": "C9H14"
     },
@@ -177,13 +187,18 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
-        "Nitrile",
-        "Tertiary amine"
+        "C=C (Alken)",
+        "C≡N (Nitril)"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_labels_full": [
+        "Nitrile",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Tertiäres Amin"
+        "C=C (Alken)",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C7H10N2"
     }
@@ -659,51 +674,117 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.06415409594774246,
+      0.12713510394096375,
+      0.07902572453022003
+    ],
+    [
+      0.06675709560513496,
+      1.0,
+      0.1895174503326416,
+      0.08228772431612015
+    ],
+    [
+      0.10364328175783158,
+      0.15222805440425874,
+      1.0,
+      0.08329110145568848
+    ],
+    [
+      0.13151071816682816,
+      0.14454629123210908,
+      0.1450034886598587,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.003727208393048223,
+      0.006517405464095941,
+      0.005580592914557581
+    ],
+    [
+      0.004642437228510471,
+      0.0,
+      0.01644651450034156,
+      0.005569072031272538
+    ],
+    [
+      0.0025625632761418276,
+      0.006421287709778781,
+      0.0,
+      0.003289315488297333
+    ],
+    [
+      0.004881623140075849,
+      0.00798149914504487,
+      0.008024632070614206,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Tertiary amine",
-    "majority_fg_de": "Tertiäres Amin",
+    "majority_fg": "Alkene",
+    "majority_fg_de": "C=C (Alken)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Tertiäres Amin",
-      "Unbekannt",
-      "Nitril"
+      "C=C (Alken)",
+      "C≡N (Nitril)"
     ],
-    "gt_fg": "Tertiary amine",
-    "gt_fg_de": "Tertiäres Amin",
+    "gt_fg": "Ether",
+    "gt_fg_de": "Ether (–O–)",
     "gt_idx": 1,
     "shared_fgs_de": [],
-    "non_gt_shared_fgs_de": [],
-    "gt_lacks_fgs_de": [],
-    "gt_extra_fgs_de": [
-      "Ether"
+    "non_gt_shared_fgs_de": [
+      "C=C (Alken)"
     ],
+    "gt_lacks_fgs_de": [
+      "C=C (Alken)"
+    ],
+    "gt_extra_fgs_de": [
+      "Ether (–O–)"
+    ],
+    "gt_instead_fgs_de": [
+      "Ether (–O–)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Unbekannt": "Keine typische Gruppe erkannt"
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
-      2,
       3
     ],
     "alt_gt_fgs": {
-      "2": "unknown",
       "3": "Nitrile"
     },
     "alt_gt_fgs_de": {
-      "2": "Unbekannt",
-      "3": "Nitril"
+      "3": "C≡N (Nitril)"
     },
     "model_pred_idx": 2,
-    "model_alt_correct": true,
-    "model_exclusive_fgs_de": [
-      "Unbekannt"
-    ],
-    "model_lacks_fgs_de": [
-      "Tertiäres Amin"
-    ],
-    "model_without_n_fg": true,
+    "model_alt_correct": false,
+    "model_exclusive_fgs_de": [],
+    "model_lacks_fgs_de": [],
+    "model_without_n_fg": false,
     "source": "rdkit"
   }
 }

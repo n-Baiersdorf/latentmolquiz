@@ -38,13 +38,18 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H8O"
     },
@@ -83,13 +88,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C7H6O2"
     },
@@ -130,11 +142,15 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
+        "–OH (Alkohol)"
+      ],
+      "fg_labels_full": [
         "Alcohol"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol"
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C5H8O3"
     },
@@ -173,15 +189,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Tertiary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H9NO"
     }
@@ -657,44 +675,123 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.07034289091825485,
+      0.11960241794586182,
+      0.09799205213785171
+    ],
+    [
+      0.0801390364766121,
+      1.0,
+      0.11955429911613465,
+      0.12711331397294998
+    ],
+    [
+      0.15396130979061126,
+      0.12464203834533691,
+      1.0,
+      0.07147914618253708
+    ],
+    [
+      0.09998758435249329,
+      0.10694400519132614,
+      0.05491536781191826,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.0012932151952435187,
+      0.004430577763250046,
+      0.003703581572111518
+    ],
+    [
+      0.0009268262513438795,
+      0.0,
+      0.007417465110067534,
+      0.007812884219030982
+    ],
+    [
+      0.002991778852708699,
+      0.004110773231073502,
+      0.0,
+      0.0032741293699630925
+    ],
+    [
+      0.006138710942676437,
+      0.005632804822372255,
+      0.0025236362577870574,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Ether",
-    "majority_fg_de": "Ether",
-    "majority_count": 2,
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
+    "majority_count": 3,
     "other_primaries_de": [
-      "Ether",
-      "Tertiäres Amin"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_fg": "Alcohol",
-    "gt_fg_de": "Alkohol",
+    "gt_fg_de": "–OH (Alkohol)",
     "gt_idx": 2,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_lacks_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_extra_fgs_de": [
-      "Alkohol"
+      "–OH (Alkohol)"
     ],
+    "gt_instead_fgs_de": [
+      "–OH (Alkohol)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
-      3
+      0,
+      1
     ],
     "alt_gt_fgs": {
-      "3": "Tertiary amine"
+      "0": "Alkene",
+      "1": "Alkyne"
     },
     "alt_gt_fgs_de": {
-      "3": "Tertiäres Amin"
+      "0": "C=C (Alken)",
+      "1": "C≡C (Alkin)"
     },
     "model_pred_idx": 1,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "C≡C (Alkin)"
+    ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"

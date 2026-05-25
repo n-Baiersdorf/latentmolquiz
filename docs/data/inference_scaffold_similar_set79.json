@@ -38,15 +38,23 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring N",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine"
+        "N und O im Ring (N,O-Heterocycl)",
+        "–NH– (sekundäres Amin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Ring N",
+        "Ring O arom",
+        "Secondary amine"
+      ],
+      "fg_ring_n_detail_de": [
+        "N im Ring"
+      ],
+      "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin"
+        "N und O im Ring (N,O-Heterocycl)",
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C6H10N2O"
     },
@@ -87,11 +95,15 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
+        "–CONR– (Amid)"
+      ],
+      "fg_labels_full": [
         "Amide"
       ],
-      "fg_primary_de": "Amid",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid"
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C7H13NO"
     },
@@ -130,15 +142,26 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Lactam",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine"
+        "2× N im Ring",
+        "N–H im Ring",
+        "C=O im Ring (Lactam)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Lactam",
+        "Ring N",
+        "Ring N-H"
+      ],
+      "fg_ring_n_detail_de": [
+        "2× N im Ring",
+        "N–H im Ring"
+      ],
+      "fg_primary_de": "C=O im Ring (Lactam)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin"
+        "2× N im Ring",
+        "N–H im Ring",
+        "C=O im Ring (Lactam)"
       ],
       "mol_formula": "C4H3N3O2"
     },
@@ -177,15 +200,25 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Imine C=N-H",
       "fg_labels": [
-        "Secondary amine",
+        "N–H im Ring",
+        "C=N–H (Imin)",
+        "Ether (–O–)"
+      ],
+      "fg_labels_full": [
+        "Imine C=N-H",
+        "Ring N-H",
         "Ether"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [
+        "N–H im Ring"
+      ],
+      "fg_primary_de": "C=N–H (Imin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Ether"
+        "N–H im Ring",
+        "C=N–H (Imin)",
+        "Ether (–O–)"
       ],
       "mol_formula": "C6H8N2O"
     }
@@ -844,39 +877,95 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
-    "majority_count": 3,
+    "majority_fg": "Ring N",
+    "majority_fg_de": "N im Ring (Heterocycl)",
+    "majority_count": 1,
     "other_primaries_de": [
-      "Sekundäres Amin"
+      "N im Ring (Heterocycl)",
+      "C=O im Ring (Lactam)",
+      "C=N–H (Imin)"
     ],
     "gt_fg": "Amide",
-    "gt_fg_de": "Amid",
+    "gt_fg_de": "–CONR– (Amid)",
     "gt_idx": 1,
     "shared_fgs_de": [],
-    "non_gt_shared_fgs_de": [
-      "Sekundäres Amin"
-    ],
-    "gt_lacks_fgs_de": [
-      "Sekundäres Amin"
-    ],
+    "non_gt_shared_fgs_de": [],
+    "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Amid"
+      "–CONR– (Amid)"
     ],
+    "gt_instead_fgs_de": [
+      "–CONR– (Amid)"
+    ],
+    "gt_lacks_coarse_de": [
+      "N im Ring"
+    ],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Amid": "Amid (-CONH-): Stickstoff direkt an einer Carbonylgruppe (C=O)",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "–CONR– (Amid)": {
+        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
+        "image": "fg_ref/amide.png"
+      },
+      "C=O im Ring (Lactam)": {
+        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
+        "image": "fg_ref/lactam.png"
+      },
+      "C=N–H (Imin)": {
+        "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
+        "image": "fg_ref/imine_nh.png"
+      },
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "N–H im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N mit H (z. B. Pyrrol). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_h_arom.png"
+      },
+      "O im aromatischen Ring": {
+        "text": "sp2-O im aromatischen Ring (z. B. Furan). Nicht Ether und nicht gesättigtes Ring-O.",
+        "image": "fg_ref/ring_o_arom.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "N im Ring": {
+        "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "2× N im Ring": {
+        "text": "2× N im Ring: Zwei oder mehr Ring-N ohne H (z. B. Pyrimidin).",
+        "image": "fg_ref/ring_n_2x.png"
+      },
+      "N–H im Ring": {
+        "text": "Fein: aromatischer Ring-N mit H (Pyrrol-typ).",
+        "image": "fg_ref/ring_n_h.png"
+      },
+      "N und O im Ring (N,O-Heterocycl)": {
+        "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
+        "image": "fg_ref/ring_no.png"
+      }
     },
     "alt_gt_indices": [
+      0,
+      2,
       3
     ],
     "alt_gt_fgs": {
-      "3": "Ether"
+      "0": "Ring O arom",
+      "2": "Lactam",
+      "3": "Imine C=N-H"
     },
     "alt_gt_fgs_de": {
-      "3": "Ether"
+      "0": "O im aromatischen Ring",
+      "2": "C=O im Ring (Lactam)",
+      "3": "C=N–H (Imin)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": false,

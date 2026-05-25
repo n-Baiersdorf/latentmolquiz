@@ -38,13 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alkyne",
       "fg_labels": [
-        "Tertiary amine"
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡C (Alkin)",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C8H11N"
     },
@@ -85,8 +89,12 @@
       },
       "fg_primary": "unknown",
       "fg_labels": [
+        "Unbekannt"
+      ],
+      "fg_labels_full": [
         "unknown"
       ],
+      "fg_ring_n_detail_de": [],
       "fg_primary_de": "Unbekannt",
       "fg_labels_de": [
         "Unbekannt"
@@ -130,17 +138,18 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
+        "–OH (Alkohol)",
+        "C≡N (Nitril)"
+      ],
+      "fg_labels_full": [
         "Nitrile",
-        "Secondary amine",
-        "Tertiary amine",
         "Alcohol"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Sekundäres Amin",
-        "Tertiäres Amin",
-        "Alkohol"
+        "–OH (Alkohol)",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C6H8N2O"
     },
@@ -179,13 +188,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "unknown",
       "fg_labels": [
-        "Tertiary amine"
+        "Unbekannt"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "unknown"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "Unbekannt",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "Unbekannt"
       ],
       "mol_formula": "C7H15N"
     }
@@ -844,49 +857,65 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Tertiary amine",
-    "majority_fg_de": "Tertiäres Amin",
+    "majority_fg": "unknown",
+    "majority_fg_de": "Unbekannt",
     "majority_count": 2,
     "other_primaries_de": [
-      "Tertiäres Amin",
+      "C≡C (Alkin)",
       "Unbekannt"
     ],
     "gt_fg": "Nitrile",
-    "gt_fg_de": "Nitril",
+    "gt_fg_de": "C≡N (Nitril)",
     "gt_idx": 2,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Nitril",
-      "Sekundäres Amin",
-      "Alkohol"
+      "C≡N (Nitril)",
+      "–OH (Alkohol)"
     ],
+    "gt_instead_fgs_de": [
+      "–OH (Alkohol)",
+      "C≡N (Nitril)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Unbekannt": "Keine typische Gruppe erkannt"
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "Unbekannt": {
+        "text": "Keine typische Gruppe erkannt."
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
-      1
+      0
     ],
     "alt_gt_fgs": {
-      "1": "unknown"
+      "0": "Alkyne"
     },
     "alt_gt_fgs_de": {
-      "1": "Unbekannt"
+      "0": "C≡C (Alkin)"
     },
     "model_pred_idx": 1,
-    "model_alt_correct": true,
-    "model_exclusive_fgs_de": [
-      "Unbekannt"
-    ],
-    "model_lacks_fgs_de": [
-      "Tertiäres Amin"
-    ],
-    "model_without_n_fg": true,
+    "model_alt_correct": false,
+    "model_exclusive_fgs_de": [],
+    "model_lacks_fgs_de": [],
+    "model_without_n_fg": false,
     "source": "rdkit"
   }
 }

@@ -38,15 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Tertiary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H9NO"
     },
@@ -85,13 +87,18 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C6H10O"
     },
@@ -130,13 +137,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H12O"
     },
@@ -177,13 +188,18 @@
       },
       "fg_primary": "Ester",
       "fg_labels": [
-        "Ester",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–COOR (Ester)"
       ],
-      "fg_primary_de": "Ester",
-      "fg_labels_de": [
+      "fg_labels_full": [
         "Ester",
-        "Ether"
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–COOR (Ester)",
+      "fg_labels_de": [
+        "O im Ring (cycl. Ether)",
+        "–COOR (Ester)"
       ],
       "mol_formula": "C7H10O2"
     }
@@ -659,46 +675,114 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.1338707536458969,
+      0.15963104963302613,
+      0.17790170013904572
+    ],
+    [
+      0.18345066606998445,
+      1.0,
+      0.15595312416553497,
+      0.14382598996162416
+    ],
+    [
+      0.17142868638038636,
+      0.12067507207393646,
+      1.0,
+      0.10010236501693726
+    ],
+    [
+      0.1737082779407501,
+      0.10545748323202134,
+      0.0943438395857811,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.009828682126181855,
+      0.009080066452906727,
+      0.008198890199070158
+    ],
+    [
+      0.00766930758605043,
+      0.0,
+      0.004870627771846812,
+      0.003812095180380076
+    ],
+    [
+      0.0021854895674331795,
+      0.0020920806170209327,
+      0.0,
+      0.002188774288341984
+    ],
+    [
+      0.00304565095341754,
+      0.0020466217519129783,
+      0.0017163497996535116,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Ether",
-    "majority_fg_de": "Ether",
-    "majority_count": 2,
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
+    "majority_count": 3,
     "other_primaries_de": [
-      "Tertiäres Amin",
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_fg": "Ester",
-    "gt_fg_de": "Ester",
+    "gt_fg_de": "–COOR (Ester)",
     "gt_idx": 3,
     "shared_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "non_gt_shared_fgs_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Ester"
+      "–COOR (Ester)"
     ],
+    "gt_instead_fgs_de": [
+      "–COOR (Ester)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Ester": "Ester (-COO-): Sauerstoff zwischen zwei Kohlenstoff-Fragmenten",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "–COOR (Ester)": {
+        "text": "Struktur: C=O mit –O– zu einem zweiten C (–COOR). Typisch: Ester.",
+        "image": "fg_ref/ester.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
-      0
+      1
     ],
     "alt_gt_fgs": {
-      "0": "Tertiary amine"
+      "1": "Alkene"
     },
     "alt_gt_fgs_de": {
-      "0": "Tertiäres Amin"
+      "1": "C=C (Alken)"
     },
     "model_pred_idx": 0,
-    "model_alt_correct": true,
-    "model_exclusive_fgs_de": [
-      "Tertiäres Amin"
-    ],
+    "model_alt_correct": false,
+    "model_exclusive_fgs_de": [],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"

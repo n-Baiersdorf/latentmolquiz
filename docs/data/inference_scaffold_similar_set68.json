@@ -40,15 +40,21 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
+        "–OH (Alkohol)",
+        "C=O am Kettenende (Aldehyd)",
+        "–CONR– (Amid)"
+      ],
+      "fg_labels_full": [
         "Amide",
         "Alcohol",
         "Aldehyde"
       ],
-      "fg_primary_de": "Amid",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid",
-        "Alkohol",
-        "Aldehyd"
+        "–OH (Alkohol)",
+        "C=O am Kettenende (Aldehyd)",
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C5H9NO3"
     },
@@ -89,17 +95,22 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
+        "Ether (–O–)",
+        "–OH (Alkohol)",
+        "C=O in der Kette (Keton)"
+      ],
+      "fg_labels_full": [
         "Alcohol",
         "Ether",
         "Ketone",
         "Aldehyde"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol",
-        "Ether",
-        "Keton",
-        "Aldehyd"
+        "Ether (–O–)",
+        "–OH (Alkohol)",
+        "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C5H8O4"
     },
@@ -140,15 +151,18 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
+        "C=O am Kettenende (Aldehyd)",
+        "–CONR– (Amid)"
+      ],
+      "fg_labels_full": [
         "Amide",
-        "Tertiary amine",
         "Aldehyde"
       ],
-      "fg_primary_de": "Amid",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid",
-        "Tertiäres Amin",
-        "Aldehyd"
+        "C=O am Kettenende (Aldehyd)",
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C5H8N2O2"
     },
@@ -187,15 +201,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Primary amine",
+      "fg_primary": "Ring N",
       "fg_labels": [
-        "Primary amine",
-        "Tertiary amine"
+        "N und O im Ring (N,O-Heterocycl)"
       ],
-      "fg_primary_de": "Primäres Amin",
+      "fg_labels_full": [
+        "Ring N",
+        "Ring O arom"
+      ],
+      "fg_ring_n_detail_de": [
+        "N im Ring"
+      ],
+      "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
-        "Primäres Amin",
-        "Tertiäres Amin"
+        "N und O im Ring (N,O-Heterocycl)"
       ],
       "mol_formula": "C5H8N2O2"
     }
@@ -855,33 +874,70 @@
   ],
   "fg_analysis": {
     "majority_fg": "Amide",
-    "majority_fg_de": "Amid",
+    "majority_fg_de": "–CONR– (Amid)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Amid",
-      "Alkohol"
+      "–CONR– (Amid)",
+      "–OH (Alkohol)"
     ],
-    "gt_fg": "Primary amine",
-    "gt_fg_de": "Primäres Amin",
+    "gt_fg": "Ring N",
+    "gt_fg_de": "N im Ring (Heterocycl)",
     "gt_idx": 3,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Aldehyd"
+      "C=O am Kettenende (Aldehyd)"
     ],
     "gt_lacks_fgs_de": [
-      "Aldehyd"
+      "C=O am Kettenende (Aldehyd)"
     ],
     "gt_extra_fgs_de": [
-      "Primäres Amin"
+      "N und O im Ring (N,O-Heterocycl)"
     ],
+    "gt_instead_fgs_de": [
+      "N und O im Ring (N,O-Heterocycl)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [
+      "N im Ring"
+    ],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Amid": "Amid (-CONH-): Stickstoff direkt an einer Carbonylgruppe (C=O)",
-      "Primäres Amin": "Primäres Amin (-NH₂): Stickstoff mit zwei Wasserstoffen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen",
-      "Aldehyd": "Aldehyd (-CHO): Carbonylgruppe am Kettenende"
+      "–CONR– (Amid)": {
+        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
+        "image": "fg_ref/amide.png"
+      },
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "O im aromatischen Ring": {
+        "text": "sp2-O im aromatischen Ring (z. B. Furan). Nicht Ether und nicht gesättigtes Ring-O.",
+        "image": "fg_ref/ring_o_arom.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=O am Kettenende (Aldehyd)": {
+        "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
+        "image": "fg_ref/aldehyde.png"
+      },
+      "N im Ring": {
+        "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N und O im Ring (N,O-Heterocycl)": {
+        "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
+        "image": "fg_ref/ring_no.png"
+      }
     },
     "alt_gt_indices": [
       1
@@ -890,7 +946,7 @@
       "1": "Ether"
     },
     "alt_gt_fgs_de": {
-      "1": "Ether"
+      "1": "Ether (–O–)"
     },
     "model_pred_idx": 3,
     "model_alt_correct": false,

@@ -38,17 +38,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Tertiary amine",
-        "Alcohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alcohol"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Alkohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C5H9NO2"
     },
@@ -87,15 +90,21 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alcohol",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Alcohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alcohol",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Alkohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C7H10O2"
     },
@@ -136,13 +145,18 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
+        "Ether (–O–)",
+        "–OH (Alkohol)"
+      ],
+      "fg_labels_full": [
         "Alcohol",
         "Ether"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol",
-        "Ether"
+        "Ether (–O–)",
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C7H14O2"
     },
@@ -181,17 +195,26 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Primary amine",
+      "fg_primary": "Ring N",
       "fg_labels": [
+        "N und O im Ring (N,O-Heterocycl)",
+        "–NH₂ (primäres Amin)",
+        "Halogen (F/Cl/…)"
+      ],
+      "fg_labels_full": [
+        "Ring N",
+        "Ring O arom",
         "Primary amine",
-        "Tertiary amine",
         "Halogen"
       ],
-      "fg_primary_de": "Primäres Amin",
+      "fg_ring_n_detail_de": [
+        "N im Ring"
+      ],
+      "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
-        "Primäres Amin",
-        "Tertiäres Amin",
-        "Halogen"
+        "N und O im Ring (N,O-Heterocycl)",
+        "–NH₂ (primäres Amin)",
+        "Halogen (F/Cl/…)"
       ],
       "mol_formula": "C4H3FN2O2"
     }
@@ -850,48 +873,93 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Alcohol",
-    "majority_fg_de": "Alkohol",
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Tertiäres Amin",
-      "Alkohol"
+      "O im Ring (cycl. Ether)",
+      "–OH (Alkohol)"
     ],
-    "gt_fg": "Primary amine",
-    "gt_fg_de": "Primäres Amin",
+    "gt_fg": "Ring N",
+    "gt_fg_de": "N im Ring (Heterocycl)",
     "gt_idx": 3,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Alkohol",
-      "Ether"
+      "–OH (Alkohol)"
     ],
     "gt_lacks_fgs_de": [
-      "Alkohol",
-      "Ether"
+      "–OH (Alkohol)"
     ],
     "gt_extra_fgs_de": [
-      "Primäres Amin",
-      "Halogen"
+      "Halogen (F/Cl/…)"
     ],
+    "gt_instead_fgs_de": [
+      "Halogen (F/Cl/…)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [
+      "N im Ring"
+    ],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Primäres Amin": "Primäres Amin (-NH₂): Stickstoff mit zwei Wasserstoffen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Halogen": "Halogen (-F, -Cl, …): Fluor, Chlor oder ähnliches am Kohlenstoff"
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "O im aromatischen Ring": {
+        "text": "sp2-O im aromatischen Ring (z. B. Furan). Nicht Ether und nicht gesättigtes Ring-O.",
+        "image": "fg_ref/ring_o_arom.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH₂ (primäres Amin)": {
+        "text": "NH₂ an Kette, nicht im Ring. Typisch: primäres Amin.",
+        "image": "fg_ref/primary_amine.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "Halogen (F/Cl/…)": {
+        "text": "F/Cl/Br/I als Substituent.",
+        "image": "fg_ref/halogen.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N und O im Ring (N,O-Heterocycl)": {
+        "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
+        "image": "fg_ref/ring_no.png"
+      }
     },
     "alt_gt_indices": [
-      0
+      1,
+      2
     ],
     "alt_gt_fgs": {
-      "0": "Tertiary amine"
+      "1": "Alkene",
+      "2": "Ether"
     },
     "alt_gt_fgs_de": {
-      "0": "Tertiäres Amin"
+      "1": "C=C (Alken)",
+      "2": "Ether (–O–)"
     },
     "model_pred_idx": 1,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "C=C (Alken)"
+    ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"

@@ -38,13 +38,18 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C8H12O"
     },
@@ -83,15 +88,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Aldehyde",
       "fg_labels": [
-        "Tertiary amine",
+        "C=O am Kettenende (Aldehyd)"
+      ],
+      "fg_labels_full": [
         "Aldehyde"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=O am Kettenende (Aldehyd)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Aldehyd"
+        "C=O am Kettenende (Aldehyd)"
       ],
       "mol_formula": "C7H9NO"
     },
@@ -132,11 +139,15 @@
       },
       "fg_primary": "Ketone",
       "fg_labels": [
+        "C=O in der Kette (Keton)"
+      ],
+      "fg_labels_full": [
         "Ketone"
       ],
-      "fg_primary_de": "Keton",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=O in der Kette (Keton)",
       "fg_labels_de": [
-        "Keton"
+        "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C8H14O"
     },
@@ -175,15 +186,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether",
+        "O im Ring (cycl. Ether)",
+        "C=O in der Kette (Keton)"
+      ],
+      "fg_labels_full": [
+        "Ring O aliph",
         "Ketone"
       ],
-      "fg_primary_de": "Ether",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether",
-        "Keton"
+        "O im Ring (cycl. Ether)",
+        "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C7H8O2"
     }
@@ -842,44 +858,67 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Ether",
-    "majority_fg_de": "Ether",
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Tertiäres Amin",
-      "Keton",
-      "Ether"
+      "C=O am Kettenende (Aldehyd)",
+      "C=O in der Kette (Keton)",
+      "O im Ring (cycl. Ether)"
     ],
-    "gt_fg": "Ether",
-    "gt_fg_de": "Ether",
+    "gt_fg": "Ring O aliph",
+    "gt_fg_de": "O im Ring (cycl. Ether)",
     "gt_idx": 0,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
-    "gt_extra_fgs_de": [],
+    "gt_extra_fgs_de": [
+      "C=C (Alken)"
+    ],
+    "gt_instead_fgs_de": [
+      "C=C (Alken)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen",
-      "Aldehyd": "Aldehyd (-CHO): Carbonylgruppe am Kettenende"
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=O am Kettenende (Aldehyd)": {
+        "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
+        "image": "fg_ref/aldehyde.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       1,
       2
     ],
     "alt_gt_fgs": {
-      "1": "Tertiary amine",
+      "1": "Aldehyde",
       "2": "Ketone"
     },
     "alt_gt_fgs_de": {
-      "1": "Tertiäres Amin",
-      "2": "Keton"
+      "1": "C=O am Kettenende (Aldehyd)",
+      "2": "C=O in der Kette (Keton)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "Tertiäres Amin",
-      "Aldehyd"
+      "C=O am Kettenende (Aldehyd)"
     ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,

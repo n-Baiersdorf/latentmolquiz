@@ -21,6 +21,6 @@
       "set_idx": 23
     }
   ],
-  "show_properties": true,
-  "show_iupac": true
+  "show_properties": false,
+  "show_iupac": false
 }

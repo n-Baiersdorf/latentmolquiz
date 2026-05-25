@@ -38,13 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alkyne",
       "fg_labels": [
-        "Tertiary amine"
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡C (Alkin)",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C8H13N"
     },
@@ -83,13 +87,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "unknown",
       "fg_labels": [
-        "Tertiary amine"
+        "Unbekannt"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "unknown"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "Unbekannt",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "Unbekannt"
       ],
       "mol_formula": "C8H11N"
     },
@@ -128,17 +136,26 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Primary amine",
+      "fg_primary": "Ring N",
       "fg_labels": [
+        "N mit Alkyl am Ring",
+        "N mit N–N-Bindung",
+        "–NH₂ (primäres Amin)"
+      ],
+      "fg_labels_full": [
+        "Ring N",
         "Primary amine",
-        "Tertiary amine",
         "Alcohol"
       ],
-      "fg_primary_de": "Primäres Amin",
+      "fg_ring_n_detail_de": [
+        "N mit Alkyl am Ring",
+        "N mit N–N-Bindung"
+      ],
+      "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
-        "Primäres Amin",
-        "Tertiäres Amin",
-        "Alkohol"
+        "N mit Alkyl am Ring",
+        "N mit N–N-Bindung",
+        "–NH₂ (primäres Amin)"
       ],
       "mol_formula": "C5H9N3O"
     },
@@ -179,13 +196,18 @@
       },
       "fg_primary": "Nitrile",
       "fg_labels": [
-        "Nitrile",
-        "Tertiary amine"
+        "C≡C (Alkin)",
+        "C≡N (Nitril)"
       ],
-      "fg_primary_de": "Nitril",
+      "fg_labels_full": [
+        "Nitrile",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡N (Nitril)",
       "fg_labels_de": [
-        "Nitril",
-        "Tertiäres Amin"
+        "C≡C (Alkin)",
+        "C≡N (Nitril)"
       ],
       "mol_formula": "C8H9N"
     }
@@ -661,42 +683,137 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.14290042817592621,
+      0.10789834707975388,
+      0.08938599675893784
+    ],
+    [
+      0.09860816001892089,
+      1.0,
+      0.09176593124866486,
+      0.04891961589455605
+    ],
+    [
+      0.1853821963071823,
+      0.26647841930389404,
+      1.0,
+      0.23400996029376983
+    ],
+    [
+      0.08474986106157303,
+      0.06517595797777176,
+      0.13803620636463165,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.0046584457641325894,
+      0.005564450873420343,
+      0.003821692784294645
+    ],
+    [
+      0.0033207004938775155,
+      0.0,
+      0.0036725748635477477,
+      0.003310840593851542
+    ],
+    [
+      0.010928118345855121,
+      0.019279166720822145,
+      0.0,
+      0.018138758731583066
+    ],
+    [
+      0.003249088395527597,
+      0.0023023308445025022,
+      0.005496666935979907,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Tertiary amine",
-    "majority_fg_de": "Tertiäres Amin",
-    "majority_count": 2,
+    "majority_fg": "Alkyne",
+    "majority_fg_de": "C≡C (Alkin)",
+    "majority_count": 1,
     "other_primaries_de": [
-      "Tertiäres Amin",
-      "Nitril"
+      "C≡C (Alkin)",
+      "Unbekannt",
+      "C≡N (Nitril)"
     ],
-    "gt_fg": "Primary amine",
-    "gt_fg_de": "Primäres Amin",
+    "gt_fg": "Ring N",
+    "gt_fg_de": "N im Ring (Heterocycl)",
     "gt_idx": 2,
-    "shared_fgs_de": [
-      "Tertiäres Amin"
-    ],
-    "non_gt_shared_fgs_de": [
-      "Tertiäres Amin"
-    ],
+    "shared_fgs_de": [],
+    "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Primäres Amin",
-      "Alkohol"
+      "N im Ring (Heterocycl)",
+      "–NH₂ (primäres Amin)"
     ],
+    "gt_instead_fgs_de": [
+      "–NH₂ (primäres Amin)",
+      "N im Ring (Heterocycl)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [
+      "N im Ring"
+    ],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Primäres Amin": "Primäres Amin (-NH₂): Stickstoff mit zwei Wasserstoffen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff"
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "–NH₂ (primäres Amin)": {
+        "text": "NH₂ an Kette, nicht im Ring. Typisch: primäres Amin.",
+        "image": "fg_ref/primary_amine.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "Unbekannt": {
+        "text": "Keine typische Gruppe erkannt."
+      },
+      "N mit Alkyl am Ring": {
+        "text": "Ring-N ohne H, mit Alkyl-Substituent (z. B. N-Methyl).",
+        "image": "fg_ref/ring_n_alkyl.png"
+      },
+      "N mit N–N-Bindung": {
+        "text": "Benachbarte Ring-N mit N–N-Einzelbindung (Kekulé). Oft zusätzlich N–H.",
+        "image": "fg_ref/ring_n_nn_single.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
+      0,
+      1,
       3
     ],
     "alt_gt_fgs": {
+      "0": "Alkyne",
+      "1": "unknown",
       "3": "Nitrile"
     },
     "alt_gt_fgs_de": {
-      "3": "Nitril"
+      "0": "C≡C (Alkin)",
+      "1": "Unbekannt",
+      "3": "C≡N (Nitril)"
     },
     "model_pred_idx": 2,
     "model_alt_correct": false,

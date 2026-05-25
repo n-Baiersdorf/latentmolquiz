@@ -38,15 +38,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Imine C=N-H",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine"
+        "C=N–H (Imin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Imine C=N-H"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=N–H (Imin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin"
+        "C=N–H (Imin)"
       ],
       "mol_formula": "C3H5N3"
     },
@@ -87,17 +89,21 @@
       },
       "fg_primary": "Carboxylic acid",
       "fg_labels": [
+        "C≡N (Nitril)",
+        "–COOH (Carbonsäure)",
+        "–COO⁻ (Carboxylat)"
+      ],
+      "fg_labels_full": [
         "Carboxylic acid",
         "Carboxylate",
-        "Nitrile",
-        "Tertiary amine"
+        "Nitrile"
       ],
-      "fg_primary_de": "Carbonsäure",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–COOH (Carbonsäure)",
       "fg_labels_de": [
-        "Carbonsäure",
-        "Carboxylat",
-        "Nitril",
-        "Tertiäres Amin"
+        "C≡N (Nitril)",
+        "–COOH (Carbonsäure)",
+        "–COO⁻ (Carboxylat)"
       ],
       "mol_formula": "C5H8N2O2"
     },
@@ -138,15 +144,22 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
+        "–OH (Alkohol)",
+        "–NH– (sekundäres Amin)",
+        "C=C (Alken)"
+      ],
+      "fg_labels_full": [
         "Secondary amine",
         "Alcohol",
-        "Ketone"
+        "Ketone",
+        "Alkene"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Alkohol",
-        "Keton"
+        "–OH (Alkohol)",
+        "–NH– (sekundäres Amin)",
+        "C=C (Alken)"
       ],
       "mol_formula": "C6H7NO2"
     },
@@ -187,15 +200,18 @@
       },
       "fg_primary": "Ester",
       "fg_labels": [
-        "Ester",
-        "Tertiary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–COOR (Ester)"
       ],
-      "fg_primary_de": "Ester",
-      "fg_labels_de": [
+      "fg_labels_full": [
         "Ester",
-        "Tertiäres Amin",
-        "Ether"
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–COOR (Ester)",
+      "fg_labels_de": [
+        "O im Ring (cycl. Ether)",
+        "–COOR (Ester)"
       ],
       "mol_formula": "C6H7NO2"
     }
@@ -671,32 +687,127 @@
     ],
     "gap_pred_unit": "eV"
   },
-  "fg_analysis": {
-    "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
-    "majority_count": 2,
-    "other_primaries_de": [
-      "Carbonsäure",
-      "Sekundäres Amin",
-      "Ester"
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.1924555391073227,
+      0.25893032252788545,
+      0.21985631287097931
     ],
-    "gt_fg": "Secondary amine",
-    "gt_fg_de": "Sekundäres Amin",
+    [
+      0.14407263398170472,
+      1.0,
+      0.18589568138122559,
+      0.21295022070407868
+    ],
+    [
+      0.10610432624816894,
+      0.10708744972944259,
+      1.0,
+      0.13368867933750153
+    ],
+    [
+      0.08844532668590546,
+      0.12861344665288926,
+      0.1390698105096817,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.007111971172870286,
+      0.013230803545471318,
+      0.010369110255388652
+    ],
+    [
+      0.011494576212222522,
+      0.0,
+      0.008241846404519755,
+      0.006612679333269689
+    ],
+    [
+      0.003171125369943012,
+      0.004772896848729639,
+      0.0,
+      0.0022538635837141044
+    ],
+    [
+      0.0026128128659249523,
+      0.00470757163161381,
+      0.0026987244762511913,
+      0.0
+    ]
+  ],
+  "fg_analysis": {
+    "majority_fg": "Imine C=N-H",
+    "majority_fg_de": "C=N–H (Imin)",
+    "majority_count": 1,
+    "other_primaries_de": [
+      "–COOH (Carbonsäure)",
+      "–NH– (sekundäres Amin)",
+      "–COOR (Ester)"
+    ],
+    "gt_fg": "Imine C=N-H",
+    "gt_fg_de": "C=N–H (Imin)",
     "gt_idx": 0,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
-    "gt_extra_fgs_de": [],
+    "gt_extra_fgs_de": [
+      "C=N–H (Imin)"
+    ],
+    "gt_instead_fgs_de": [
+      "C=N–H (Imin)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Carbonsäure": "Carbonsäure (-COOH): sauer, polare Gruppe",
-      "Carboxylat": "Carboxylat (-COO⁻): salzartige, polare Form der Carbonsäure",
-      "Ester": "Ester (-COO-): Sauerstoff zwischen zwei Kohlenstoff-Fragmenten",
-      "Nitril": "Nitril (-C≡N): Stickstoff dreifach an Kohlenstoff gebunden",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste",
-      "Keton": "Keton (C=O): doppelbindiger Sauerstoff zwischen zwei Kohlenstoffen"
+      "–COOH (Carbonsäure)": {
+        "text": "Struktur: –COOH (C=O plus –OH am selben C). Typisch: Carbonsäure.",
+        "image": "fg_ref/carboxylic_acid.png"
+      },
+      "–COO⁻ (Carboxylat)": {
+        "text": "Struktur: –COO⁻ (deprotonierte Carboxylgruppe). Typisch: Carboxylat-Anion.",
+        "image": "fg_ref/carboxylate.png"
+      },
+      "–COOR (Ester)": {
+        "text": "Struktur: C=O mit –O– zu einem zweiten C (–COOR). Typisch: Ester.",
+        "image": "fg_ref/ester.png"
+      },
+      "C≡N (Nitril)": {
+        "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
+        "image": "fg_ref/nitrile.png"
+      },
+      "C=N–H (Imin)": {
+        "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
+        "image": "fg_ref/imine_nh.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C=O in der Kette (Keton)": {
+        "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
+        "image": "fg_ref/ketone.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       1,
@@ -705,20 +816,20 @@
     ],
     "alt_gt_fgs": {
       "1": "Carboxylic acid",
-      "2": "Alcohol",
+      "2": "Secondary amine",
       "3": "Ester"
     },
     "alt_gt_fgs_de": {
-      "1": "Carbonsäure",
-      "2": "Alkohol",
-      "3": "Ester"
+      "1": "–COOH (Carbonsäure)",
+      "2": "–NH– (sekundäres Amin)",
+      "3": "–COOR (Ester)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "Carbonsäure",
-      "Carboxylat",
-      "Nitril"
+      "–COOH (Carbonsäure)",
+      "–COO⁻ (Carboxylat)",
+      "C≡N (Nitril)"
     ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,

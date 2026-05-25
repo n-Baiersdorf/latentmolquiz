@@ -40,11 +40,18 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
-        "Alcohol"
+        "–OH (Alkohol)",
+        "C=C (Alken)"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_labels_full": [
+        "Alcohol",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol"
+        "–OH (Alkohol)",
+        "C=C (Alken)"
       ],
       "mol_formula": "C6H10O"
     },
@@ -85,11 +92,18 @@
       },
       "fg_primary": "Alcohol",
       "fg_labels": [
-        "Alcohol"
+        "–OH (Alkohol)",
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Alkohol",
+      "fg_labels_full": [
+        "Alcohol",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Alkohol"
+        "–OH (Alkohol)",
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C7H10O2"
     },
@@ -130,13 +144,21 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
+        "C=O im Ring (Lactam)",
+        "Ether (–O–)",
+        "–CONR– (Amid)"
+      ],
+      "fg_labels_full": [
         "Amide",
+        "Lactam",
         "Ether"
       ],
-      "fg_primary_de": "Amid",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid",
-        "Ether"
+        "C=O im Ring (Lactam)",
+        "Ether (–O–)",
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C6H9NO2"
     },
@@ -175,15 +197,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alcohol",
       "fg_labels": [
-        "Tertiary amine",
+        "–OH (Alkohol)"
+      ],
+      "fg_labels_full": [
         "Alcohol"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–OH (Alkohol)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Alkohol"
+        "–OH (Alkohol)"
       ],
       "mol_formula": "C7H13NO"
     }
@@ -843,44 +867,79 @@
   ],
   "fg_analysis": {
     "majority_fg": "Alcohol",
-    "majority_fg_de": "Alkohol",
-    "majority_count": 2,
+    "majority_fg_de": "–OH (Alkohol)",
+    "majority_count": 3,
     "other_primaries_de": [
-      "Alkohol",
-      "Tertiäres Amin"
+      "–OH (Alkohol)"
     ],
     "gt_fg": "Amide",
-    "gt_fg_de": "Amid",
+    "gt_fg_de": "–CONR– (Amid)",
     "gt_idx": 2,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Alkohol"
+      "–OH (Alkohol)"
     ],
     "gt_lacks_fgs_de": [
-      "Alkohol"
+      "–OH (Alkohol)"
     ],
     "gt_extra_fgs_de": [
-      "Amid",
-      "Ether"
+      "C=O im Ring (Lactam)",
+      "Ether (–O–)"
     ],
+    "gt_instead_fgs_de": [
+      "Ether (–O–)",
+      "C=O im Ring (Lactam)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Amid": "Amid (-CONH-): Stickstoff direkt an einer Carbonylgruppe (C=O)",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "–CONR– (Amid)": {
+        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
+        "image": "fg_ref/amide.png"
+      },
+      "C=O im Ring (Lactam)": {
+        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
+        "image": "fg_ref/lactam.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
-      3
+      0,
+      1
     ],
     "alt_gt_fgs": {
-      "3": "Tertiary amine"
+      "0": "Alkene",
+      "1": "Alkyne"
     },
     "alt_gt_fgs_de": {
-      "3": "Tertiäres Amin"
+      "0": "C=C (Alken)",
+      "1": "C≡C (Alkin)"
     },
     "model_pred_idx": 0,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "C=C (Alken)"
+    ],
     "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"

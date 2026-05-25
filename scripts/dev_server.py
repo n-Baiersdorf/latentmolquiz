@@ -4,32 +4,11 @@
 from __future__ import annotations
 
 import argparse
-import json
-import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-DEBUG_LOG = Path(__file__).resolve().parent.parent / ".cursor" / "debug-8a6053.log"
-
 
 class DevHandler(SimpleHTTPRequestHandler):
-    def do_POST(self) -> None:
-        if self.path == "/__debug/ingest":
-            length = int(self.headers.get("Content-Length", 0))
-            body = self.rfile.read(length) if length else b""
-            try:
-                payload = json.loads(body.decode("utf-8") or "{}")
-                payload.setdefault("timestamp", int(time.time() * 1000))
-                DEBUG_LOG.parent.mkdir(parents=True, exist_ok=True)
-                with DEBUG_LOG.open("a", encoding="utf-8") as f:
-                    f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-            except Exception:
-                pass
-            self.send_response(204)
-            self.end_headers()
-            return
-        self.send_error(404)
-
     def end_headers(self) -> None:
         # Avoid stale JS/CSS/data in browser during development
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")

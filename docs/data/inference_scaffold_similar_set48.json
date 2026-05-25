@@ -40,13 +40,18 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
+        "Ether (–O–)",
+        "–NH– (sekundäres Amin)"
+      ],
+      "fg_labels_full": [
         "Secondary amine",
         "Ether"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Ether"
+        "Ether (–O–)",
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -85,15 +90,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Tertiary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -134,13 +141,15 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine"
+        "–NH– (sekundäres Amin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Secondary amine"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin"
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C6H7N3"
     },
@@ -179,17 +188,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Primary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Primary amine",
-        "Tertiary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–NH₂ (primäres Amin)"
       ],
-      "fg_primary_de": "Primäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Primary amine"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Primäres Amin",
-        "Tertiäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–NH₂ (primäres Amin)"
       ],
       "mol_formula": "C6H10N2O"
     }
@@ -849,46 +861,65 @@
   ],
   "fg_analysis": {
     "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
+    "majority_fg_de": "–NH– (sekundäres Amin)",
     "majority_count": 2,
     "other_primaries_de": [
-      "Sekundäres Amin",
-      "Primäres Amin"
+      "–NH– (sekundäres Amin)",
+      "O im Ring (cycl. Ether)"
     ],
-    "gt_fg": "Tertiary amine",
-    "gt_fg_de": "Tertiäres Amin",
+    "gt_fg": "Ring O aliph",
+    "gt_fg_de": "O im Ring (cycl. Ether)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [],
+    "gt_instead_fgs_de": [
+      "O im Ring (cycl. Ether)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Primäres Amin": "Primäres Amin (-NH₂): Stickstoff mit zwei Wasserstoffen",
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH₂ (primäres Amin)": {
+        "text": "NH₂ an Kette, nicht im Ring. Typisch: primäres Amin.",
+        "image": "fg_ref/primary_amine.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
       0,
-      2,
       3
     ],
     "alt_gt_fgs": {
-      "0": "Tertiary amine",
-      "2": "Ether",
+      "0": "Ether",
       "3": "Primary amine"
     },
     "alt_gt_fgs_de": {
-      "0": "Tertiäres Amin",
-      "2": "Ether",
-      "3": "Primäres Amin"
+      "0": "Ether (–O–)",
+      "3": "–NH₂ (primäres Amin)"
     },
     "model_pred_idx": 0,
     "model_alt_correct": true,
-    "model_exclusive_fgs_de": [],
-    "model_lacks_fgs_de": [
-      "Tertiäres Amin"
+    "model_exclusive_fgs_de": [
+      "Ether (–O–)"
     ],
+    "model_lacks_fgs_de": [],
     "model_without_n_fg": false,
     "source": "rdkit"
   }

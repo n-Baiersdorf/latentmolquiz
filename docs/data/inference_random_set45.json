@@ -38,13 +38,23 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "Ether (–O–)",
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Ether",
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "Ether (–O–)",
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C7H8O2"
     },
@@ -85,11 +95,15 @@
       },
       "fg_primary": "Ether",
       "fg_labels": [
+        "Ether (–O–)"
+      ],
+      "fg_labels_full": [
         "Ether"
       ],
-      "fg_primary_de": "Ether",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "Ether (–O–)",
       "fg_labels_de": [
-        "Ether"
+        "Ether (–O–)"
       ],
       "mol_formula": "C7H14O2"
     },
@@ -128,13 +142,18 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
-      "fg_primary_de": "Ether",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Ether"
+        "O im Ring (cycl. Ether)"
       ],
       "mol_formula": "C8H12O"
     },
@@ -175,13 +194,18 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "Amide",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–CONR– (Amid)"
       ],
-      "fg_primary_de": "Amid",
+      "fg_labels_full": [
+        "Amide",
+        "Ring O aliph"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "Amid",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–CONR– (Amid)"
       ],
       "mol_formula": "C6H9NO2"
     }
@@ -657,37 +681,128 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.11393647342920303,
+      0.06324429139494896,
+      0.09635485708713531
+    ],
+    [
+      0.12253540307283402,
+      1.0,
+      0.17328418493270875,
+      0.12358700335025788
+    ],
+    [
+      0.05926833301782608,
+      0.15521724224090577,
+      1.0,
+      0.0835794061422348
+    ],
+    [
+      0.12612475007772445,
+      0.14506933689117432,
+      0.11548872292041779,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.0060720669236046165,
+      0.0036583386325017044,
+      0.004880143792414917
+    ],
+    [
+      0.003521474227785344,
+      0.0,
+      0.005224982579536451,
+      0.0038860018619634638
+    ],
+    [
+      0.002412328947696607,
+      0.011029684874942654,
+      0.0,
+      0.003917878390183154
+    ],
+    [
+      0.00413847917561233,
+      0.003630305176566881,
+      0.006797235913167941,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Ether",
-    "majority_fg_de": "Ether",
-    "majority_count": 3,
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
+    "majority_count": 2,
     "other_primaries_de": [
-      "Ether"
+      "O im Ring (cycl. Ether)",
+      "Ether (–O–)"
     ],
     "gt_fg": "Amide",
-    "gt_fg_de": "Amid",
+    "gt_fg_de": "–CONR– (Amid)",
     "gt_idx": 3,
-    "shared_fgs_de": [
-      "Ether"
-    ],
-    "non_gt_shared_fgs_de": [
-      "Ether"
-    ],
+    "shared_fgs_de": [],
+    "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Amid"
+      "–CONR– (Amid)"
     ],
+    "gt_instead_fgs_de": [
+      "–CONR– (Amid)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Amid": "Amid (-CONH-): Stickstoff direkt an einer Carbonylgruppe (C=O)",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "–CONR– (Amid)": {
+        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
+        "image": "fg_ref/amide.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "Ether (–O–)": {
+        "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
+        "image": "fg_ref/ether.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
-    "alt_gt_indices": [],
-    "alt_gt_fgs": {},
-    "alt_gt_fgs_de": {},
+    "alt_gt_indices": [
+      0,
+      1,
+      2
+    ],
+    "alt_gt_fgs": {
+      "0": "Alkyne",
+      "1": "Ring O aliph",
+      "2": "Alkene"
+    },
+    "alt_gt_fgs_de": {
+      "0": "C≡C (Alkin)",
+      "1": "O im Ring (cycl. Ether)",
+      "2": "C=C (Alken)"
+    },
     "model_pred_idx": 1,
-    "model_alt_correct": false,
+    "model_alt_correct": true,
     "model_exclusive_fgs_de": [],
-    "model_lacks_fgs_de": [],
+    "model_lacks_fgs_de": [
+      "O im Ring (cycl. Ether)"
+    ],
     "model_without_n_fg": false,
     "source": "rdkit"
   }

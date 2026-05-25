@@ -38,15 +38,21 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Imine C=N-H",
       "fg_labels": [
-        "Secondary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C=N–H (Imin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Imine C=N-H",
+        "Ring O aliph",
+        "Alkene"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C=N–H (Imin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "C=N–H (Imin)"
       ],
       "mol_formula": "C6H10N2O"
     },
@@ -85,17 +91,23 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Secondary amine",
-        "Alcohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)",
+        "–NH– (sekundäres Amin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Secondary amine",
+        "Alcohol"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Alkohol",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–OH (Alkohol)",
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C6H11NO2"
     },
@@ -134,15 +146,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "Secondary amine",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–NH– (sekundäres Amin)"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Ring O aliph",
+        "Secondary amine"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Ether"
+        "O im Ring (cycl. Ether)",
+        "–NH– (sekundäres Amin)"
       ],
       "mol_formula": "C7H13NO"
     },
@@ -181,13 +198,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Alkyne",
       "fg_labels": [
-        "Tertiary amine"
+        "C≡C (Alkin)"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_labels_full": [
+        "Alkyne"
+      ],
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "C≡C (Alkin)",
       "fg_labels_de": [
-        "Tertiäres Amin"
+        "C≡C (Alkin)"
       ],
       "mol_formula": "C8H13N"
     }
@@ -663,42 +684,126 @@
     ],
     "gap_pred_unit": "eV"
   },
-  "fg_analysis": {
-    "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
-    "majority_count": 3,
-    "other_primaries_de": [
-      "Sekundäres Amin"
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.14967076778411864,
+      0.17047910690307616,
+      0.17525144219398497
     ],
-    "gt_fg": "Tertiary amine",
-    "gt_fg_de": "Tertiäres Amin",
+    [
+      0.10463247001171112,
+      1.0,
+      0.15576719045639037,
+      0.22406383454799653
+    ],
+    [
+      0.10594655573368073,
+      0.13546641170978546,
+      1.0,
+      0.13947187960147858
+    ],
+    [
+      0.12608000189065932,
+      0.21761475801467894,
+      0.13661292791366578,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.005441158344401825,
+      0.008983121541016206,
+      0.01028343047394649
+    ],
+    [
+      0.0036485810717392948,
+      0.0,
+      0.007021866599683849,
+      0.013183277610771224
+    ],
+    [
+      0.003354364062265855,
+      0.0024978390402627866,
+      0.0,
+      0.0054231913095707995
+    ],
+    [
+      0.0015353632522512308,
+      0.00850164082162785,
+      0.004252597972044044,
+      0.0
+    ]
+  ],
+  "fg_analysis": {
+    "majority_fg": "Ring O aliph",
+    "majority_fg_de": "O im Ring (cycl. Ether)",
+    "majority_count": 2,
+    "other_primaries_de": [
+      "C=N–H (Imin)",
+      "O im Ring (cycl. Ether)"
+    ],
+    "gt_fg": "Alkyne",
+    "gt_fg_de": "C≡C (Alkin)",
     "gt_idx": 3,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
-      "Sekundäres Amin",
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_lacks_fgs_de": [
-      "Sekundäres Amin",
-      "Ether"
+      "O im Ring (cycl. Ether)"
     ],
     "gt_extra_fgs_de": [
-      "Tertiäres Amin"
+      "C≡C (Alkin)"
     ],
+    "gt_instead_fgs_de": [
+      "C≡C (Alkin)"
+    ],
+    "gt_lacks_coarse_de": [],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Ether": "Ether (-O-): Sauerstoff verbindet zwei Kohlenstoff-Reste"
+      "C=N–H (Imin)": {
+        "text": "Struktur: C=N–H. Typisch: primäres Imin (Aldimin).",
+        "image": "fg_ref/imine_nh.png"
+      },
+      "O im Ring (cycl. Ether)": {
+        "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
+        "image": "fg_ref/ring_o_aliph.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C≡C (Alkin)": {
+        "text": "C≡C-Dreifachbindung, nicht aromatisch.",
+        "image": "fg_ref/alkyne.png"
+      },
+      "C=C (Alken)": {
+        "text": "C=C außerhalb aromatischer Systeme.",
+        "image": "fg_ref/alkene.png"
+      },
+      "N im Ring": {
+        "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
+        "image": "fg_ref/ring_n_coarse.png"
+      }
     },
     "alt_gt_indices": [
+      0,
       1
     ],
     "alt_gt_fgs": {
+      "0": "Imine C=N-H",
       "1": "Alcohol"
     },
     "alt_gt_fgs_de": {
-      "1": "Alkohol"
+      "0": "C=N–H (Imin)",
+      "1": "–OH (Alkohol)"
     },
     "model_pred_idx": 3,
     "model_alt_correct": false,

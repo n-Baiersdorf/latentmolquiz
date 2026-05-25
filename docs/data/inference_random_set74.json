@@ -40,15 +40,21 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
+        "–OH (Alkohol)",
+        "–NH– (sekundäres Amin)",
+        "C=O am Kettenende (Aldehyd)"
+      ],
+      "fg_labels_full": [
         "Secondary amine",
         "Alcohol",
         "Aldehyde"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [],
+      "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Alkohol",
-        "Aldehyd"
+        "–OH (Alkohol)",
+        "–NH– (sekundäres Amin)",
+        "C=O am Kettenende (Aldehyd)"
       ],
       "mol_formula": "C6H11NO2"
     },
@@ -87,15 +93,22 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Ring N-H",
       "fg_labels": [
-        "Secondary amine",
+        "N–H im Ring",
+        "Halogen (F/Cl/…)"
+      ],
+      "fg_labels_full": [
+        "Ring N-H",
         "Halogen"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_ring_n_detail_de": [
+        "N–H im Ring"
+      ],
+      "fg_primary_de": "N–H im Ring (Heterocycl)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Halogen"
+        "N–H im Ring",
+        "Halogen (F/Cl/…)"
       ],
       "mol_formula": "C6H6FNO"
     },
@@ -134,15 +147,27 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Tertiary amine",
+      "fg_primary": "Imine C=N-C",
       "fg_labels": [
-        "Tertiary amine",
+        "N und O im Ring (N,O-Heterocycl)",
+        "N mit N=N-Bindung",
+        "C=N–C (Imin)"
+      ],
+      "fg_labels_full": [
+        "Imine C=N-C",
+        "Ring N",
+        "Ring O arom",
         "Halogen"
       ],
-      "fg_primary_de": "Tertiäres Amin",
+      "fg_ring_n_detail_de": [
+        "N mit N=N-Bindung",
+        "N im Ring"
+      ],
+      "fg_primary_de": "C=N–C (Imin)",
       "fg_labels_de": [
-        "Tertiäres Amin",
-        "Halogen"
+        "N und O im Ring (N,O-Heterocycl)",
+        "N mit N=N-Bindung",
+        "C=N–C (Imin)"
       ],
       "mol_formula": "C3H3FN4O"
     },
@@ -181,15 +206,27 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Secondary amine",
+      "fg_primary": "Imine C=N-C",
       "fg_labels": [
-        "Secondary amine",
-        "Tertiary amine"
+        "N mit N–N-Bindung",
+        "N im Ring",
+        "N–H im Ring"
       ],
-      "fg_primary_de": "Sekundäres Amin",
+      "fg_labels_full": [
+        "Imine C=N-C",
+        "Ring N",
+        "Ring N-H"
+      ],
+      "fg_ring_n_detail_de": [
+        "N mit N–N-Bindung",
+        "N im Ring",
+        "N–H im Ring"
+      ],
+      "fg_primary_de": "C=N–C (Imin)",
       "fg_labels_de": [
-        "Sekundäres Amin",
-        "Tertiäres Amin"
+        "N mit N–N-Bindung",
+        "N im Ring",
+        "N–H im Ring"
       ],
       "mol_formula": "C5H8N4"
     }
@@ -665,39 +702,150 @@
     ],
     "gap_pred_unit": "eV"
   },
+  "pea_matrix_mean": [
+    [
+      1.0,
+      0.1318187415599823,
+      0.10257419496774674,
+      0.1096474289894104
+    ],
+    [
+      0.13283373415470123,
+      1.0,
+      0.09964399337768555,
+      0.14549667835235597
+    ],
+    [
+      0.20925629436969756,
+      0.1929243564605713,
+      1.0,
+      0.07575753480195999
+    ],
+    [
+      0.2008458763360977,
+      0.22781215012073516,
+      0.06205811947584152,
+      1.0
+    ]
+  ],
+  "pea_matrix_std": [
+    [
+      0.0,
+      0.0032695646667826933,
+      0.003122722178777003,
+      0.008786880159830384
+    ],
+    [
+      0.0051626032375670225,
+      0.0,
+      0.005207342574697385,
+      0.013271752507339162
+    ],
+    [
+      0.014412259795058726,
+      0.00961327585777824,
+      0.0,
+      0.016976708583717928
+    ],
+    [
+      0.02118484179551342,
+      0.015937005305348265,
+      0.012286311076082065,
+      0.0
+    ]
+  ],
   "fg_analysis": {
-    "majority_fg": "Secondary amine",
-    "majority_fg_de": "Sekundäres Amin",
-    "majority_count": 3,
+    "majority_fg": "Imine C=N-C",
+    "majority_fg_de": "C=N–C (Imin)",
+    "majority_count": 2,
     "other_primaries_de": [
-      "Sekundäres Amin",
-      "Tertiäres Amin"
+      "N–H im Ring (Heterocycl)",
+      "C=N–C (Imin)"
     ],
     "gt_fg": "Secondary amine",
-    "gt_fg_de": "Sekundäres Amin",
+    "gt_fg_de": "–NH– (sekundäres Amin)",
     "gt_idx": 0,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
     "gt_lacks_fgs_de": [],
     "gt_extra_fgs_de": [
-      "Alkohol",
-      "Aldehyd"
+      "–OH (Alkohol)",
+      "C=O am Kettenende (Aldehyd)"
     ],
+    "gt_instead_fgs_de": [
+      "–OH (Alkohol)",
+      "C=O am Kettenende (Aldehyd)"
+    ],
+    "gt_lacks_coarse_de": [
+      "N im Ring"
+    ],
+    "gt_extra_coarse_de": [],
+    "coarse_criterion_de": "N im Ring",
     "glossary": {
-      "Sekundäres Amin": "Sekundäres Amin (-NH-): Stickstoff mit zwei C-N-Bindungen",
-      "Tertiäres Amin": "Tertiäres Amin (-N≡): Stickstoff mit drei C-N-Bindungen, kein N-H",
-      "Alkohol": "Alkohol (-OH): Sauerstoff mit Wasserstoff direkt am Kohlenstoff",
-      "Aldehyd": "Aldehyd (-CHO): Carbonylgruppe am Kettenende",
-      "Halogen": "Halogen (-F, -Cl, …): Fluor, Chlor oder ähnliches am Kohlenstoff"
+      "C=N–C (Imin)": {
+        "text": "Struktur: C=N–C (kein N–H). Typisch: Imin.",
+        "image": "fg_ref/imine_cnc.png"
+      },
+      "N im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N ohne H (z. B. Pyridin). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_1.png"
+      },
+      "N–H im Ring (Heterocycl)": {
+        "text": "Grob: aromatischer Ring-N mit H (z. B. Pyrrol). Details in der Tabelle.",
+        "image": "fg_ref/ring_n_h_arom.png"
+      },
+      "O im aromatischen Ring": {
+        "text": "sp2-O im aromatischen Ring (z. B. Furan). Nicht Ether und nicht gesättigtes Ring-O.",
+        "image": "fg_ref/ring_o_arom.png"
+      },
+      "–NH– (sekundäres Amin)": {
+        "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
+        "image": "fg_ref/secondary_amine.png"
+      },
+      "–OH (Alkohol)": {
+        "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
+        "image": "fg_ref/alcohol.png"
+      },
+      "C=O am Kettenende (Aldehyd)": {
+        "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
+        "image": "fg_ref/aldehyde.png"
+      },
+      "Halogen (F/Cl/…)": {
+        "text": "F/Cl/Br/I als Substituent.",
+        "image": "fg_ref/halogen.png"
+      },
+      "N–H im Ring": {
+        "text": "Fein: aromatischer Ring-N mit H (Pyrrol-typ).",
+        "image": "fg_ref/ring_n_h.png"
+      },
+      "N mit N=N-Bindung": {
+        "text": "Benachbarte Ring-N mit N=N (Kekulé). RDKit zählt je nach Darstellung; 2x = zwei solche Bindungen.",
+        "image": "fg_ref/ring_n_nn_eq.png"
+      },
+      "N im Ring": {
+        "text": "Fein: aromatischer Ring-N ohne H (Pyridin-typ). Nicht N–H und nicht N–N-Sonderfall.",
+        "image": "fg_ref/ring_n_coarse.png"
+      },
+      "N mit N–N-Bindung": {
+        "text": "Benachbarte Ring-N mit N–N-Einzelbindung (Kekulé). Oft zusätzlich N–H.",
+        "image": "fg_ref/ring_n_nn_single.png"
+      },
+      "N und O im Ring (N,O-Heterocycl)": {
+        "text": "Aromatischer Ring mit N und O (N,O-Heterozyklus).",
+        "image": "fg_ref/ring_no.png"
+      }
     },
     "alt_gt_indices": [
+      1,
       2
     ],
     "alt_gt_fgs": {
-      "2": "Secondary amine"
+      "1": "Ring N-H",
+      "2": "Ring O arom"
     },
     "alt_gt_fgs_de": {
-      "2": "Sekundäres Amin"
+      "1": "N–H im Ring (Heterocycl)",
+      "2": "O im aromatischen Ring"
     },
     "model_pred_idx": 1,
     "model_alt_correct": false,
