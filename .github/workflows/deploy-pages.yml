@@ -1,4 +1,4 @@
-# Nur actions/checkout@v4 (lädt auf euren Runnern); kein codeload für andere Actions.
+# Standard-Pages-Deploy (aktiv, sobald das GitHub-Konto nicht mehr suspended ist).
 name: Deploy GitHub Pages
 
 on:
@@ -7,32 +7,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: pages-git
+  group: pages
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          fetch-depth: 1
-
-      - name: Push docs/ to gh-pages branch
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -rf /tmp/gh-pages-staging
-          mkdir -p /tmp/gh-pages-staging
-          cp -a docs/. /tmp/gh-pages-staging/
-          touch /tmp/gh-pages-staging/.nojekyll
-          cd /tmp/gh-pages-staging
-          git init -q
-          git add -A
-          git commit -q -m "deploy: docs from ${GITHUB_SHA}"
-          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4
