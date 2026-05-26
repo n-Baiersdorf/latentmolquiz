@@ -18,14 +18,6 @@ import { initFgTutorial, closeFgTutorial } from "./fg-tutorial.js";
 import { renderPeaHeatmap } from "./pea-heatmap.js";
 import { showCuratorScreen, ensureCuratorReady } from "./curator.js";
 import { getEffectiveModelPerspective } from "./model-perspective.js";
-import {
-  bindDetailsKeyHintSync,
-  initKeyHintsLayout,
-  isCompactKeyHints,
-  labelWithKeyHint,
-  setButtonKeyHint,
-  syncDetailsKeyHint,
-} from "./key-hints.js";
 const SCREEN_ID_BY_NAME = {
   intro: "screen-intro",
   quiz: "screen-quiz",
@@ -89,7 +81,6 @@ function showScreen(name) {
   });
   SCREENS.quiz?.classList.remove("quiz-set-in", "quiz-set-out");
   placeThemeButton(name);
-  refreshKeyHintsLayout();
 }
 
 const THEME_SLOTS = {
@@ -296,96 +287,6 @@ function updateQuizChrome() {
     updatePoolShuffleToggleUi();
   }
   if (isPoolSpeedrunMode()) updateSpeedrunScoreLive();
-  updateQuizKeyHints();
-}
-
-function updateQuizTopHintsEl() {
-  const el = document.getElementById("quiz-kbd-hints");
-  if (!el) return;
-  if (!SCREENS.quiz?.classList.contains("active")) {
-    el.innerHTML = "";
-    el.classList.add("hidden");
-    return;
-  }
-
-  const items = [];
-  if (isPoolSpeedrunMode()) {
-    items.push(["1–4", "wählen"], ["H", "Menü"]);
-  } else {
-    items.push(["1–4", "Molekül"], ["←", "Set"], ["→", "Set"]);
-    if (isEndlessPoolMode()) items.push(["R", "Shuffle"]);
-    if (state.resolved) {
-      items.push(["F", "FG-Tabelle"], ["P", "PEA"], ["Enter", "Weiter"]);
-    }
-    items.push(["H", "Menü"]);
-  }
-
-  el.innerHTML = items
-    .map(
-      ([key, text]) =>
-        `<span class="quiz-kbd-item"><kbd class="key-hint">${key}</kbd> ${text}</span>`
-    )
-    .join('<span class="quiz-kbd-sep" aria-hidden="true">·</span>');
-  el.classList.toggle("hidden", isCompactKeyHints());
-}
-
-function updateQuizKeyHints() {
-  const btnNext = document.getElementById("btn-next");
-  const btnHome = document.getElementById("btn-home");
-  const btnPrev = document.getElementById("btn-prev");
-  const shuffleBtn = document.getElementById("pool-shuffle-toggle");
-
-  if (btnNext && !btnNext.classList.contains("hidden")) {
-    setButtonKeyHint(btnNext, "Weiter →", state.resolved ? "Enter" : "→");
-  }
-
-  setButtonKeyHint(btnHome, "Hauptmenü", "H");
-
-  if (btnPrev && !btnPrev.classList.contains("hidden")) {
-    btnPrev.innerHTML = labelWithKeyHint("←", "←", { forcePrefix: true });
-    btnPrev.setAttribute("aria-label", "Vorheriges Set (Pfeil links)");
-  }
-
-  if (shuffleBtn && isEndlessPoolMode()) {
-    const stateEl = shuffleBtn.querySelector(".pool-shuffle-state");
-    const onOff = stateEl?.textContent?.trim() || "aus";
-    const label = `Shuffle: ${onOff}`;
-    shuffleBtn.innerHTML = `${labelWithKeyHint(label, "R", { forcePrefix: true })}`;
-    shuffleBtn.setAttribute(
-      "title",
-      "Gemischte Reihenfolge ein/aus — bei „an“ folgt Weiter/Enter der gemischten Permutation"
-    );
-  }
-
-  syncDetailsKeyHint(document.getElementById("fg-highlight-details"));
-  syncDetailsKeyHint(document.getElementById("pea-panel-details"));
-  updateQuizTopHintsEl();
-}
-
-function refreshKeyHintsLayout() {
-  updateQuizKeyHints();
-  const btnStart = document.getElementById("btn-start");
-  if (btnStart && btnStart.getAttribute("aria-busy") !== "true" && !btnStart.disabled) {
-    setButtonKeyHint(btnStart, "Los geht's", "1");
-  }
-  document.querySelectorAll("#screen-intro .intro-link[data-label]").forEach((btn) => {
-    const key = (btn.dataset.keyHint || "").replace(/^\(|\)$/g, "");
-    if (btn.dataset.label) setButtonKeyHint(btn, btn.dataset.label, key || null);
-  });
-  const introTutorial = document.getElementById("btn-intro-fg-tutorial");
-  if (introTutorial) {
-    setButtonKeyHint(introTutorial, "Tutorial: Funktionelle Gruppen kurz erklärt", "2");
-  }
-  const introInfo = document.getElementById("btn-intro-more-info");
-  if (introInfo) setButtonKeyHint(introInfo, "Mehr zum KI-Modell", "5");
-  for (const id of ["btn-speedrun-outro-home", "btn-outro-home"]) {
-    setButtonKeyHint(document.getElementById(id), "Hauptmenü", "H");
-  }
-  const theme =
-    document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-  const followsSystem =
-    localStorage.getItem(THEME_KEY) !== "light" && localStorage.getItem(THEME_KEY) !== "dark";
-  updateThemeButton(theme, followsSystem);
 }
 
 function updatePoolToolbarFields() {
@@ -505,7 +406,6 @@ function updatePoolShuffleToggleUi() {
   btn.setAttribute("aria-pressed", on ? "true" : "false");
   btn.classList.toggle("is-on", on);
   if (stateEl) stateEl.textContent = on ? "an" : "aus";
-  updateQuizKeyHints();
 }
 
 function togglePoolShuffle() {
@@ -1260,8 +1160,6 @@ function toggleFgHighlightDetails() {
   const details = document.getElementById("fg-highlight-details");
   if (!details) return;
   details.open = !details.open;
-  syncDetailsKeyHint(details);
-  updateQuizTopHintsEl();
   if (details.open) {
     scrollFgHighlightDetailsIntoView();
   }
@@ -1282,8 +1180,6 @@ function togglePeaPanelDetails() {
   const details = document.getElementById("pea-panel-details");
   if (!details) return;
   details.open = !details.open;
-  syncDetailsKeyHint(details);
-  updateQuizTopHintsEl();
   if (details.open) {
     scrollPeaPanelIntoView();
   }
@@ -1554,6 +1450,11 @@ function showOutro() {
   showScreen("outro");
 }
 
+function actionButtonHtml(label, hint = null) {
+  if (!hint) return label;
+  return `${label} <span class="key-hint key-hint-suffix" aria-hidden="true">(${hint})</span>`;
+}
+
 function setStartButtonState(loading, errorMsg = null) {
   const btn = document.getElementById("btn-start");
   if (!btn) return;
@@ -1566,7 +1467,7 @@ function setStartButtonState(loading, errorMsg = null) {
   }
 
   btn.removeAttribute("aria-busy");
-  setButtonKeyHint(btn, "Los geht's", "1");
+  btn.innerHTML = actionButtonHtml("Los geht's", "1");
   btn.disabled = Boolean(errorMsg) || !state.curatedSets.length;
 }
 
@@ -1637,9 +1538,21 @@ function bindQuizControls() {
   });
 }
 
-function onStartClick() {
+async function onStartClick() {
   if (!state.appReady) {
     showIntroLoadError("Quiz wird noch geladen — bitte einen Moment warten.");
+    return;
+  }
+  if (isCuratorArmed()) {
+    setCuratorArmed(false);
+    document.querySelector("#screen-intro .brand-title")?.classList.remove("curator-armed");
+    try {
+      await ensureCuratorReady();
+      await showCuratorScreen();
+    } catch (err) {
+      console.error(err);
+      showIntroLoadError(`Kurator konnte nicht geladen werden: ${err.message}`);
+    }
     return;
   }
   if (state.loadError || !state.curatedSets.length) {
@@ -1669,12 +1582,14 @@ function restoreIntroLinkBtn(btn, loading) {
   btn.disabled = loading;
   const base = btn.dataset.label;
   if (!base) return;
-  const key = (btn.dataset.keyHint || "").replace(/^\(|\)$/g, "");
-  if (loading) {
-    btn.textContent = "Lade …";
-    return;
+  let key = btn.dataset.keyHint;
+  if (!key) {
+    key = btn.querySelector(".key-hint-suffix")?.textContent?.trim() || "";
+    if (key) btn.dataset.keyHint = key;
   }
-  setButtonKeyHint(btn, base, key || null);
+  btn.innerHTML = loading
+    ? "Lade …"
+    : `${base} <span class="key-hint key-hint-suffix" aria-hidden="true">${key}</span>`;
 }
 
 function setPoolButtonsLoading(loading) {
@@ -1957,23 +1872,45 @@ function initKeyboard() {
   });
 }
 
+const CURATOR_ARM_KEY = "jufo_curator_armed";
+const CURATOR_TITLE_HOLD_MS = 3000;
+
+function isCuratorArmed() {
+  return sessionStorage.getItem(CURATOR_ARM_KEY) === "1";
+}
+
+function setCuratorArmed(armed) {
+  if (armed) sessionStorage.setItem(CURATOR_ARM_KEY, "1");
+  else sessionStorage.removeItem(CURATOR_ARM_KEY);
+}
+
 function initCuratorEntry() {
-  const intro = document.querySelector("#screen-intro h1");
-  if (!intro) return;
-  let timer = null;
-  const start = () => {
-    timer = setTimeout(() => {
-      showCuratorScreen().catch((err) => {
-        console.error("Kurator konnte nicht geladen werden:", err);
-      });
-    }, 800);
+  const title = document.querySelector("#screen-intro .brand-title");
+  if (!title) return;
+
+  let holdTimer = null;
+  const syncArmedClass = () => {
+    title.classList.toggle("curator-armed", isCuratorArmed());
   };
-  const stop = () => clearTimeout(timer);
-  intro.addEventListener("mousedown", start);
-  intro.addEventListener("mouseup", stop);
-  intro.addEventListener("mouseleave", stop);
-  intro.addEventListener("touchstart", start, { passive: true });
-  intro.addEventListener("touchend", stop);
+  syncArmedClass();
+
+  const arm = () => {
+    setCuratorArmed(true);
+    syncArmedClass();
+  };
+
+  const startHold = () => {
+    clearTimeout(holdTimer);
+    holdTimer = window.setTimeout(arm, CURATOR_TITLE_HOLD_MS);
+  };
+  const endHold = () => clearTimeout(holdTimer);
+
+  title.addEventListener("mousedown", startHold);
+  title.addEventListener("mouseup", endHold);
+  title.addEventListener("mouseleave", endHold);
+  title.addEventListener("touchstart", startHold, { passive: true });
+  title.addEventListener("touchend", endHold);
+  title.addEventListener("touchcancel", endHold);
 }
 
 const THEME_KEY = "jufo_theme";
@@ -1982,24 +1919,25 @@ function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+function isCompactTheme() {
+  return window.matchMedia("(max-width: 767px)").matches;
+}
+
 function updateThemeButton(theme, followsSystem) {
   const btn = document.getElementById("btn-theme");
   if (!btn) return;
-  const compact = isCompactKeyHints();
+  const compact = isCompactTheme();
   const suffix = followsSystem && !compact ? " · SYS" : "";
   if (theme === "dark") {
-    const label = compact ? "☀" : `☀ HELL${suffix}`;
-    btn.innerHTML = escapeHtml(label);
+    btn.textContent = compact ? "☀" : `☀ HELL${suffix}`;
     btn.setAttribute("aria-label", followsSystem ? "Hellmodus (folgt System)" : "Hellmodus");
   } else {
-    const label = compact ? "☾" : `☾ DUNKEL${suffix}`;
-    btn.innerHTML = escapeHtml(label);
+    btn.textContent = compact ? "☾" : `☾ DUNKEL${suffix}`;
     btn.setAttribute("aria-label", followsSystem ? "Dunkelmodus (folgt System)" : "Dunkelmodus");
   }
   btn.title = followsSystem
     ? "Folgt der Systemeinstellung — Klick setzt manuelle Wahl"
     : "Manuelle Theme-Wahl";
-  updateQuizTopHintsEl();
 }
 
 function applyTheme(theme, persist = false) {
@@ -2047,12 +1985,10 @@ function initTheme() {
 
 async function init() {
   initTheme();
-  bindDetailsKeyHintSync();
-  initKeyHintsLayout(refreshKeyHintsLayout);
-  refreshKeyHintsLayout();
   initKeyboard();
   initGlossary();
   initFgTutorial();
+  initCuratorEntry();
   bindQuizControls();
   setStartButtonState(true);
 
@@ -2099,6 +2035,15 @@ async function init() {
     setStartButtonState(false, state.curatedSets.length ? null : "Keine Sets geladen");
   });
 
+  if (isCuratorMode()) {
+    try {
+      await ensureCuratorReady();
+      await showCuratorScreen();
+    } catch (err) {
+      document.getElementById("app").innerHTML =
+        `<p class="error-msg">Kurator konnte nicht geladen werden: ${escapeHtml(err.message)}</p>`;
+    }
+  }
 }
 
 init().catch((err) => {

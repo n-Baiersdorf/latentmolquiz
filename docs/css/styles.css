@@ -316,6 +316,12 @@ body {
   letter-spacing: 0.3em;
   text-transform: uppercase;
   text-shadow: 0 0 12px var(--accent-ghost);
+  cursor: default;
+  user-select: none;
+}
+
+.brand-title.curator-armed {
+  text-shadow: 0 0 14px var(--accent-ghost), 0 0 2px var(--ink);
 }
 
 .brand-claim {
@@ -436,16 +442,6 @@ h1 {
   font-weight: 600;
   opacity: 0.65;
   text-transform: none;
-}
-
-.key-hint-prefix {
-  margin-right: 0.35rem;
-}
-
-@media (max-width: 767px) {
-  .key-hint-suffix {
-    display: none;
-  }
 }
 
 .action.secondary {
@@ -659,58 +655,6 @@ h1 {
 .quiz-top-row .question {
   flex: 1 1 auto;
   min-width: 0;
-}
-
-.quiz-top-row-end {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
-  flex-shrink: 0;
-  max-width: min(22rem, 46vw);
-}
-
-.quiz-kbd-hints {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.2rem 0.35rem;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--muted);
-  line-height: 1.35;
-  text-align: right;
-}
-
-.quiz-kbd-hints.hidden {
-  display: none !important;
-}
-
-.quiz-kbd-item {
-  white-space: nowrap;
-}
-
-.quiz-kbd-sep {
-  opacity: 0.45;
-  margin: 0 0.05rem;
-}
-
-@media (max-width: 767px) {
-  .quiz-kbd-hints {
-    display: none !important;
-  }
-
-  .pool-kbd-hint {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .pool-toolbar .pool-kbd-hint {
-    display: none;
-  }
 }
 
 .counter {
@@ -1132,20 +1076,12 @@ body.compact-mol #quiz-body:not(.resolved) .mol-body {
   list-style: none;
 }
 
-.fg-highlight-details summary .details-hint-slot,
-.pea-panel-details summary .details-hint-slot {
+.fg-highlight-details summary .details-hint {
   font-weight: 400;
   font-size: 0.72rem;
   letter-spacing: 0.02em;
   text-transform: none;
   color: var(--muted);
-}
-
-.fg-highlight-details summary .details-hint-slot .key-hint,
-.pea-panel-details summary .details-hint-slot .key-hint {
-  font-size: 0.95em;
-  margin: 0 0.1rem;
-  vertical-align: baseline;
 }
 
 .fg-highlight-details summary::before {
@@ -1329,7 +1265,12 @@ body.compact-mol #quiz-body:not(.resolved) .mol-body {
   list-style: none;
 }
 
-.pea-panel-details summary .details-hint-slot {
+.pea-panel-details summary .details-hint {
+  font-weight: 400;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--muted);
   margin-left: 0.25rem;
 }
 

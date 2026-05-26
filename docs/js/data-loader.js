@@ -245,5 +245,5 @@ export function computeOffDiagonalRange(matrix) {
 }
 
 export function isCuratorMode() {
-  return false;
+  return new URLSearchParams(window.location.search).get("mode") === "curator";
 }

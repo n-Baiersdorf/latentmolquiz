@@ -14,7 +14,7 @@
       }
     })();
   </script>
-  <link rel="stylesheet" href="css/styles.css?v=62ef574">
+  <link rel="stylesheet" href="css/styles.css?v=2fac65a">
 </head>
 <body>
   <main id="app">
@@ -41,12 +41,12 @@
         <p class="intro-text muted">Ergänzung zur Jufo-Arbeit · 5 Sets · ~2 Minuten · kein Chemie-Wissen nötig.</p>
       </div>
       <div class="intro-start">
-        <button type="button" id="btn-start" class="action" data-ui-label="Los geht's">Los geht's</button>
+        <button type="button" id="btn-start" class="action">Los geht's <span class="key-hint key-hint-suffix" aria-hidden="true">(1)</span></button>
         <nav class="intro-links" aria-label="Weitere Einstiege">
-          <button type="button" id="btn-intro-fg-tutorial" class="text-btn intro-link" data-ui-label="Tutorial: Funktionelle Gruppen kurz erklärt">Tutorial: Funktionelle Gruppen kurz erklärt</button>
-          <button type="button" id="btn-intro-endless" class="text-btn intro-link" data-label="Weitere Sets (Pool)" data-key-hint="3">Weitere Sets (Pool)</button>
-          <button type="button" id="btn-intro-pool-speedrun" class="text-btn intro-link" data-label="Pool Speedrun (3 min)" data-key-hint="4">Pool Speedrun (3 min)</button>
-          <button type="button" id="btn-intro-more-info" class="text-btn intro-link" data-ui-label="Mehr zum KI-Modell">Mehr zum KI-Modell</button>
+          <button type="button" id="btn-intro-fg-tutorial" class="text-btn intro-link">Tutorial: Funktionelle Gruppen kurz erklärt <span class="key-hint key-hint-suffix" aria-hidden="true">(2)</span></button>
+          <button type="button" id="btn-intro-endless" class="text-btn intro-link" data-label="Weitere Sets (Pool)" data-key-hint="(3)">Weitere Sets (Pool) <span class="key-hint key-hint-suffix" aria-hidden="true">(3)</span></button>
+          <button type="button" id="btn-intro-pool-speedrun" class="text-btn intro-link" data-label="Pool Speedrun (3 min)" data-key-hint="(4)">Pool Speedrun (3 min) <span class="key-hint key-hint-suffix" aria-hidden="true">(4)</span></button>
+          <button type="button" id="btn-intro-more-info" class="text-btn intro-link">Mehr zum KI-Modell <span class="key-hint key-hint-suffix" aria-hidden="true">(5)</span></button>
         </nav>
       </div>
     </section>
@@ -64,16 +64,13 @@
             <input type="number" id="pool-jump-input" class="pool-jump-input" min="1" value="1" inputmode="numeric" aria-label="Set-Nummer im Pool">
           </label>
           <span id="pool-jump-total" class="pool-jump-total muted">/ 0</span>
-          <button type="button" id="pool-shuffle-toggle" class="nav-btn small pool-toolbar-btn pool-shuffle-toggle" aria-pressed="false" title="Gemischte Reihenfolge ein/aus — bei „an“ kommt das nächste Set erst über Weiter/Enter (Taste R)">Shuffle: <span class="pool-shuffle-state">aus</span></button>
+          <button type="button" id="pool-shuffle-toggle" class="nav-btn small pool-toolbar-btn pool-shuffle-toggle" aria-pressed="false" title="Gemischte Reihenfolge ein/aus — bei „an“ kommt das nächste Set erst über Weiter/Enter (Taste R)">Shuffle: <span class="pool-shuffle-state">aus</span> <span class="key-hint" aria-hidden="true">R</span></button>
           <span id="pool-set-id" class="pool-set-id muted"></span>
           <span class="pool-kbd-hint muted">Set-Nummer · Enter/Maus · R Shuffle an/aus · Weiter/←→ gemischt wenn an · 1–4 · F/P</span>
         </div>
         <div class="quiz-top-row">
           <h1 class="question">Welches Molekül passt nicht dazu?</h1>
-          <div class="quiz-top-row-end">
-            <span id="quiz-kbd-hints" class="quiz-kbd-hints hidden" aria-hidden="true"></span>
-            <span id="theme-slot-quiz" class="theme-slot"></span>
-          </div>
+          <span id="theme-slot-quiz" class="theme-slot"></span>
         </div>
       </div>
 
@@ -83,14 +80,14 @@
 
         <div id="resolution" class="resolution hidden">
           <div id="fg-highlight" class="fg-highlight" aria-live="polite"></div>
-          <details id="fg-highlight-details" class="fg-highlight-details hidden" data-key-hint="F">
-            <summary>Funktionelle Gruppen je Molekül<span class="details-hint-slot"></span></summary>
+          <details id="fg-highlight-details" class="fg-highlight-details hidden">
+            <summary>Funktionelle Gruppen je Molekül <span class="details-hint">Taste F</span></summary>
             <div id="fg-summary" class="fg-summary"></div>
           </details>
           <div id="fg-model-perspective" class="fg-model-perspective hidden" aria-live="polite"></div>
           <section id="pea-panel" class="pea-panel">
-            <details id="pea-panel-details" class="pea-panel-details" data-key-hint="P">
-              <summary>PEA-Matrix — wie das Modell die Moleküle mischt<span class="details-hint-slot"></span></summary>
+            <details id="pea-panel-details" class="pea-panel-details">
+              <summary>PEA-Matrix — wie das Modell die Moleküle mischt <span class="details-hint">Taste P</span></summary>
               <div class="pea-panel-body">
                 <p id="pea-panel-caption" class="pea-caption muted">
                   <strong>PEA</strong> (Perspective Ensemble Attention): Zeile = Ziel-Molekül, Spalte = Quelle — Wert = Anteil, mit dem die Quelle in die Ziel-Darstellung einfließt (Mittel über 5 Seeds).
@@ -106,9 +103,9 @@
       <nav class="nav">
         <div class="nav-left">
           <button type="button" id="btn-prev" class="nav-btn" disabled aria-label="Vorheriges Set">←</button>
-          <button type="button" id="btn-home" class="nav-btn nav-btn-menu" data-ui-label="Hauptmenü">Hauptmenü</button>
+          <button type="button" id="btn-home" class="nav-btn nav-btn-menu">Hauptmenü <span class="key-hint key-hint-suffix" aria-hidden="true">(H)</span></button>
         </div>
-        <button type="button" id="btn-next" class="nav-btn action hidden" aria-keyshortcuts="ArrowRight Enter Space" data-ui-label="Weiter →">Weiter →</button>
+        <button type="button" id="btn-next" class="nav-btn action hidden" aria-keyshortcuts="ArrowRight Enter Space">Weiter →</button>
       </nav>
     </section>
 
@@ -117,7 +114,7 @@
         <h1 class="title-spaced">Zeit!</h1>
         <div class="outro-head-actions">
           <span id="theme-slot-speedrun-outro" class="theme-slot"></span>
-          <button type="button" id="btn-speedrun-outro-home" class="text-btn" data-ui-label="Hauptmenü">Hauptmenü</button>
+          <button type="button" id="btn-speedrun-outro-home" class="text-btn">Hauptmenü <span class="key-hint key-hint-suffix" aria-hidden="true">(H)</span></button>
         </div>
       </div>
       <p id="speedrun-final-score" class="lead"></p>
@@ -132,7 +129,7 @@
         <h1 class="title-spaced">Danke fürs Mitmachen!</h1>
         <div class="outro-head-actions">
           <span id="theme-slot-outro" class="theme-slot"></span>
-          <button type="button" id="btn-outro-home" class="text-btn" data-ui-label="Hauptmenü">Hauptmenü</button>
+          <button type="button" id="btn-outro-home" class="text-btn">Hauptmenü <span class="key-hint key-hint-suffix" aria-hidden="true">(H)</span></button>
         </div>
       </div>
       <p id="outro-score" class="lead"></p>
@@ -153,6 +150,47 @@
       </div>
       <div id="info-content" class="info-content">
         <p class="muted">Lade …</p>
+      </div>
+    </section>
+
+    <section id="screen-curator" class="screen">
+      <div class="curator-head">
+        <h1>Kurator</h1>
+        <div class="curator-head-actions">
+          <span id="theme-slot-curator" class="theme-slot"></span>
+          <button type="button" id="btn-back-quiz" class="text-btn">← Quiz</button>
+        </div>
+      </div>
+
+      <div class="curator-controls">
+        <select id="filter-strategy">
+          <option value="">Alle Strategien</option>
+          <option value="scaffold_similar">scaffold_similar</option>
+          <option value="random">random</option>
+        </select>
+        <select id="filter-category">
+          <option value="">Alle Kategorien</option>
+          <option value="perfect">5/5 korrekt</option>
+          <option value="confident_wrong">0/5 falsch</option>
+          <option value="scattered">Uneinig</option>
+        </select>
+        <label class="check"><input type="checkbox" id="filter-kept-only"> Nur Auswahl</label>
+        <label class="check"><input type="checkbox" id="toggle-properties" checked> HOMO, gap</label>
+        <label class="check"><input type="checkbox" id="toggle-iupac"> IUPAC</label>
+        <button type="button" id="btn-open-perspective-review" class="action small">↗ Sicht prüfen</button>
+        <button type="button" id="btn-open-fg-review" class="action small">↗ FG prüfen</button>
+        <button type="button" id="btn-export-config" class="action small">Export</button>
+        <label class="action small import-label">
+          Import
+          <input type="file" id="import-config" accept=".json" hidden>
+        </label>
+      </div>
+
+      <div id="curator-gallery" class="curator-gallery"></div>
+
+      <div id="curator-selected" class="curator-selected">
+        <h2>Auswahl (<span id="selected-count">0</span>)</h2>
+        <ol id="selected-list"></ol>
       </div>
     </section>
 
@@ -241,12 +279,13 @@
     </div>
   </div>
 
-  <script type="module" src="js/data-loader.js?v=62ef574"></script>
-  <script type="module" src="js/pea-heatmap.js?v=62ef574"></script>
-  <script type="module" src="js/fg-tutorial.js?v=62ef574"></script>
-  <script type="module" src="js/model-perspective.js?v=62ef574"></script>
-  <script type="module" src="js/perspective-curator.js?v=62ef574"></script>
-  <script type="module" src="js/fg-curator.js?v=62ef574"></script>
-  <script type="module" src="js/app.js?v=62ef574"></script>
+  <script type="module" src="js/data-loader.js?v=2fac65a"></script>
+  <script type="module" src="js/pea-heatmap.js?v=2fac65a"></script>
+  <script type="module" src="js/fg-tutorial.js?v=2fac65a"></script>
+  <script type="module" src="js/model-perspective.js?v=2fac65a"></script>
+  <script type="module" src="js/perspective-curator.js?v=2fac65a"></script>
+  <script type="module" src="js/fg-curator.js?v=2fac65a"></script>
+  <script type="module" src="js/curator.js?v=2fac65a"></script>
+  <script type="module" src="js/app.js?v=2fac65a"></script>
 </body>
 </html>
