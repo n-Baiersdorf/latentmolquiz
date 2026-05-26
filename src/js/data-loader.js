@@ -2,6 +2,8 @@
  * Data loading and set utilities for JuFo MultiMol OOO-Quiz.
  */
 
+import { applyFgOverridesToSet } from "./fg-overrides.js";
+
 const APP_BASE = new URL("../", import.meta.url).href;
 const DATA_BASE = `${APP_BASE}data/`;
 const GALLERY_BASE = `${APP_BASE}gallery/`;
@@ -160,6 +162,7 @@ export async function loadConfiguredSets(config) {
 }
 
 export function enrichSetMeta(data) {
+  data = applyFgOverridesToSet(data);
   const perSeed = data.per_seed || {};
   const seedEntries = Object.entries(perSeed).map(([seedId, s]) => ({
     seedId,

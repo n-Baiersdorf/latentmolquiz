@@ -145,16 +145,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ketone",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
+        "tert. Amin (3× C–N)",
         "C=O in der Kette (Keton)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Ketone"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C=O in der Kette (Keton)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
+        "tert. Amin (3× C–N)",
         "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C7H9NO"
@@ -194,20 +197,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Amide",
+      "fg_primary": "Lactam",
       "fg_labels": [
         "C=O im Ring (Lactam)",
         "–OH (Alkohol)",
         "C=O in der Kette (Keton)"
       ],
       "fg_labels_full": [
-        "Amide",
         "Lactam",
         "Alcohol",
         "Ketone"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "–CONR– (Amid)",
+      "fg_primary_de": "C=O im Ring (Lactam)",
       "fg_labels_de": [
         "C=O im Ring (Lactam)",
         "–OH (Alkohol)",
@@ -745,8 +747,8 @@
     "majority_count": 1,
     "other_primaries_de": [
       "O im Ring (cycl. Ether)",
-      "C=O in der Kette (Keton)",
-      "–CONR– (Amid)"
+      "tert. Amin (3× C–N)",
+      "C=O im Ring (Lactam)"
     ],
     "gt_fg": "Ring N",
     "gt_fg_de": "N im Ring (Heterocycl)",
@@ -773,10 +775,6 @@
     ],
     "highlight_mode": "extra",
     "glossary": {
-      "–CONR– (Amid)": {
-        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
-        "image": "fg_ref/amide.png"
-      },
       "C=O im Ring (Lactam)": {
         "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
         "image": "fg_ref/lactam.png"
@@ -796,6 +794,10 @@
       "–NH– (sekundäres Amin)": {
         "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
         "image": "fg_ref/secondary_amine.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
@@ -833,13 +835,13 @@
     ],
     "alt_gt_fgs": {
       "1": "Ring O aliph",
-      "2": "Ketone",
-      "3": "Amide"
+      "2": "Tertiary amine",
+      "3": "Lactam"
     },
     "alt_gt_fgs_de": {
       "1": "O im Ring (cycl. Ether)",
-      "2": "C=O in der Kette (Keton)",
-      "3": "–CONR– (Amid)"
+      "2": "tert. Amin (3× C–N)",
+      "3": "C=O im Ring (Lactam)"
     },
     "model_pred_idx": 0,
     "model_alt_correct": false,

@@ -38,17 +38,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alkyne",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "C≡C (Alkin)"
+        "C≡C (Alkin)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alkyne"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C≡C (Alkin)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "C≡C (Alkin)"
+        "C≡C (Alkin)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C8H9N"
     },
@@ -89,15 +92,18 @@
       },
       "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "O im Ring (cycl. Ether)"
+        "O im Ring (cycl. Ether)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "Ring O aliph"
+        "Ring O aliph",
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "O im Ring (cycl. Ether)"
+        "O im Ring (cycl. Ether)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H11NO"
     },
@@ -185,17 +191,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "unknown"
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Unbekannt",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C8H9N"
     }
@@ -854,13 +860,12 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Alkyne",
-    "majority_fg_de": "C≡C (Alkin)",
-    "majority_count": 1,
+    "majority_fg": "Tertiary amine",
+    "majority_fg_de": "tert. Amin (3× C–N)",
+    "majority_count": 2,
     "other_primaries_de": [
-      "C≡C (Alkin)",
-      "C=C (Alken)",
-      "Unbekannt"
+      "tert. Amin (3× C–N)",
+      "C=C (Alken)"
     ],
     "gt_fg": "Ring O aliph",
     "gt_fg_de": "O im Ring (cycl. Ether)",
@@ -889,6 +894,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "C≡C (Alkin)": {
         "text": "C≡C-Dreifachbindung, nicht aromatisch.",
         "image": "fg_ref/alkyne.png"
@@ -896,9 +905,6 @@
       "C=C (Alken)": {
         "text": "C=C außerhalb aromatischer Systeme.",
         "image": "fg_ref/alkene.png"
-      },
-      "Unbekannt": {
-        "text": "Keine typische Gruppe erkannt."
       },
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
@@ -915,36 +921,25 @@
     },
     "alt_gt_indices": [
       0,
-      2,
-      3
+      2
     ],
     "alt_gt_fgs": {
       "0": "Alkyne",
-      "2": "Alkene",
-      "3": "unknown"
+      "2": "Alkene"
     },
     "alt_gt_fgs_de": {
       "0": "C≡C (Alkin)",
-      "2": "C=C (Alken)",
-      "3": "Unbekannt"
+      "2": "C=C (Alken)"
     },
     "model_pred_idx": 3,
-    "model_alt_correct": true,
-    "model_exclusive_fgs_de": [
-      "Unbekannt"
-    ],
+    "model_alt_correct": false,
+    "model_exclusive_fgs_de": [],
     "model_lacks_fgs_de": [],
     "model_criterion_de": [
-      "Unbekannt"
+      "tert. Amin (3× C–N)"
     ],
-    "model_criterion_mode": "exclusive",
-    "model_perspective_de": {
-      "title": "Sicht des Modells",
-      "paragraphs": [
-        "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil [[Unbekannt]] nur in #4 ist."
-      ],
-      "auto": true
-    },
+    "model_criterion_mode": "primary",
+    "model_perspective_de": null,
     "model_plausible_hint_de": null,
     "model_without_n_fg": false,
     "source": "rdkit",

@@ -41,17 +41,20 @@
       "fg_primary": "Secondary amine",
       "fg_labels": [
         "–OH (Alkohol)",
-        "–NH– (sekundäres Amin)"
+        "–NH– (sekundäres Amin)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
         "Secondary amine",
+        "Tertiary amine",
         "Alcohol"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
         "–OH (Alkohol)",
-        "–NH– (sekundäres Amin)"
+        "–NH– (sekundäres Amin)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C6H8N2O"
     },
@@ -903,6 +906,10 @@
       "–NH– (sekundäres Amin)": {
         "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
         "image": "fg_ref/secondary_amine.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",

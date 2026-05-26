@@ -64,12 +64,20 @@ FG_DETECTORS: list[tuple[str, str]] = [
 
 # Custom SMARTS (RDKit fr_NH* matches any N by H-count, not true amines)
 # Extra SMARTS tried after FG_CUSTOM_SMARTS miss (e.g. lactams in kekulized forms)
+# Ring-N + exocyclic N-acyl (e.g. N-formyl-pyrrolidine) must NOT match — C=O carbon in ring.
 FG_EXTRA_SMARTS: dict[str, list[str]] = {
-    "Lactam": ["[#7;R]C(=O)"],
+    "Lactam": [
+        "[#7;R]1~[#6](=[#8])~[#6]~1",
+        "[#7;R]1~[#6](=[#8])~[#6]~[#6]~1",
+        "[#7;R]1~[#6](=[#8])~[#6]~[#6]~[#6]~1",
+        "[#7;R]1~[#6](=[#8])~[#6]~[#6]~[#6]~[#6]~1",
+        "[#7;R]1~[#6](=[#8])~[#6]~[#6]~[#6]~[#6]~[#6]~1",
+    ],
 }
 
 FG_CUSTOM_SMARTS: dict[str, str] = {
-    "Lactam": "[#7;R]~[#6](=[#8])",
+    # Cyclic amide: ring N and amidic carbonyl C are both in the same ring
+    "Lactam": "[#7;R]C(=O)[!#7;!#8;R]",
     "Imine C=N-C": "[#6]=[#7;H0;!R;!$(n);!$(N-C(=O))]",
     "Imine C=N-H": "[#6]=[#7;H1;!R;!$(N-C(=O))]",
     "Ring N": "[n;R;H0;!$(nC=O)]",
@@ -78,7 +86,7 @@ FG_CUSTOM_SMARTS: dict[str, str] = {
     "Ring O aliph": "[OD2;R;!$(O=[#6]);!o]",
     "Primary amine": "[NX3;H2;!$(NC=O)]",
     "Secondary amine": "[NX3;H1;!$(NC=O);!$(N=C)]",
-    "Tertiary amine": "[NX3;H0;!$(N=C);!$(n);!$(N#*);!$(NC=O);!R](-[#6])(-[#6])-[#6]",
+    "Tertiary amine": "[NX3;H0;!$(N=C);!$(n);!$(N#*);!$(NC=O)](-[#6])(-[#6])-[#6]",
     "Ether": "[OD2;!R](-[#6])-[#6]",
     "Nitro": "[$([NX3](=O)=O),$([NX3+](=O)[O-])]",
     "Alkyne": "[CX2]#[CX2]",
@@ -131,6 +139,7 @@ FG_CHIP_REFERENCES: dict[str, tuple[str, str]] = {
     "–NO₂ (Nitrogruppe)": ("nitro", "C[N+](=O)[O-]"),
     "C≡C (Alkin)": ("alkyne", "C#CC"),
     "C=C (Alken)": ("alkene", "C=CC"),
+    "Keine FG — nur Alkan": ("alkane_only", "CCCC"),
     "N mit Alkyl am Ring": ("ring_n_alkyl", "c1ccn(C)c1"),
     "1× N mit Alkyl am Ring": ("ring_n_alkyl", "c1ccn(C)c1"),
     "N mit N=N-Bindung": ("ring_n_nn_eq", "c1ccnnc1"),
@@ -238,6 +247,7 @@ FG_DE: dict[str, str] = {
     "Nitro": "–NO₂",
     "Alkyne": "C≡C",
     "Alkene": "Alken",
+    "alkane_only": "nur Alkan",
     "unknown": "Unbekannt",
 }
 
@@ -267,6 +277,7 @@ FG_DISPLAY_DE: dict[str, str] = {
     "Nitro": "–NO₂ (Nitrogruppe)",
     "Alkyne": "C≡C (Alkin)",
     "Alkene": "C=C (Alken)",
+    "alkane_only": "Keine FG — nur Alkan",
     "unknown": "Unbekannt",
 }
 
@@ -344,7 +355,15 @@ FG_GLOSSARY_CHIP_DE: dict[str, str] = {
     "C=C (Alken)": (
         "C=C außerhalb aromatischer Systeme."
     ),
-    "Unbekannt": "Keine typische Gruppe erkannt.",
+    "Keine FG — nur Alkan": (
+        "Nur Kohlenstoff und Wasserstoff, ausschließlich Einfachbindungen "
+        "(auch Ringe wie Cyclohexan). Keine funktionelle Gruppe im Quiz-Sinn — "
+        "reines gesättigtes Kohlenwasserstoff-Gerüst (Alkan)."
+    ),
+    "Unbekannt": (
+        "Keine Quiz-FG erkannt — z. B. aromatisches Kohlenstoffgerüst (Benzol) "
+        "oder ungewöhnliche Struktur. Nicht mit „Keine FG — nur Alkan“ verwechseln."
+    ),
 }
 
 # Ring-N subtypes (SMARTS, base chip label) — replaces coarse "3× N im Ring"
@@ -702,6 +721,9 @@ def refine_fg_labels(labels: list[str]) -> list[str]:
     """Drop amine tags when N belongs to amide, nitrile, imine, nitro, or sulfonamide."""
     if N_BLOCKING_LABELS & set(labels):
         labels = [label for label in labels if label not in AMINE_LABELS]
+    # Lactam is a specific cyclic amide — avoid duplicate generic Amide chip
+    if "Lactam" in labels and "Amide" in labels:
+        labels = [label for label in labels if label != "Amide"]
     return labels
 
 
@@ -1105,8 +1127,10 @@ _WEAK_MODEL_PERSPECTIVE_FGS_DE = frozenset(
     }
 )
 
-POOL_MODEL_PERSPECTIVE_OVERRIDES: dict[str, dict | None] = {
-    # Pool 2 — random_set1: eher fehlendes N als Ring-Ether
+# Kurator: FG-Chips pro Set/Molekül (set_key → mol_idx → list[FG_DISPLAY_DE])
+FG_MOLECULE_LABEL_OVERRIDES: dict[str, dict[int, list[str]]] = {}
+
+POOL_MODEL_PERSPECTIVE_OVERRIDES = {
     "random_1": {
         "title": "Sicht des Modells",
         "paragraphs": [
@@ -1114,18 +1138,42 @@ POOL_MODEL_PERSPECTIVE_OVERRIDES: dict[str, dict | None] = {
         ],
         "auto": True,
     },
-    # Pool 11 — random_set10: Ketten-Ether zu unscharf
-    "random_10": None,
-    # Pool 3 — random_set2: sek. Amin-Chip irreführend (N–H auch in #2–#4)
-    "random_2": None,
-    # set_idx 18 — eher fehlendes N als Alken
-    "scaffold_similar_18": {
+    "random_24": {
         "title": "Sicht des Modells",
         "paragraphs": [
-            "Das Modell wählt überwiegend Molekül #1. Möglicherweise weil es — anders als #2 und #3 — kein Stickstoff-Fragment hat."
+            "Das Modell wählt überwiegend Molekül #3. Möglicherweise weil [[C≡N (Nitril)]] nur in #3 und es das einzige ohne Sauerstoff ist."
         ],
         "auto": True,
     },
+    "random_61": None,
+    "random_65": {
+        "title": "Sicht des Modells",
+        "paragraphs": [
+            "Das Modell wählt überwiegend Molekül #2. Möglicherweise weil es das einzige Stickstoffhaltige Molekül ist und [[C=O am Kettenende (Aldehyd)]] nur in #2 vorkommt."
+        ],
+        "auto": True,
+    },
+    "random_71": {
+        "title": "Sicht des Modells",
+        "paragraphs": [
+            "Das Modell wählt überwiegend Molekül #2. Möglicherweise weil das Stickstoff-haltige [[–CONR– (Amid)]] nur in #2 vorkommt."
+        ],
+        "auto": True,
+    },
+    "scaffold_similar_2": None,
+    "scaffold_similar_45": None,
+    "scaffold_similar_52": None,
+    "scaffold_similar_61": None,
+    "scaffold_similar_85": None,
+    "scaffold_similar_86": None,
+    "scaffold_similar_95": {
+        "title": "Sicht des Modells",
+        "paragraphs": [
+            "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil [[–CONR– (Amid)]] nur in #4 ist."
+        ],
+        "auto": True,
+    },
+    "scaffold_similar_99": None,
 }
 
 
@@ -1334,6 +1382,23 @@ def apply_auto_model_perspective(data: dict, curated_perspectives: dict[str, dic
     fg["model_perspective_de"] = auto
 
 
+def is_hydrocarbon_alkane_only(mol, Chem) -> bool:
+    """True if only C/H, no aromaticity, only single bonds (acyclic or cycloalkane)."""
+    if mol is None:
+        return False
+    from rdkit.Chem import BondType
+
+    for atom in mol.GetAtoms():
+        if atom.GetAtomicNum() not in (1, 6):
+            return False
+        if atom.GetIsAromatic():
+            return False
+    for bond in mol.GetBonds():
+        if bond.GetBondType() != BondType.SINGLE:
+            return False
+    return True
+
+
 def detect_molecule_fgs(smiles: str, Chem) -> tuple[str | None, list[str]]:
     """Return (fg_primary, fg_labels) — human-readable functional group names."""
     mol = Chem.MolFromSmiles(smiles) if Chem else None
@@ -1366,6 +1431,9 @@ def detect_molecule_fgs(smiles: str, Chem) -> tuple[str | None, list[str]]:
 
     if labels:
         return labels[0], labels
+
+    if is_hydrocarbon_alkane_only(mol, Chem):
+        return "alkane_only", ["alkane_only"]
 
     return "unknown", ["unknown"]
 
@@ -1606,13 +1674,28 @@ def compute_fg_analysis(
 
 def enrich_functional_groups(data: dict, Chem) -> dict:
     """Add formula, FG labels (DE), and fg_analysis at set level."""
+    set_key = f"{data['strategy']}_{data['set_idx']}"
+    override_map = FG_MOLECULE_LABEL_OVERRIDES.get(set_key) or {}
     primary_fgs: list[str | None] = []
     all_labels_en: list[list[str]] = []
-    for mol in data["molecules"]:
-        primary, labels_full = detect_molecule_fgs(mol["smiles"], Chem)
-        mol_obj = Chem.MolFromSmiles(mol["smiles"]) if Chem else None
-        ring_detail = ring_n_detail_de(mol_obj, Chem) if mol_obj else []
-        labels_display = jury_display_labels(labels_full, ring_detail)
+    for mol_idx, mol in enumerate(data["molecules"]):
+        if mol_idx in override_map:
+            labels_de = list(override_map[mol_idx])
+            en_labels = []
+            de_to_en = {v: k for k, v in FG_DISPLAY_DE.items()}
+            for chip in labels_de:
+                en = de_to_en.get(chip)
+                if en:
+                    en_labels.append(en)
+            primary = en_labels[0] if en_labels else "unknown"
+            labels_full = en_labels
+            labels_display = labels_de
+            ring_detail: list[str] = []
+        else:
+            primary, labels_full = detect_molecule_fgs(mol["smiles"], Chem)
+            mol_obj = Chem.MolFromSmiles(mol["smiles"]) if Chem else None
+            ring_detail = ring_n_detail_de(mol_obj, Chem) if mol_obj else []
+            labels_display = jury_display_labels(labels_full, ring_detail)
         mol["fg_primary"] = primary
         mol["fg_labels"] = labels_display
         mol["fg_labels_full"] = labels_full
@@ -1855,46 +1938,9 @@ def build_bundle(target: Path, inference_files: list[Path], preserve_data_from: 
     (target / ".nojekyll").touch()
 
 
-def sanitize_public_pages(target: Path) -> None:
-    """Remove dev-only tooling from the public GitHub Pages bundle (docs/ only)."""
-    index = target / "index.html"
-    html = index.read_text(encoding="utf-8")
-    html = re.sub(
-        r"\n\s*<section id=\"screen-curator\".*?</section>\n",
-        "\n",
-        html,
-        flags=re.DOTALL,
-    )
-    html = html.replace('  <script type="module" src="js/curator.js"></script>\n', "")
-    index.write_text(html, encoding="utf-8")
-
-    (target / "js" / "curator.js").write_text(
-        "/** Public Pages — Kurator deaktiviert. */\n"
-        "export async function ensureCuratorReady() {}\n"
-        "export async function showCuratorScreen() {}\n",
-        encoding="utf-8",
-    )
-
-    loader = target / "js" / "data-loader.js"
-    loader.write_text(
-        loader.read_text(encoding="utf-8").replace(
-            'return new URLSearchParams(window.location.search).get("mode") === "curator";',
-            "return false;",
-        ),
-        encoding="utf-8",
-    )
-
-    app = target / "js" / "app.js"
-    app_text = app.read_text(encoding="utf-8")
-    app_text = app_text.replace("  initCuratorEntry();\n", "")
-    app_text = re.sub(
-        r"\n  if \(isCuratorMode\(\)\) \{.*?\n  \}\n",
-        "\n",
-        app_text,
-        count=1,
-        flags=re.DOTALL,
-    )
-    app.write_text(app_text, encoding="utf-8")
+def sanitize_public_pages(_target: Path) -> None:
+    """Früher: Kurator aus docs/ entfernt. Jetzt identisch zu dist/ — Zugang nur per verstecktem Intro-Geste."""
+    return
 
 
 def asset_cache_version() -> str:
@@ -1995,7 +2041,7 @@ def main() -> int:
     sanitize_public_pages(DOCS)
     stamp_asset_cache_bust(DOCS)
     verify_public_bundle(DOCS)
-    print("  docs/: Kurator entfernt, Pages-Bundle geprüft")
+    print("  docs/: Pages-Bundle geprüft")
 
     print("Fertig.")
     print(f"  dist/:  {DIST}")

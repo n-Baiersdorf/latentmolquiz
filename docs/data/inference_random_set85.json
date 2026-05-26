@@ -94,17 +94,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "unknown"
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Unbekannt",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C8H17N"
     },
@@ -198,17 +198,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alcohol",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "–OH (Alkohol)"
+        "–OH (Alkohol)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alcohol"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "–OH (Alkohol)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "–OH (Alkohol)"
+        "–OH (Alkohol)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H11NO"
     }
@@ -737,16 +740,16 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Imine C=N-H",
-    "majority_fg_de": "C=N–H (Imin)",
-    "majority_count": 1,
+    "majority_fg": "Tertiary amine",
+    "majority_fg_de": "tert. Amin (3× C–N)",
+    "majority_count": 2,
     "other_primaries_de": [
       "C=N–H (Imin)",
       "C≡N (Nitril)",
-      "–OH (Alkohol)"
+      "tert. Amin (3× C–N)"
     ],
-    "gt_fg": "unknown",
-    "gt_fg_de": "Unbekannt",
+    "gt_fg": "Tertiary amine",
+    "gt_fg_de": "tert. Amin (3× C–N)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
@@ -755,11 +758,9 @@
     "gt_lacks_fgs_de": [
       "–OH (Alkohol)"
     ],
-    "gt_extra_fgs_de": [
-      "Unbekannt"
-    ],
+    "gt_extra_fgs_de": [],
     "gt_instead_fgs_de": [
-      "Unbekannt"
+      "tert. Amin (3× C–N)"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [],
@@ -768,7 +769,7 @@
       "–OH (Alkohol)"
     ],
     "highlight_instead_de": [
-      "Unbekannt"
+      "tert. Amin (3× C–N)"
     ],
     "highlight_mode": "lacks",
     "glossary": {
@@ -784,6 +785,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
         "image": "fg_ref/alcohol.png"
@@ -791,9 +796,6 @@
       "C=C (Alken)": {
         "text": "C=C außerhalb aromatischer Systeme.",
         "image": "fg_ref/alkene.png"
-      },
-      "Unbekannt": {
-        "text": "Keine typische Gruppe erkannt."
       },
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
@@ -810,18 +812,15 @@
     },
     "alt_gt_indices": [
       0,
-      2,
-      3
+      2
     ],
     "alt_gt_fgs": {
       "0": "Imine C=N-H",
-      "2": "Nitrile",
-      "3": "Alcohol"
+      "2": "Nitrile"
     },
     "alt_gt_fgs_de": {
       "0": "C=N–H (Imin)",
-      "2": "C≡N (Nitril)",
-      "3": "–OH (Alkohol)"
+      "2": "C≡N (Nitril)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": false,

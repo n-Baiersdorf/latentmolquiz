@@ -92,19 +92,16 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "C=O im Ring (Lactam)",
         "C=O in der Kette (Keton)",
         "–CONR– (Amid)"
       ],
       "fg_labels_full": [
         "Amide",
-        "Lactam",
         "Ketone"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "C=O im Ring (Lactam)",
         "C=O in der Kette (Keton)",
         "–CONR– (Amid)"
       ],
@@ -145,23 +142,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Amide",
+      "fg_primary": "Lactam",
       "fg_labels": [
         "C=N–H (Imin)",
-        "C=O im Ring (Lactam)",
-        "–CONR– (Amid)"
+        "C=O im Ring (Lactam)"
       ],
       "fg_labels_full": [
-        "Amide",
         "Lactam",
         "Imine C=N-H"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "–CONR– (Amid)",
+      "fg_primary_de": "C=O im Ring (Lactam)",
       "fg_labels_de": [
         "C=N–H (Imin)",
-        "C=O im Ring (Lactam)",
-        "–CONR– (Amid)"
+        "C=O im Ring (Lactam)"
       ],
       "mol_formula": "C5H9N3O"
     },
@@ -748,12 +742,13 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Amide",
-    "majority_fg_de": "–CONR– (Amid)",
-    "majority_count": 2,
+    "majority_fg": "Secondary amine",
+    "majority_fg_de": "–NH– (sekundäres Amin)",
+    "majority_count": 1,
     "other_primaries_de": [
       "–NH– (sekundäres Amin)",
-      "–CONR– (Amid)"
+      "–CONR– (Amid)",
+      "C=O im Ring (Lactam)"
     ],
     "gt_fg": "Ring N",
     "gt_fg_de": "N im Ring (Heterocycl)",
@@ -836,13 +831,13 @@
     ],
     "alt_gt_fgs": {
       "0": "Secondary amine",
-      "1": "Ketone",
-      "2": "Imine C=N-H"
+      "1": "Amide",
+      "2": "Lactam"
     },
     "alt_gt_fgs_de": {
       "0": "–NH– (sekundäres Amin)",
-      "1": "C=O in der Kette (Keton)",
-      "2": "C=N–H (Imin)"
+      "1": "–CONR– (Amid)",
+      "2": "C=O im Ring (Lactam)"
     },
     "model_pred_idx": 3,
     "model_alt_correct": false,

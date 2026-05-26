@@ -94,16 +94,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ketone",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
+        "tert. Amin (3× C–N)",
         "C=O in der Kette (Keton)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Ketone"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C=O in der Kette (Keton)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
+        "tert. Amin (3× C–N)",
         "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C7H9NO"
@@ -877,7 +880,7 @@
     "majority_count": 1,
     "other_primaries_de": [
       "–COOR (Ester)",
-      "C=O in der Kette (Keton)",
+      "tert. Amin (3× C–N)",
       "C≡N (Nitril)"
     ],
     "gt_fg": "Ring N",
@@ -925,6 +928,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "Ether (–O–)": {
         "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
         "image": "fg_ref/ether.png"
@@ -965,23 +972,31 @@
     ],
     "alt_gt_fgs": {
       "0": "Ester",
-      "1": "Ketone",
+      "1": "Tertiary amine",
       "2": "Nitrile"
     },
     "alt_gt_fgs_de": {
       "0": "–COOR (Ester)",
-      "1": "C=O in der Kette (Keton)",
+      "1": "tert. Amin (3× C–N)",
       "2": "C≡N (Nitril)"
     },
     "model_pred_idx": 1,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "tert. Amin (3× C–N)"
+    ],
     "model_lacks_fgs_de": [],
     "model_criterion_de": [
-      "C=O in der Kette (Keton)"
+      "tert. Amin (3× C–N)"
     ],
-    "model_criterion_mode": "primary",
-    "model_perspective_de": null,
+    "model_criterion_mode": "exclusive",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #2. Möglicherweise weil [[tert. Amin (3× C–N)]] nur in #2 ist."
+      ],
+      "auto": true
+    },
     "model_plausible_hint_de": null,
     "model_without_n_fg": false,
     "source": "rdkit",

@@ -42,11 +42,12 @@
       "fg_labels": [
         "N im Ring",
         "N–H im Ring",
-        "–OH im Ring (Heterocycl)"
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
         "Ring N",
         "Ring N-H",
+        "Tertiary amine",
         "Heterocyclic OH"
       ],
       "fg_ring_n_detail_de": [
@@ -57,7 +58,7 @@
       "fg_labels_de": [
         "N im Ring",
         "N–H im Ring",
-        "–OH im Ring (Heterocycl)"
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C5H7N3O"
     },
@@ -200,16 +201,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ketone",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
+        "tert. Amin (3× C–N)",
         "C=O in der Kette (Keton)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Ketone"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C=O in der Kette (Keton)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
+        "tert. Amin (3× C–N)",
         "C=O in der Kette (Keton)"
       ],
       "mol_formula": "C7H9NO"
@@ -745,7 +749,7 @@
     "other_primaries_de": [
       "–COOR (Ester)",
       "C≡N (Nitril)",
-      "C=O in der Kette (Keton)"
+      "tert. Amin (3× C–N)"
     ],
     "gt_fg": "Ring N",
     "gt_fg_de": "N im Ring (Heterocycl)",
@@ -791,6 +795,10 @@
       "O im Ring (cycl. Ether)": {
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "C=O in der Kette (Keton)": {
         "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",

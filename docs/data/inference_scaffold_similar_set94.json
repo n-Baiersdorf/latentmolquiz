@@ -142,17 +142,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "unknown"
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Unbekannt",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C6H9N3"
     },
@@ -865,7 +865,7 @@
     "majority_count": 1,
     "other_primaries_de": [
       "C≡N (Nitril)",
-      "Unbekannt",
+      "tert. Amin (3× C–N)",
       "C=C (Alken)"
     ],
     "gt_fg": "Ring O aliph",
@@ -903,6 +903,10 @@
         "text": "NH₂ an Kette, nicht im Ring. Typisch: primäres Amin.",
         "image": "fg_ref/primary_amine.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
         "image": "fg_ref/alcohol.png"
@@ -910,9 +914,6 @@
       "C=C (Alken)": {
         "text": "C=C außerhalb aromatischer Systeme.",
         "image": "fg_ref/alkene.png"
-      },
-      "Unbekannt": {
-        "text": "Keine typische Gruppe erkannt."
       },
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
@@ -934,12 +935,12 @@
     ],
     "alt_gt_fgs": {
       "1": "Nitrile",
-      "2": "unknown",
+      "2": "Tertiary amine",
       "3": "Alkene"
     },
     "alt_gt_fgs_de": {
       "1": "C≡N (Nitril)",
-      "2": "Unbekannt",
+      "2": "tert. Amin (3× C–N)",
       "3": "C=C (Alken)"
     },
     "model_pred_idx": 3,
@@ -948,13 +949,11 @@
       "C=C (Alken)"
     ],
     "model_lacks_fgs_de": [],
-    "model_criterion_de": [
-      "C=C (Alken)"
-    ],
-    "model_criterion_mode": "exclusive",
+    "model_criterion_de": [],
+    "model_criterion_mode": "no_n",
     "model_perspective_de": null,
     "model_plausible_hint_de": null,
-    "model_without_n_fg": false,
+    "model_without_n_fg": true,
     "source": "rdkit",
     "model_seed_votes": 3
   }

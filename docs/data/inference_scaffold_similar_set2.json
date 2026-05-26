@@ -994,13 +994,7 @@
       "–NH– (sekundäres Amin)"
     ],
     "model_criterion_mode": "exclusive",
-    "model_perspective_de": {
-      "title": "Sicht des Modells",
-      "paragraphs": [
-        "Das Modell wählt überwiegend Molekül #1. Möglicherweise weil [[–NH– (sekundäres Amin)]] nur in #1 ist."
-      ],
-      "auto": true
-    },
+    "model_perspective_de": null,
     "model_plausible_hint_de": null,
     "model_without_n_fg": false,
     "source": "rdkit",

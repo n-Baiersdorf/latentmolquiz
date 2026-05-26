@@ -209,17 +209,20 @@
       },
       "fg_primary": "Ring N-H",
       "fg_labels": [
-        "N–H im Ring"
+        "N–H im Ring",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "Ring N-H"
+        "Ring N-H",
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [
         "N–H im Ring"
       ],
       "fg_primary_de": "N–H im Ring (Heterocycl)",
       "fg_labels_de": [
-        "N–H im Ring"
+        "N–H im Ring",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H10N2"
     }
@@ -937,6 +940,10 @@
       "–NH₂ (primäres Amin)": {
         "text": "NH₂ an Kette, nicht im Ring. Typisch: primäres Amin.",
         "image": "fg_ref/primary_amine.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "Halogen (F/Cl/…)": {
         "text": "F/Cl/Br/I als Substituent.",

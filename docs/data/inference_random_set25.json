@@ -41,11 +41,13 @@
       "fg_primary": "Ring N",
       "fg_labels": [
         "N mit N=N-Bindung",
-        "N–H im Ring"
+        "N–H im Ring",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
         "Ring N",
-        "Ring N-H"
+        "Ring N-H",
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [
         "N mit N=N-Bindung",
@@ -54,7 +56,8 @@
       "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
         "N mit N=N-Bindung",
-        "N–H im Ring"
+        "N–H im Ring",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C5H8N4"
     },
@@ -802,6 +805,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
         "image": "fg_ref/alcohol.png"
@@ -844,14 +851,17 @@
       }
     },
     "alt_gt_indices": [
+      0,
       1,
       2
     ],
     "alt_gt_fgs": {
+      "0": "Tertiary amine",
       "1": "Ring O arom",
       "2": "Alkene"
     },
     "alt_gt_fgs_de": {
+      "0": "tert. Amin (3× C–N)",
       "1": "O im aromatischen Ring",
       "2": "C=C (Alken)"
     },

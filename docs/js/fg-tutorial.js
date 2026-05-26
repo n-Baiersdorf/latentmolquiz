@@ -116,11 +116,15 @@ function renderStep(stepIdx) {
   }
 }
 
-function closeTutorial(markDone = false) {
+export function closeFgTutorial(markDone = false) {
   if (!backdrop) return;
   backdrop.classList.add("hidden");
   backdrop.setAttribute("aria-hidden", "true");
   if (markDone) localStorage.setItem(TUTORIAL_STORAGE_KEY, "1");
+}
+
+function closeTutorial(markDone = false) {
+  closeFgTutorial(markDone);
 }
 
 export function openFgTutorial(step = 0) {

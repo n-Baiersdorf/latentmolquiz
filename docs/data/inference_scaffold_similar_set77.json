@@ -142,17 +142,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "Ether (–O–)"
+        "Ether (–O–)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Ether"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Ether (–O–)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "Ether (–O–)"
+        "Ether (–O–)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H13NO"
     },
@@ -862,9 +865,10 @@
   "fg_analysis": {
     "majority_fg": "Ether",
     "majority_fg_de": "Ether (–O–)",
-    "majority_count": 3,
+    "majority_count": 2,
     "other_primaries_de": [
-      "Ether (–O–)"
+      "Ether (–O–)",
+      "tert. Amin (3× C–N)"
     ],
     "gt_fg": "Ring O aliph",
     "gt_fg_de": "O im Ring (cycl. Ether)",
@@ -897,6 +901,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
         "image": "fg_ref/alcohol.png"
@@ -922,9 +930,15 @@
         "image": "fg_ref/ring_n_1.png"
       }
     },
-    "alt_gt_indices": [],
-    "alt_gt_fgs": {},
-    "alt_gt_fgs_de": {},
+    "alt_gt_indices": [
+      2
+    ],
+    "alt_gt_fgs": {
+      "2": "Tertiary amine"
+    },
+    "alt_gt_fgs_de": {
+      "2": "tert. Amin (3× C–N)"
+    },
     "model_pred_idx": 3,
     "model_alt_correct": false,
     "model_exclusive_fgs_de": [],

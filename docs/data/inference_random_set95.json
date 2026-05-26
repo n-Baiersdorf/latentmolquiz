@@ -202,19 +202,16 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "C=O im Ring (Lactam)",
         "C=C (Alken)",
         "–CONR– (Amid)"
       ],
       "fg_labels_full": [
         "Amide",
-        "Lactam",
         "Alkene"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "C=O im Ring (Lactam)",
         "C=C (Alken)",
         "–CONR– (Amid)"
       ],
@@ -779,10 +776,6 @@
       "–CONR– (Amid)": {
         "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
         "image": "fg_ref/amide.png"
-      },
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
       },
       "C≡N (Nitril)": {
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",

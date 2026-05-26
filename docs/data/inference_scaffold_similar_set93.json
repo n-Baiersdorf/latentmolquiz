@@ -38,16 +38,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alkene",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
+        "tert. Amin (3× C–N)",
         "C=C (Alken)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alkene"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C=C (Alken)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
+        "tert. Amin (3× C–N)",
         "C=C (Alken)"
       ],
       "mol_formula": "C8H11N"
@@ -87,17 +90,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Ether",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "Ether (–O–)"
+        "Ether (–O–)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Ether"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Ether (–O–)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "Ether (–O–)"
+        "Ether (–O–)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H9NO"
     },
@@ -857,15 +863,16 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Alkene",
-    "majority_fg_de": "C=C (Alken)",
+    "majority_fg": "Tertiary amine",
+    "majority_fg_de": "tert. Amin (3× C–N)",
     "majority_count": 2,
     "other_primaries_de": [
+      "tert. Amin (3× C–N)",
       "C=C (Alken)",
       "C≡N (Nitril)"
     ],
-    "gt_fg": "Ether",
-    "gt_fg_de": "Ether (–O–)",
+    "gt_fg": "Tertiary amine",
+    "gt_fg_de": "tert. Amin (3× C–N)",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
@@ -895,6 +902,10 @@
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
         "image": "fg_ref/nitrile.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "Ether (–O–)": {
         "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
         "image": "fg_ref/ether.png"
@@ -917,25 +928,32 @@
       }
     },
     "alt_gt_indices": [
+      2,
       3
     ],
     "alt_gt_fgs": {
+      "2": "Alkene",
       "3": "Nitrile"
     },
     "alt_gt_fgs_de": {
+      "2": "C=C (Alken)",
       "3": "C≡N (Nitril)"
     },
     "model_pred_idx": 2,
-    "model_alt_correct": false,
+    "model_alt_correct": true,
     "model_exclusive_fgs_de": [],
     "model_lacks_fgs_de": [],
-    "model_criterion_de": [
-      "C=C (Alken)"
-    ],
-    "model_criterion_mode": "primary",
-    "model_perspective_de": null,
+    "model_criterion_de": [],
+    "model_criterion_mode": "no_n",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #3. Möglicherweise weil es — anders als #1, #2 und #4 — kein Stickstoff-Fragment hat."
+      ],
+      "auto": true
+    },
     "model_plausible_hint_de": null,
-    "model_without_n_fg": false,
+    "model_without_n_fg": true,
     "source": "rdkit",
     "model_seed_votes": 5
   }

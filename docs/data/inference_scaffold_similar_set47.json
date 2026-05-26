@@ -38,17 +38,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alcohol",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "–OH (Alkohol)"
+        "–OH (Alkohol)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alcohol"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "–OH (Alkohol)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "–OH (Alkohol)"
+        "–OH (Alkohol)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C6H7NO2"
     },
@@ -870,7 +873,7 @@
     "majority_fg_de": "O im Ring (cycl. Ether)",
     "majority_count": 2,
     "other_primaries_de": [
-      "–OH (Alkohol)",
+      "tert. Amin (3× C–N)",
       "O im Ring (cycl. Ether)"
     ],
     "gt_fg": "Imine C=N-H",
@@ -908,6 +911,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
         "image": "fg_ref/alcohol.png"
@@ -937,10 +944,10 @@
       0
     ],
     "alt_gt_fgs": {
-      "0": "Alcohol"
+      "0": "Tertiary amine"
     },
     "alt_gt_fgs_de": {
-      "0": "–OH (Alkohol)"
+      "0": "tert. Amin (3× C–N)"
     },
     "model_pred_idx": 2,
     "model_alt_correct": false,

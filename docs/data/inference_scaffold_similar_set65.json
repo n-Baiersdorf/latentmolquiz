@@ -88,16 +88,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Aldehyde",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
+        "tert. Amin (3× C–N)",
         "C=O am Kettenende (Aldehyd)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Aldehyde"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C=O am Kettenende (Aldehyd)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
+        "tert. Amin (3× C–N)",
         "C=O am Kettenende (Aldehyd)"
       ],
       "mol_formula": "C7H9NO"
@@ -862,7 +865,7 @@
     "majority_fg_de": "O im Ring (cycl. Ether)",
     "majority_count": 2,
     "other_primaries_de": [
-      "C=O am Kettenende (Aldehyd)",
+      "tert. Amin (3× C–N)",
       "C=O in der Kette (Keton)",
       "O im Ring (cycl. Ether)"
     ],
@@ -892,6 +895,10 @@
       "O im Ring (cycl. Ether)": {
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "C=O in der Kette (Keton)": {
         "text": "C=O zwischen zwei C-Resten. Typisch: Keton.",
@@ -923,11 +930,11 @@
       2
     ],
     "alt_gt_fgs": {
-      "1": "Aldehyde",
+      "1": "Tertiary amine",
       "2": "Ketone"
     },
     "alt_gt_fgs_de": {
-      "1": "C=O am Kettenende (Aldehyd)",
+      "1": "tert. Amin (3× C–N)",
       "2": "C=O in der Kette (Keton)"
     },
     "model_pred_idx": 1,

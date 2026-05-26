@@ -141,15 +141,18 @@
       },
       "fg_primary": "Secondary amine",
       "fg_labels": [
-        "–NH– (sekundäres Amin)"
+        "–NH– (sekundäres Amin)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "Secondary amine"
+        "Secondary amine",
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–NH– (sekundäres Amin)",
       "fg_labels_de": [
-        "–NH– (sekundäres Amin)"
+        "–NH– (sekundäres Amin)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C6H7N3"
     },
@@ -770,6 +773,10 @@
         "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
         "image": "fg_ref/secondary_amine.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "Ether (–O–)": {
         "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
         "image": "fg_ref/ether.png"
@@ -789,14 +796,17 @@
     },
     "alt_gt_indices": [
       0,
+      2,
       3
     ],
     "alt_gt_fgs": {
       "0": "Ether",
+      "2": "Tertiary amine",
       "3": "Primary amine"
     },
     "alt_gt_fgs_de": {
       "0": "Ether (–O–)",
+      "2": "tert. Amin (3× C–N)",
       "3": "–NH₂ (primäres Amin)"
     },
     "model_pred_idx": 0,

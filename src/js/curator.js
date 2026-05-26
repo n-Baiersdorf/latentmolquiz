@@ -11,6 +11,7 @@ import {
 } from "./data-loader.js";
 
 import { showPerspectiveCuratorScreen } from "./perspective-curator.js";
+import { showFgCuratorScreen, initFgCuratorBindings } from "./fg-curator.js";
 
 const STORAGE_KEY = "jufo_curator_selection";
 
@@ -306,6 +307,15 @@ async function initCuratorCore() {
       alert(`Sicht-Kurator konnte nicht geladen werden: ${err.message}`);
     });
   });
+
+  document.getElementById("btn-open-fg-review")?.addEventListener("click", () => {
+    showFgCuratorScreen().catch((err) => {
+      console.error("FG-Kurator:", err);
+      alert(`FG-Kurator konnte nicht geladen werden: ${err.message}`);
+    });
+  });
+
+  initFgCuratorBindings();
 
   renderGallery();
   renderSelectedList();

@@ -42,11 +42,10 @@
       "fg_labels": [
         "O im Ring (cycl. Ether)",
         "C=N–H (Imin)",
-        "C=O im Ring (Lactam)"
+        "Ether (–O–)"
       ],
       "fg_labels_full": [
         "Amide",
-        "Lactam",
         "Imine C=N-H",
         "Ring O aliph",
         "Ether"
@@ -56,7 +55,7 @@
       "fg_labels_de": [
         "O im Ring (cycl. Ether)",
         "C=N–H (Imin)",
-        "C=O im Ring (Lactam)"
+        "Ether (–O–)"
       ],
       "mol_formula": "C4H6N2O3"
     },
@@ -783,10 +782,6 @@
       "–CONR– (Amid)": {
         "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
         "image": "fg_ref/amide.png"
-      },
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
       },
       "C≡N (Nitril)": {
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",

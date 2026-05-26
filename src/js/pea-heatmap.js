@@ -1,5 +1,5 @@
 /**
- * PEA panel: summary + monochrome 4×4 matrix (always visible after resolution).
+ * PEA panel: monochrome 4×4 matrix (eigener Kasten unter der Erklärung).
  */
 
 import { computeOffDiagonalRange } from "./data-loader.js";
@@ -81,37 +81,10 @@ export function renderPeaHeatmap(container, matrix, options = {}) {
 
   computeOffDiagonalRange(matrix);
 
-  const block = document.createElement("div");
-  block.className = "pea";
-
-  block.innerHTML = `
-    <div class="pea-head">
-      <p class="pea-title">PEA-Matrix</p>
-      <p class="pea-subtitle">Perspective Ensemble Attention</p>
-    </div>
-    <p class="pea-teaser">Die Matrix zeigt, wie das Modell entscheidet, die vier Moleküle miteinander zu vermischen.</p>`;
-
   const matrixWrap = document.createElement("div");
   matrixWrap.className = "pea-matrix";
   matrixWrap.appendChild(renderHeatmapTable(matrix, { gtIdx, wrongPredCols }));
-  block.appendChild(matrixWrap);
-
-  const more = document.createElement("details");
-  more.className = "pea-more";
-  more.innerHTML = `
-      <summary class="info-btn">ⓘ Weitere Informationen</summary>
-      <div class="pea-more-body">
-        <p><strong>Zeile</strong> = Ziel-Molekül · <strong>Spalte</strong> = Quellen-Molekül. Jede Zelle: Anteil, mit dem die Quelle in die Ziel-Darstellung einfließt (Mittel über 5 Modell-Seeds).</p>
-        <ul class="detail-legend-list">
-          <li><strong>Rahmen</strong> — Zeile/Spalte des Ausreißers (definierte Ground Truth)</li>
-          <li><strong>Unterstrichen</strong> — stärkste Quelle in dieser Zeile (ohne Diagonale)</li>
-          <li><strong>Grau</strong> — Diagonale = 1 (Selbstanteil)</li>
-          <li><strong>Gestrichelte Spalte</strong> — mindestens ein Seed wählte dieses Molekül fälschlich als Ausreißer</li>
-        </ul>
-      </div>`;
-  block.appendChild(more);
-
-  container.appendChild(block);
+  container.appendChild(matrixWrap);
   return { setHighlight: () => {}, clearHighlight: () => {} };
 }
 

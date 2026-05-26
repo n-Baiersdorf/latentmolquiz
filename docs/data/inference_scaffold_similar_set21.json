@@ -148,14 +148,13 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Lactam",
+      "fg_primary": "Ring N",
       "fg_labels": [
         "N mit Alkyl am Ring",
         "N mit N=N-Bindung",
         "–NH₂ (primäres Amin)"
       ],
       "fg_labels_full": [
-        "Lactam",
         "Ring N",
         "Primary amine"
       ],
@@ -163,7 +162,7 @@
         "N mit Alkyl am Ring",
         "N mit N=N-Bindung"
       ],
-      "fg_primary_de": "C=O im Ring (Lactam)",
+      "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
         "N mit Alkyl am Ring",
         "N mit N=N-Bindung",
@@ -878,13 +877,12 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Imine C=N-C",
-    "majority_fg_de": "C=N–C (Imin)",
-    "majority_count": 1,
+    "majority_fg": "Ring N",
+    "majority_fg_de": "N im Ring (Heterocycl)",
+    "majority_count": 2,
     "other_primaries_de": [
       "C=N–C (Imin)",
-      "N im Ring (Heterocycl)",
-      "C=O im Ring (Lactam)"
+      "N im Ring (Heterocycl)"
     ],
     "gt_fg": "Alcohol",
     "gt_fg_de": "–OH (Alkohol)",
@@ -915,10 +913,6 @@
     ],
     "highlight_mode": "lacks_coarse",
     "glossary": {
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
-      },
       "C=N–C (Imin)": {
         "text": "Struktur: C=N–C (kein N–H). Typisch: Imin.",
         "image": "fg_ref/imine_cnc.png"
@@ -980,12 +974,12 @@
     "alt_gt_fgs": {
       "0": "Imine C=N-C",
       "1": "Nitro",
-      "2": "Lactam"
+      "2": "Primary amine"
     },
     "alt_gt_fgs_de": {
       "0": "C=N–C (Imin)",
       "1": "–NO₂ (Nitrogruppe)",
-      "2": "C=O im Ring (Lactam)"
+      "2": "–NH₂ (primäres Amin)"
     },
     "model_pred_idx": 3,
     "model_alt_correct": false,

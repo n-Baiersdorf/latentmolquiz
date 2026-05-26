@@ -202,19 +202,16 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "C=O im Ring (Lactam)",
         "C=C (Alken)",
         "–CONR– (Amid)"
       ],
       "fg_labels_full": [
         "Amide",
-        "Lactam",
         "Alkene"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "C=O im Ring (Lactam)",
         "C=C (Alken)",
         "–CONR– (Amid)"
       ],
@@ -910,10 +907,6 @@
         "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
         "image": "fg_ref/amide.png"
       },
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
-      },
       "C≡N (Nitril)": {
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
         "image": "fg_ref/nitrile.png"
@@ -966,17 +959,17 @@
     "model_pred_idx": 3,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "C=O im Ring (Lactam)"
+      "–CONR– (Amid)"
     ],
     "model_lacks_fgs_de": [],
     "model_criterion_de": [
-      "C=O im Ring (Lactam)"
+      "–CONR– (Amid)"
     ],
     "model_criterion_mode": "exclusive",
     "model_perspective_de": {
       "title": "Sicht des Modells",
       "paragraphs": [
-        "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil [[C=O im Ring (Lactam)]] nur in #4 ist."
+        "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil [[–CONR– (Amid)]] nur in #4 ist."
       ],
       "auto": true
     },

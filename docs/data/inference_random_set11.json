@@ -146,17 +146,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alcohol",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "–OH (Alkohol)"
+        "–OH (Alkohol)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alcohol"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "–OH (Alkohol)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "–OH (Alkohol)"
+        "–OH (Alkohol)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H13NO"
     },
@@ -737,12 +740,13 @@
     ]
   ],
   "fg_analysis": {
-    "majority_fg": "Alcohol",
-    "majority_fg_de": "–OH (Alkohol)",
-    "majority_count": 2,
+    "majority_fg": "Nitrile",
+    "majority_fg_de": "C≡N (Nitril)",
+    "majority_count": 1,
     "other_primaries_de": [
       "C≡N (Nitril)",
-      "–OH (Alkohol)"
+      "–OH (Alkohol)",
+      "tert. Amin (3× C–N)"
     ],
     "gt_fg": "Ring O aliph",
     "gt_fg_de": "O im Ring (cycl. Ether)",
@@ -783,6 +787,10 @@
         "text": "Gesättigtes Ring-O (sp3) zwischen zwei C, z. B. Epoxid/THF. Nicht Ketten-Ether.",
         "image": "fg_ref/ring_o_aliph.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",
         "image": "fg_ref/alcohol.png"
@@ -810,25 +818,36 @@
     },
     "alt_gt_indices": [
       0,
-      1
+      1,
+      2
     ],
     "alt_gt_fgs": {
       "0": "Nitrile",
-      "1": "Alkyne"
+      "1": "Alkyne",
+      "2": "Tertiary amine"
     },
     "alt_gt_fgs_de": {
       "0": "C≡N (Nitril)",
-      "1": "C≡C (Alkin)"
+      "1": "C≡C (Alkin)",
+      "2": "tert. Amin (3× C–N)"
     },
     "model_pred_idx": 2,
-    "model_alt_correct": false,
-    "model_exclusive_fgs_de": [],
+    "model_alt_correct": true,
+    "model_exclusive_fgs_de": [
+      "tert. Amin (3× C–N)"
+    ],
     "model_lacks_fgs_de": [],
     "model_criterion_de": [
-      "–OH (Alkohol)"
+      "tert. Amin (3× C–N)"
     ],
-    "model_criterion_mode": "primary",
-    "model_perspective_de": null,
+    "model_criterion_mode": "exclusive",
+    "model_perspective_de": {
+      "title": "Sicht des Modells",
+      "paragraphs": [
+        "Das Modell wählt überwiegend Molekül #3. Möglicherweise weil [[tert. Amin (3× C–N)]] nur in #3 ist."
+      ],
+      "auto": true
+    },
     "model_plausible_hint_de": null,
     "model_without_n_fg": false,
     "source": "rdkit",

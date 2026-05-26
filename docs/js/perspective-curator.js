@@ -15,6 +15,15 @@ let allSets = [];
 let reviewItems = [];
 let reviewIdx = 0;
 let filterStatus = "pending";
+let lastSavedKey = null;
+
+const STATUS_LABELS = {
+  pending: "Offen",
+  approved: "OK",
+  suppressed: "Ausgeblendet",
+  edited: "Bearbeitet",
+  flagged: "Markiert",
+};
 
 function escapeHtml(text) {
   return String(text)
@@ -25,13 +34,25 @@ function escapeHtml(text) {
 }
 
 function reviewStatus(item) {
-  const stored = item.stored;
-  if (!stored) return "pending";
-  return stored.status || "pending";
+  const status = item.stored?.status;
+  if (!status || status === "pending") return "pending";
+  return status;
+}
+
+function statusLabel(status) {
+  return STATUS_LABELS[status] || status;
+}
+
+function hasReviewDecision(item) {
+  const status = item.stored?.status;
+  return status === "approved" || status === "suppressed" || status === "edited" || status === "flagged";
 }
 
 function filteredItems() {
   if (filterStatus === "all") return reviewItems;
+  if (filterStatus === "pending") {
+    return reviewItems.filter((item) => !hasReviewDecision(item));
+  }
   return reviewItems.filter((item) => reviewStatus(item) === filterStatus);
 }
 
@@ -60,9 +81,10 @@ function renderReviewNav() {
     .map((item, i) => {
       const status = reviewStatus(item);
       const active = i === reviewIdx ? " active" : "";
-      return `<button type="button" class="persp-review-item${active}" data-idx="${i}">
+      const savedMark = item.key === lastSavedKey ? " persp-review-item-saved" : "";
+      return `<button type="button" class="persp-review-item${active}${savedMark}" data-idx="${i}">
         <span class="persp-review-item-id">${escapeHtml(item.key)}</span>
-        <span class="persp-review-item-status status-${status}">${escapeHtml(status)}</span>
+        <span class="persp-review-item-status status-${status}">${escapeHtml(statusLabel(status))}</span>
       </button>`;
     })
     .join("");
@@ -98,14 +120,32 @@ function setReviewStatus(key, entry) {
   const overrides = loadPerspectiveOverrides();
   overrides[key] = entry;
   savePerspectiveOverrides(overrides);
+  lastSavedKey = key;
   reloadReviewItems();
 }
 
-function advanceReview() {
+function clampReviewIndex() {
+  const items = filteredItems();
+  if (!items.length) {
+    reviewIdx = 0;
+    return;
+  }
+  if (reviewIdx >= items.length) reviewIdx = items.length - 1;
+}
+
+/** Nach OK / Ausblenden / …: Liste neu zeichnen, Index nicht erhöhen (nächster „Offen“-Eintrag rückt nach). */
+function afterReviewDecision() {
+  clampReviewIndex();
+  renderReviewSummary();
+  renderReviewNav();
+  renderReviewDetail();
+}
+
+function goNextReview() {
   const items = filteredItems();
   if (reviewIdx < items.length - 1) reviewIdx++;
-  renderReviewDetail();
   renderReviewNav();
+  renderReviewDetail();
 }
 
 function renderReviewDetail() {
@@ -153,7 +193,8 @@ function renderReviewDetail() {
       <button type="button" id="persp-btn-save" class="nav-btn">✎ Text übernehmen</button>
       <button type="button" id="persp-btn-flag" class="nav-btn">⚠ Markieren</button>
     </div>
-    <p class="persp-review-status-line">Status: <strong>${escapeHtml(status)}</strong></p>
+    <p class="persp-review-status-line">Status: <strong>${escapeHtml(statusLabel(status))}</strong></p>
+    <p class="persp-review-hint muted">Filter „Offen“: nur noch nicht entschiedene Sets. Nach einer Entscheidung verschwinden sie dort.</p>
     <div class="persp-review-nav-row">
       <button type="button" id="persp-btn-prev" class="nav-btn">← Zurück</button>
       <button type="button" id="persp-btn-next" class="nav-btn">Weiter →</button>
@@ -161,44 +202,51 @@ function renderReviewDetail() {
 
   document.getElementById("persp-btn-approve")?.addEventListener("click", () => {
     setReviewStatus(key, { status: "approved" });
-    advanceReview();
+    afterReviewDecision();
   });
   document.getElementById("persp-btn-hide")?.addEventListener("click", () => {
     setReviewStatus(key, { status: "suppressed" });
-    advanceReview();
+    afterReviewDecision();
   });
   document.getElementById("persp-btn-save")?.addEventListener("click", () => {
     const custom = document.getElementById("persp-review-edit")?.value.trim();
-    if (!custom) return;
+    if (!custom) {
+      window.alert("Bitte zuerst einen Text eintragen (oder ✓ OK für den Vorschlag).");
+      return;
+    }
     setReviewStatus(key, {
       status: "edited",
       perspective: { title: "Sicht des Modells", paragraphs: [custom], auto: true },
     });
-    advanceReview();
+    afterReviewDecision();
   });
   document.getElementById("persp-btn-flag")?.addEventListener("click", () => {
     setReviewStatus(key, { status: "flagged" });
-    advanceReview();
+    afterReviewDecision();
   });
   document.getElementById("persp-btn-prev")?.addEventListener("click", () => {
     if (reviewIdx > 0) reviewIdx--;
     renderReviewDetail();
     renderReviewNav();
   });
-  document.getElementById("persp-btn-next")?.addEventListener("click", () => advanceReview());
+  document.getElementById("persp-btn-next")?.addEventListener("click", () => goNextReview());
 }
 
 function renderReviewSummary() {
   const el = document.getElementById("persp-review-summary");
   if (!el) return;
-  const stored = Object.keys(loadPerspectiveOverrides()).length;
-  el.textContent = `${reviewItems.length} Vorschläge · ${stored} Entscheidungen gespeichert (localStorage)`;
+  const counts = { pending: 0, approved: 0, suppressed: 0, edited: 0, flagged: 0 };
+  for (const item of reviewItems) {
+    counts[reviewStatus(item)] = (counts[reviewStatus(item)] || 0) + 1;
+  }
+  el.textContent =
+    `${reviewItems.length} Vorschläge · ${counts.pending} offen · ${counts.approved} OK · ` +
+    `${counts.suppressed} ausgeblendet · ${counts.edited} bearbeitet · ${counts.flagged} markiert · localStorage`;
 }
 
 function renderPerspectiveReview() {
   reloadReviewItems();
-  const items = filteredItems();
-  if (reviewIdx >= items.length) reviewIdx = Math.max(0, items.length - 1);
+  clampReviewIndex();
   renderReviewSummary();
   renderReviewNav();
   renderReviewDetail();
@@ -213,6 +261,7 @@ async function initPerspectiveCurator() {
   document.getElementById("persp-filter-status")?.addEventListener("change", (e) => {
     filterStatus = e.target.value;
     reviewIdx = 0;
+    lastSavedKey = null;
     renderPerspectiveReview();
   });
 

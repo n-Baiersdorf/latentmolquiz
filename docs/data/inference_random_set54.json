@@ -149,20 +149,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Amide",
+      "fg_primary": "Lactam",
       "fg_labels": [
         "O im Ring (cycl. Ether)",
         "C=N–H (Imin)",
         "C=O im Ring (Lactam)"
       ],
       "fg_labels_full": [
-        "Amide",
         "Lactam",
         "Imine C=N-H",
         "Ring O aliph"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "–CONR– (Amid)",
+      "fg_primary_de": "C=O im Ring (Lactam)",
       "fg_labels_de": [
         "O im Ring (cycl. Ether)",
         "C=N–H (Imin)",
@@ -756,7 +755,7 @@
     "other_primaries_de": [
       "C=N–H (Imin)",
       "C≡N (Nitril)",
-      "–CONR– (Amid)"
+      "C=O im Ring (Lactam)"
     ],
     "gt_fg": "Ring O aliph",
     "gt_fg_de": "O im Ring (cycl. Ether)",
@@ -785,10 +784,6 @@
     ],
     "highlight_mode": "lacks",
     "glossary": {
-      "–CONR– (Amid)": {
-        "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
-        "image": "fg_ref/amide.png"
-      },
       "C=O im Ring (Lactam)": {
         "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
         "image": "fg_ref/lactam.png"
@@ -846,12 +841,12 @@
     "alt_gt_fgs": {
       "0": "Ether",
       "1": "Nitrile",
-      "2": "Amide"
+      "2": "Lactam"
     },
     "alt_gt_fgs_de": {
       "0": "Ether (–O–)",
       "1": "C≡N (Nitril)",
-      "2": "–CONR– (Amid)"
+      "2": "C=O im Ring (Lactam)"
     },
     "model_pred_idx": 3,
     "model_alt_correct": false,

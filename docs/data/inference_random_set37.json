@@ -198,17 +198,20 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alkyne",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "C≡C (Alkin)"
+        "C≡C (Alkin)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alkyne"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C≡C (Alkin)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "C≡C (Alkin)"
+        "C≡C (Alkin)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C8H13N"
     }
@@ -744,8 +747,8 @@
       "C=N–H (Imin)",
       "O im Ring (cycl. Ether)"
     ],
-    "gt_fg": "Alkyne",
-    "gt_fg_de": "C≡C (Alkin)",
+    "gt_fg": "Tertiary amine",
+    "gt_fg_de": "tert. Amin (3× C–N)",
     "gt_idx": 3,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
@@ -782,6 +785,10 @@
       "–NH– (sekundäres Amin)": {
         "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
         "image": "fg_ref/secondary_amine.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "–OH (Alkohol)": {
         "text": "OH an sp3-C (Kette). Typisch: Alkohol.",

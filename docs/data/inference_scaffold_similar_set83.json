@@ -38,24 +38,21 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Lactam",
+      "fg_primary": "Ring N",
       "fg_labels": [
         "2× N im Ring",
-        "C=O im Ring (Lactam)",
         "–OH im Ring (Heterocycl)"
       ],
       "fg_labels_full": [
-        "Lactam",
         "Ring N",
         "Heterocyclic OH"
       ],
       "fg_ring_n_detail_de": [
         "2× N im Ring"
       ],
-      "fg_primary_de": "C=O im Ring (Lactam)",
+      "fg_primary_de": "N im Ring (Heterocycl)",
       "fg_labels_de": [
         "2× N im Ring",
-        "C=O im Ring (Lactam)",
         "–OH im Ring (Heterocycl)"
       ],
       "mol_formula": "C5H4N2O2"
@@ -875,8 +872,8 @@
       "C≡N (Nitril)",
       "O im Ring (cycl. Ether)"
     ],
-    "gt_fg": "Lactam",
-    "gt_fg_de": "C=O im Ring (Lactam)",
+    "gt_fg": "Ring N",
+    "gt_fg_de": "N im Ring (Heterocycl)",
     "gt_idx": 0,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
@@ -889,7 +886,7 @@
       "N im Ring (Heterocycl)"
     ],
     "gt_instead_fgs_de": [
-      "C=O im Ring (Lactam)"
+      "N im Ring (Heterocycl)"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [
@@ -900,14 +897,10 @@
       "O im Ring (cycl. Ether)"
     ],
     "highlight_instead_de": [
-      "C=O im Ring (Lactam)"
+      "N im Ring (Heterocycl)"
     ],
     "highlight_mode": "lacks",
     "glossary": {
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
-      },
       "C≡N (Nitril)": {
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
         "image": "fg_ref/nitrile.png"

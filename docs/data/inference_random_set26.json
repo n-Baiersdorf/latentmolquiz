@@ -139,17 +139,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "unknown"
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Unbekannt",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
-        "Unbekannt"
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C8H13N"
     },
@@ -732,7 +732,7 @@
     "majority_count": 1,
     "other_primaries_de": [
       "C=C (Alken)",
-      "Unbekannt",
+      "tert. Amin (3× C–N)",
       "C≡N (Nitril)"
     ],
     "gt_fg": "Amide",
@@ -766,6 +766,10 @@
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
         "image": "fg_ref/nitrile.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "C=O am Kettenende (Aldehyd)": {
         "text": "C=O am Kettenende (–CHO). Typisch: Aldehyd.",
         "image": "fg_ref/aldehyde.png"
@@ -773,9 +777,6 @@
       "C=C (Alken)": {
         "text": "C=C außerhalb aromatischer Systeme.",
         "image": "fg_ref/alkene.png"
-      },
-      "Unbekannt": {
-        "text": "Keine typische Gruppe erkannt."
       },
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
@@ -797,12 +798,12 @@
     ],
     "alt_gt_fgs": {
       "0": "Alkene",
-      "2": "unknown",
+      "2": "Tertiary amine",
       "3": "Nitrile"
     },
     "alt_gt_fgs_de": {
       "0": "C=C (Alken)",
-      "2": "Unbekannt",
+      "2": "tert. Amin (3× C–N)",
       "3": "C≡N (Nitril)"
     },
     "model_pred_idx": 1,

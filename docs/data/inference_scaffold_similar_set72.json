@@ -144,17 +144,14 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "C=O im Ring (Lactam)",
         "–CONR– (Amid)"
       ],
       "fg_labels_full": [
-        "Amide",
-        "Lactam"
+        "Amide"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "C=O im Ring (Lactam)",
         "–CONR– (Amid)"
       ],
       "mol_formula": "C7H11NO"
@@ -194,16 +191,19 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "Alkene",
+      "fg_primary": "Tertiary amine",
       "fg_labels": [
+        "tert. Amin (3× C–N)",
         "C=C (Alken)"
       ],
       "fg_labels_full": [
+        "Tertiary amine",
         "Alkene"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "C=C (Alken)",
+      "fg_primary_de": "tert. Amin (3× C–N)",
       "fg_labels_de": [
+        "tert. Amin (3× C–N)",
         "C=C (Alken)"
       ],
       "mol_formula": "C7H9N"
@@ -871,8 +871,8 @@
       "C=O in der Kette (Keton)",
       "–CONR– (Amid)"
     ],
-    "gt_fg": "Alkene",
-    "gt_fg_de": "C=C (Alken)",
+    "gt_fg": "Tertiary amine",
+    "gt_fg_de": "tert. Amin (3× C–N)",
     "gt_idx": 3,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [],
@@ -902,13 +902,13 @@
         "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
         "image": "fg_ref/amide.png"
       },
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
-      },
       "C≡N (Nitril)": {
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
         "image": "fg_ref/nitrile.png"
+      },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
       },
       "Ether (–O–)": {
         "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",

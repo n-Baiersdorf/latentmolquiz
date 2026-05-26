@@ -87,17 +87,17 @@
           "unit": "eV"
         }
       },
-      "fg_primary": "unknown",
+      "fg_primary": "alkane_only",
       "fg_labels": [
-        "Unbekannt"
+        "Keine FG — nur Alkan"
       ],
       "fg_labels_full": [
-        "unknown"
+        "alkane_only"
       ],
       "fg_ring_n_detail_de": [],
-      "fg_primary_de": "Unbekannt",
+      "fg_primary_de": "Keine FG — nur Alkan",
       "fg_labels_de": [
-        "Unbekannt"
+        "Keine FG — nur Alkan"
       ],
       "mol_formula": "C9H14"
     },
@@ -869,8 +869,8 @@
       "C≡N (Nitril)",
       "C=N–H (Imin)"
     ],
-    "gt_fg": "unknown",
-    "gt_fg_de": "Unbekannt",
+    "gt_fg": "alkane_only",
+    "gt_fg_de": "Keine FG — nur Alkan",
     "gt_idx": 1,
     "shared_fgs_de": [],
     "non_gt_shared_fgs_de": [
@@ -880,10 +880,10 @@
       "O im Ring (cycl. Ether)"
     ],
     "gt_extra_fgs_de": [
-      "Unbekannt"
+      "Keine FG — nur Alkan"
     ],
     "gt_instead_fgs_de": [
-      "Unbekannt"
+      "Keine FG — nur Alkan"
     ],
     "gt_lacks_coarse_de": [],
     "gt_extra_coarse_de": [],
@@ -892,7 +892,7 @@
       "O im Ring (cycl. Ether)"
     ],
     "highlight_instead_de": [
-      "Unbekannt"
+      "Keine FG — nur Alkan"
     ],
     "highlight_mode": "lacks",
     "glossary": {
@@ -912,8 +912,9 @@
         "text": "C=C außerhalb aromatischer Systeme.",
         "image": "fg_ref/alkene.png"
       },
-      "Unbekannt": {
-        "text": "Keine typische Gruppe erkannt."
+      "Keine FG — nur Alkan": {
+        "text": "Nur Kohlenstoff und Wasserstoff, ausschließlich Einfachbindungen (auch Ringe wie Cyclohexan). Keine funktionelle Gruppe im Quiz-Sinn — reines gesättigtes Kohlenwasserstoff-Gerüst (Alkan).",
+        "image": "fg_ref/alkane_only.png"
       },
       "N im Ring": {
         "text": "Grobe Einordnung: mindestens ein aromatischer Ring-N; Details in der Tabelle.",
@@ -953,13 +954,7 @@
       "C=N–H (Imin)"
     ],
     "model_criterion_mode": "exclusive",
-    "model_perspective_de": {
-      "title": "Sicht des Modells",
-      "paragraphs": [
-        "Das Modell wählt überwiegend Molekül #4. Möglicherweise weil [[C=N–H (Imin)]] nur in #4 ist."
-      ],
-      "auto": true
-    },
+    "model_perspective_de": null,
     "model_plausible_hint_de": null,
     "model_without_n_fg": false,
     "source": "rdkit",

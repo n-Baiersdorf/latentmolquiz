@@ -89,19 +89,16 @@
       },
       "fg_primary": "Amide",
       "fg_labels": [
-        "C=O im Ring (Lactam)",
         "–CONR– (Amid)",
         "C≡N (Nitril)"
       ],
       "fg_labels_full": [
         "Amide",
-        "Lactam",
         "Nitrile"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "–CONR– (Amid)",
       "fg_labels_de": [
-        "C=O im Ring (Lactam)",
         "–CONR– (Amid)",
         "C≡N (Nitril)"
       ],
@@ -777,10 +774,6 @@
         "text": "Struktur: C=O–N (–CONH₂, –CONHR oder –CONR₂). Typisch: Amid. ",
         "image": "fg_ref/amide.png"
       },
-      "C=O im Ring (Lactam)": {
-        "text": "Cyclisches Amid: C=O und N im selben Ring. Nicht mit Keton verwechseln.",
-        "image": "fg_ref/lactam.png"
-      },
       "C≡N (Nitril)": {
         "text": "Struktur: C≡N-Dreifachbindung. Typisch: Nitril.",
         "image": "fg_ref/nitrile.png"
@@ -815,21 +808,21 @@
       2
     ],
     "alt_gt_fgs": {
-      "1": "Lactam",
+      "1": "Nitrile",
       "2": "Ester"
     },
     "alt_gt_fgs_de": {
-      "1": "C=O im Ring (Lactam)",
+      "1": "C≡N (Nitril)",
       "2": "–COOR (Ester)"
     },
     "model_pred_idx": 1,
     "model_alt_correct": true,
     "model_exclusive_fgs_de": [
-      "C=O im Ring (Lactam)"
+      "C≡N (Nitril)"
     ],
     "model_lacks_fgs_de": [],
     "model_criterion_de": [
-      "C=O im Ring (Lactam)"
+      "C≡N (Nitril)"
     ],
     "model_criterion_mode": "exclusive",
     "model_perspective_de": null,

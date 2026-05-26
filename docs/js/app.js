@@ -14,18 +14,39 @@ import {
   formatProperty,
   isCuratorMode,
 } from "./data-loader.js";
-import { initFgTutorial } from "./fg-tutorial.js";
+import { initFgTutorial, closeFgTutorial } from "./fg-tutorial.js";
 import { renderPeaHeatmap } from "./pea-heatmap.js";
 import { showCuratorScreen, ensureCuratorReady } from "./curator.js";
 import { getEffectiveModelPerspective } from "./model-perspective.js";
+import {
+  bindDetailsKeyHintSync,
+  initKeyHintsLayout,
+  isCompactKeyHints,
+  labelWithKeyHint,
+  setButtonKeyHint,
+  syncDetailsKeyHint,
+} from "./key-hints.js";
+const SCREEN_ID_BY_NAME = {
+  intro: "screen-intro",
+  quiz: "screen-quiz",
+  outro: "screen-outro",
+  speedrunOutro: "screen-speedrun-outro",
+  info: "screen-info",
+  curator: "screen-curator",
+};
 
 const SCREENS = {
   intro: document.getElementById("screen-intro"),
   quiz: document.getElementById("screen-quiz"),
   outro: document.getElementById("screen-outro"),
+  speedrunOutro: document.getElementById("screen-speedrun-outro"),
   info: document.getElementById("screen-info"),
   curator: document.getElementById("screen-curator"),
 };
+
+const POOL_SPEEDRUN_DURATION_MS = 3 * 60 * 1000;
+const SPEEDRUN_PICK_ADVANCE_MS = 380;
+const SPEEDRUN_PICK_ADVANCE_WRONG_MS = 920;
 
 const GLOSSARY_BACKDROP = document.getElementById("fg-glossary-backdrop");
 const GLOSSARY_BODY = document.getElementById("fg-glossary-body");
@@ -35,14 +56,25 @@ const state = {
   curatedSets: [],
   sets: [],
   poolEntries: [],
+  /** Shuffle an: Weiter/←→ folgen gemischter Permutation statt Set-Nummern-Reihe. */
+  poolShuffleOn: false,
+  poolOrder: [],
+  poolOrderPos: 0,
   poolSetData: null,
   poolCache: new Map(),
+  poolPrefetchInFlight: new Set(),
   poolLoading: false,
   quizTransitionLock: false,
   currentIdx: 0,
   juryAnswers: [],
   resolved: false,
   mode: "curated",
+  speedrunScore: 0,
+  speedrunEndsAt: null,
+  speedrunTimeLeftMs: 0,
+  speedrunEnded: false,
+  speedrunPickBusy: false,
+  speedrunTimerInterval: null,
   currentGlossary: null,
   infoReturn: "outro",
   appReady: false,
@@ -50,16 +82,21 @@ const state = {
 };
 
 function showScreen(name) {
-  Object.entries(SCREENS).forEach(([key, el]) => {
-    el?.classList.toggle("active", key === name);
+  const targetId = SCREEN_ID_BY_NAME[name];
+  if (!targetId) return;
+  document.querySelectorAll("#app > section.screen").forEach((el) => {
+    el.classList.toggle("active", el.id === targetId);
   });
+  SCREENS.quiz?.classList.remove("quiz-set-in", "quiz-set-out");
   placeThemeButton(name);
+  refreshKeyHintsLayout();
 }
 
 const THEME_SLOTS = {
   intro: "theme-slot-intro",
   quiz: "theme-slot-quiz",
   outro: "theme-slot-outro",
+  speedrunOutro: "theme-slot-speedrun-outro",
   info: "theme-slot-info",
   curator: "theme-slot-curator",
 };
@@ -83,22 +120,39 @@ function delay(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+function setPoolNavBusy(busy) {
+  if (!isEndlessPoolMode()) return;
+  for (const id of ["pool-shuffle-toggle", "pool-jump-input"]) {
+    document.getElementById(id)?.toggleAttribute("disabled", busy);
+  }
+}
+
 async function runQuizSetTransition(updateFn) {
   const screen = SCREENS.quiz;
   if (!screen || prefersReducedMotion()) {
-    await updateFn();
+    try {
+      await updateFn();
+    } finally {
+      schedulePoolPrefetch();
+    }
     return;
   }
 
   state.quizTransitionLock = true;
-  screen.classList.add("quiz-set-out");
-  await delay(QUIZ_SET_OUT_MS);
-  screen.classList.remove("quiz-set-out");
-  await updateFn();
-  screen.classList.add("quiz-set-in");
-  await delay(QUIZ_SET_IN_MS);
-  screen.classList.remove("quiz-set-in");
-  state.quizTransitionLock = false;
+  setPoolNavBusy(true);
+  try {
+    screen.classList.add("quiz-set-out");
+    await delay(QUIZ_SET_OUT_MS);
+    screen.classList.remove("quiz-set-out");
+    await updateFn();
+    screen.classList.add("quiz-set-in");
+    await delay(QUIZ_SET_IN_MS);
+    screen.classList.remove("quiz-set-in");
+  } finally {
+    state.quizTransitionLock = false;
+    setPoolNavBusy(false);
+    schedulePoolPrefetch();
+  }
 }
 
 function playQuizSetEnter() {
@@ -108,12 +162,387 @@ function playQuizSetEnter() {
   window.setTimeout(() => screen.classList.remove("quiz-set-in"), QUIZ_SET_IN_MS);
 }
 
+function isEndlessPoolMode() {
+  return state.mode === "endless";
+}
+
+function isPoolSpeedrunMode() {
+  return state.mode === "pool-speedrun";
+}
+
+function isPoolMode() {
+  return isEndlessPoolMode() || isPoolSpeedrunMode();
+}
+
+function formatCountdownMs(ms) {
+  const totalSec = Math.max(0, Math.ceil(ms / 1000));
+  const sec = totalSec % 60;
+  const min = Math.floor(totalSec / 60);
+  return `${min}:${String(sec).padStart(2, "0")}`;
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function stopSpeedrunTimer() {
+  if (state.speedrunTimerInterval != null) {
+    window.clearInterval(state.speedrunTimerInterval);
+    state.speedrunTimerInterval = null;
+  }
+}
+
+function startPoolSpeedrunCountdown() {
+  stopSpeedrunTimer();
+  state.speedrunEndsAt = performance.now() + POOL_SPEEDRUN_DURATION_MS;
+  state.speedrunTimeLeftMs = POOL_SPEEDRUN_DURATION_MS;
+  state.speedrunEnded = false;
+  const el = document.getElementById("speedrun-timer");
+  const tick = () => {
+    if (!isPoolSpeedrunMode() || state.speedrunEnded) return;
+    const left = state.speedrunEndsAt - performance.now();
+    state.speedrunTimeLeftMs = left;
+    if (left <= 0) {
+      endPoolSpeedrun();
+      return;
+    }
+    if (el) {
+      el.textContent = formatCountdownMs(left);
+      el.classList.toggle("speedrun-timer-low", left < 30_000);
+    }
+    updateSpeedrunScoreLive();
+  };
+  tick();
+  state.speedrunTimerInterval = window.setInterval(tick, 200);
+}
+
+function updateSpeedrunScoreLive() {
+  const el = document.getElementById("speedrun-score-live");
+  if (el) el.textContent = `Richtig: ${state.speedrunScore}`;
+}
+
+/** FG, die nur am Ausreißer (GT) vorkommt — fairer Speedrun-Hinweis in Feedback. */
+function findGtUniqueFgCue(setData) {
+  if (!setData?.molecules?.length) return null;
+  const gt = setData.ground_truth_ooo_idx;
+  const counts = new Map();
+  for (const mol of setData.molecules) {
+    for (const fg of mol.fg_labels_de || []) {
+      counts.set(fg, (counts.get(fg) || 0) + 1);
+    }
+  }
+  for (const [fgDe, count] of counts) {
+    if (count !== 1) continue;
+    const molIdx = setData.molecules.findIndex((m) => (m.fg_labels_de || []).includes(fgDe));
+    if (molIdx === gt) return { fgDe, molIdx };
+  }
+  return null;
+}
+
+function isSpeedrunPickCorrect(setData, molIdx) {
+  const cue = findGtUniqueFgCue(setData);
+  if (cue) return molIdx === cue.molIdx;
+  return molIdx === setData.ground_truth_ooo_idx;
+}
+
+function buildSpeedrunWrongFeedback(setData, pickedIdx) {
+  const gt = setData.ground_truth_ooo_idx;
+  const cue = findGtUniqueFgCue(setData);
+  if (cue) {
+    return `Richtig: #${gt + 1} — nur dort: „${cue.fgDe}“`;
+  }
+  const gtMol = setData.molecules[gt];
+  const primary = gtMol?.fg_primary || setData._fgAnalysis?.gt_fg;
+  if (primary) return `Ausreißer: #${gt + 1} (${primary})`;
+  if (cue) return `Ausreißer: #${gt + 1} — „${cue.fgDe}“ nur einmal`;
+  return `Ausreißer war #${gt + 1}, nicht #${pickedIdx + 1}`;
+}
+
+function setSpeedrunFeedback(text) {
+  const el = document.getElementById("speedrun-feedback");
+  if (!el) return;
+  if (!text) {
+    el.textContent = "";
+    el.classList.add("hidden");
+    return;
+  }
+  el.textContent = text;
+  el.classList.remove("hidden");
+}
+
+async function findNextSpeedrunPoolIndex(fromIdx) {
+  let idx = fromIdx;
+  while (idx < state.poolEntries.length) {
+    await ensurePoolSetAt(idx);
+    if (findGtUniqueFgCue(getCurrentSetData())) return idx;
+    idx++;
+  }
+  return idx;
+}
+
+function updateQuizChrome() {
+  const poolBar = document.getElementById("pool-toolbar");
+  const timer = document.getElementById("speedrun-timer");
+  const scoreLive = document.getElementById("speedrun-score-live");
+  poolBar?.classList.toggle("hidden", !isEndlessPoolMode());
+  timer?.classList.toggle("hidden", !isPoolSpeedrunMode());
+  scoreLive?.classList.toggle("hidden", !isPoolSpeedrunMode());
+  if (isEndlessPoolMode()) {
+    updatePoolToolbarFields();
+    updatePoolShuffleToggleUi();
+  }
+  if (isPoolSpeedrunMode()) updateSpeedrunScoreLive();
+  updateQuizKeyHints();
+}
+
+function updateQuizTopHintsEl() {
+  const el = document.getElementById("quiz-kbd-hints");
+  if (!el) return;
+  if (!SCREENS.quiz?.classList.contains("active")) {
+    el.innerHTML = "";
+    el.classList.add("hidden");
+    return;
+  }
+
+  const items = [];
+  if (isPoolSpeedrunMode()) {
+    items.push(["1–4", "wählen"], ["H", "Menü"]);
+  } else {
+    items.push(["1–4", "Molekül"], ["←", "Set"], ["→", "Set"]);
+    if (isEndlessPoolMode()) items.push(["R", "Shuffle"]);
+    if (state.resolved) {
+      items.push(["F", "FG-Tabelle"], ["P", "PEA"], ["Enter", "Weiter"]);
+    }
+    items.push(["H", "Menü"]);
+  }
+
+  el.innerHTML = items
+    .map(
+      ([key, text]) =>
+        `<span class="quiz-kbd-item"><kbd class="key-hint">${key}</kbd> ${text}</span>`
+    )
+    .join('<span class="quiz-kbd-sep" aria-hidden="true">·</span>');
+  el.classList.toggle("hidden", isCompactKeyHints());
+}
+
+function updateQuizKeyHints() {
+  const btnNext = document.getElementById("btn-next");
+  const btnHome = document.getElementById("btn-home");
+  const btnPrev = document.getElementById("btn-prev");
+  const shuffleBtn = document.getElementById("pool-shuffle-toggle");
+
+  if (btnNext && !btnNext.classList.contains("hidden")) {
+    setButtonKeyHint(btnNext, "Weiter →", state.resolved ? "Enter" : "→");
+  }
+
+  setButtonKeyHint(btnHome, "Hauptmenü", "H");
+
+  if (btnPrev && !btnPrev.classList.contains("hidden")) {
+    btnPrev.innerHTML = labelWithKeyHint("←", "←", { forcePrefix: true });
+    btnPrev.setAttribute("aria-label", "Vorheriges Set (Pfeil links)");
+  }
+
+  if (shuffleBtn && isEndlessPoolMode()) {
+    const stateEl = shuffleBtn.querySelector(".pool-shuffle-state");
+    const onOff = stateEl?.textContent?.trim() || "aus";
+    const label = `Shuffle: ${onOff}`;
+    shuffleBtn.innerHTML = `${labelWithKeyHint(label, "R", { forcePrefix: true })}`;
+    shuffleBtn.setAttribute(
+      "title",
+      "Gemischte Reihenfolge ein/aus — bei „an“ folgt Weiter/Enter der gemischten Permutation"
+    );
+  }
+
+  syncDetailsKeyHint(document.getElementById("fg-highlight-details"));
+  syncDetailsKeyHint(document.getElementById("pea-panel-details"));
+  updateQuizTopHintsEl();
+}
+
+function refreshKeyHintsLayout() {
+  updateQuizKeyHints();
+  const btnStart = document.getElementById("btn-start");
+  if (btnStart && btnStart.getAttribute("aria-busy") !== "true" && !btnStart.disabled) {
+    setButtonKeyHint(btnStart, "Los geht's", "1");
+  }
+  document.querySelectorAll("#screen-intro .intro-link[data-label]").forEach((btn) => {
+    const key = (btn.dataset.keyHint || "").replace(/^\(|\)$/g, "");
+    if (btn.dataset.label) setButtonKeyHint(btn, btn.dataset.label, key || null);
+  });
+  const introTutorial = document.getElementById("btn-intro-fg-tutorial");
+  if (introTutorial) {
+    setButtonKeyHint(introTutorial, "Tutorial: Funktionelle Gruppen kurz erklärt", "2");
+  }
+  const introInfo = document.getElementById("btn-intro-more-info");
+  if (introInfo) setButtonKeyHint(introInfo, "Mehr zum KI-Modell", "5");
+  for (const id of ["btn-speedrun-outro-home", "btn-outro-home"]) {
+    setButtonKeyHint(document.getElementById(id), "Hauptmenü", "H");
+  }
+  const theme =
+    document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  const followsSystem =
+    localStorage.getItem(THEME_KEY) !== "light" && localStorage.getItem(THEME_KEY) !== "dark";
+  updateThemeButton(theme, followsSystem);
+}
+
+function updatePoolToolbarFields() {
+  const total = state.poolEntries.length;
+  const input = document.getElementById("pool-jump-input");
+  const totalEl = document.getElementById("pool-jump-total");
+  const idEl = document.getElementById("pool-set-id");
+  if (input) {
+    input.max = String(Math.max(1, total));
+    input.value = String(state.currentIdx + 1);
+  }
+  if (totalEl) totalEl.textContent = `/ ${total}`;
+  const entry = state.poolEntries[state.currentIdx];
+  if (idEl) {
+    idEl.textContent = entry ? poolEntryKey(entry) : "";
+  }
+}
+
+/** Set-Zähler und Pool-Sprungfeld sofort mit currentIdx synchronisieren. */
+function syncPoolIndexChrome() {
+  if (!isEndlessPoolMode()) return;
+  updateProgress();
+  updatePoolToolbarFields();
+}
+
+async function jumpToPoolIndex(idx) {
+  if (!isEndlessPoolMode() || state.poolLoading || state.quizTransitionLock) return;
+  const total = state.poolEntries.length;
+  if (!total) return;
+  const next = Math.min(Math.max(0, idx), total - 1);
+  if (next === state.currentIdx) {
+    syncPoolIndexChrome();
+    return;
+  }
+  state.currentIdx = next;
+  syncPoolOrderPosToCurrentIdx();
+  syncPoolIndexChrome();
+  const entry = state.poolEntries[next];
+  const needsLoad = entry && !state.poolCache.has(poolEntryKey(entry));
+  if (needsLoad) {
+    const label = document.getElementById("progress-label");
+    if (label) label.textContent = "Lade Set …";
+  }
+  try {
+    await runQuizSetTransition(async () => {
+      await ensurePoolSetAt(state.currentIdx);
+      renderCurrentSet();
+      window.scrollTo(0, 0);
+    });
+  } catch (err) {
+    console.error(err);
+    showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
+    syncPoolIndexChrome();
+  }
+}
+
+function onPoolJumpFromInput() {
+  if (!isEndlessPoolMode() || state.poolLoading || state.quizTransitionLock) return;
+  const input = document.getElementById("pool-jump-input");
+  if (!input) return;
+  const total = state.poolEntries.length;
+  if (!total) return;
+  const n = parseInt(input.value, 10);
+  if (!Number.isFinite(n) || n < 1) return;
+  const idx = Math.min(n, total) - 1;
+  const display = String(idx + 1);
+  if (input.value !== display) input.value = display;
+  jumpToPoolIndex(idx);
+}
+
+function initPoolPermutation() {
+  const n = state.poolEntries.length;
+  state.poolOrder = shuffleArray(Array.from({ length: n }, (_, i) => i));
+  state.poolOrderPos = 0;
+}
+
+function syncPoolOrderPosToCurrentIdx() {
+  if (!state.poolOrder?.length) return;
+  const pos = state.poolOrder.indexOf(state.currentIdx);
+  if (pos >= 0) state.poolOrderPos = pos;
+}
+
+/** Nächstes Set in der Permutation (kein Zurücklegen bis alle einmal dran waren). */
+function nextPoolPermutationIndex() {
+  const n = state.poolOrder.length;
+  if (n <= 1) return state.currentIdx;
+  if (state.poolOrderPos < n - 1) {
+    state.poolOrderPos++;
+  } else {
+    const prev = state.currentIdx;
+    initPoolPermutation();
+    if (n > 1 && state.poolOrder[0] === prev) {
+      const j = 1 + Math.floor(Math.random() * (n - 1));
+      [state.poolOrder[0], state.poolOrder[j]] = [state.poolOrder[j], state.poolOrder[0]];
+    }
+    state.poolOrderPos = 0;
+  }
+  return state.poolOrder[state.poolOrderPos];
+}
+
+function prevPoolPermutationIndex() {
+  const n = state.poolOrder.length;
+  if (n <= 1) return state.currentIdx;
+  if (state.poolOrderPos > 0) {
+    state.poolOrderPos--;
+  } else {
+    state.poolOrderPos = n - 1;
+  }
+  return state.poolOrder[state.poolOrderPos];
+}
+
+function updatePoolShuffleToggleUi() {
+  const btn = document.getElementById("pool-shuffle-toggle");
+  const stateEl = btn?.querySelector(".pool-shuffle-state");
+  if (!btn) return;
+  const on = state.poolShuffleOn;
+  btn.setAttribute("aria-pressed", on ? "true" : "false");
+  btn.classList.toggle("is-on", on);
+  if (stateEl) stateEl.textContent = on ? "an" : "aus";
+  updateQuizKeyHints();
+}
+
+function togglePoolShuffle() {
+  if (!isEndlessPoolMode()) return;
+  state.poolShuffleOn = !state.poolShuffleOn;
+  if (state.poolShuffleOn) {
+    initPoolPermutation();
+    syncPoolOrderPosToCurrentIdx();
+    schedulePoolPrefetch(2);
+  }
+  updatePoolShuffleToggleUi();
+}
+
+async function navigatePoolSet(delta) {
+  if (!isEndlessPoolMode() || state.poolLoading || state.quizTransitionLock) return;
+  const total = state.poolEntries.length;
+  if (!total) return;
+  if (state.poolShuffleOn) {
+    const idx = delta > 0 ? nextPoolPermutationIndex() : prevPoolPermutationIndex();
+    await jumpToPoolIndex(idx);
+    return;
+  }
+  const next = state.currentIdx + delta;
+  if (next < 0 || next >= total) return;
+  await jumpToPoolIndex(next);
+}
+
 function updateProgress() {
-  const total = state.mode === "endless" ? state.poolEntries.length : state.sets.length;
-  const current = state.currentIdx + 1;
   const label = document.getElementById("progress-label");
   if (!label) return;
-  if (state.mode === "endless") {
+  if (isPoolSpeedrunMode()) {
+    label.textContent = `Pool Speedrun · gemischt`;
+    return;
+  }
+  const total = isEndlessPoolMode() ? state.poolEntries.length : state.sets.length;
+  const current = state.currentIdx + 1;
+  if (isEndlessPoolMode()) {
     label.textContent = `${current} / ${total} · Pool`;
   } else {
     label.textContent = `${current} / ${total}`;
@@ -121,12 +550,45 @@ function updateProgress() {
 }
 
 function getCurrentSetData() {
-  if (state.mode === "endless") return state.poolSetData;
+  if (isPoolMode()) return state.poolSetData;
   return state.sets[state.currentIdx];
 }
 
 function poolEntryKey(entry) {
   return `${entry.strategy}_${entry.set_idx}`;
+}
+
+async function prefetchPoolSetByIndex(idx) {
+  const entry = state.poolEntries[idx];
+  if (!entry) return;
+  const key = poolEntryKey(entry);
+  if (state.poolCache.has(key) || state.poolPrefetchInFlight.has(key)) return;
+  state.poolPrefetchInFlight.add(key);
+  try {
+    const enriched = await loadPoolSetEntry(entry);
+    if (enriched) state.poolCache.set(key, enriched);
+  } catch (err) {
+    console.warn("Pool-Prefetch fehlgeschlagen:", key, err);
+  } finally {
+    state.poolPrefetchInFlight.delete(key);
+  }
+}
+
+function schedulePoolPrefetch(count = 2) {
+  if (
+    !state.poolShuffleOn ||
+    !isEndlessPoolMode() ||
+    state.poolEntries.length < 2 ||
+    !state.poolOrder?.length
+  ) {
+    return;
+  }
+  const n = state.poolOrder.length;
+  let pos = state.poolOrderPos;
+  for (let i = 0; i < count; i++) {
+    pos = pos < n - 1 ? pos + 1 : 0;
+    void prefetchPoolSetByIndex(state.poolOrder[pos]);
+  }
 }
 
 async function ensurePoolSetAt(idx) {
@@ -136,12 +598,14 @@ async function ensurePoolSetAt(idx) {
   const key = poolEntryKey(entry);
   if (state.poolCache.has(key)) {
     state.poolSetData = state.poolCache.get(key);
+    schedulePoolPrefetch();
     return;
   }
 
   const label = document.getElementById("progress-label");
   if (label) label.textContent = "Lade Set …";
   state.poolLoading = true;
+  setPoolNavBusy(true);
   try {
     const enriched = await loadPoolSetEntry(entry);
     if (!enriched) throw new Error(`Set ${key} nicht verfügbar`);
@@ -149,6 +613,9 @@ async function ensurePoolSetAt(idx) {
     state.poolSetData = enriched;
   } finally {
     state.poolLoading = false;
+    setPoolNavBusy(false);
+    updateProgress();
+    schedulePoolPrefetch();
   }
 }
 
@@ -688,11 +1155,25 @@ function renderFgHighlight(setData) {
     <p class="fg-highlight-body">${bodyHtml}</p>
     ${subHtml ? `<p class="fg-highlight-sub">${subHtml}</p>` : ""}`;
 
+  document.getElementById("fg-highlight-details")?.classList.remove("hidden");
   bindFgChipClicks(el, glossary);
+}
+
+function clearResolutionFgPanels() {
+  const highlight = document.getElementById("fg-highlight");
+  if (highlight) highlight.innerHTML = "";
+  const summary = document.getElementById("fg-summary");
+  if (summary) summary.innerHTML = "";
+  const details = document.getElementById("fg-highlight-details");
+  if (details) {
+    details.open = false;
+    details.classList.add("hidden");
+  }
 }
 
 function renderFgSummary(setData) {
   const el = document.getElementById("fg-summary");
+  if (!el) return;
   el.innerHTML = "";
 
   const gtIdx = setData.ground_truth_ooo_idx;
@@ -710,10 +1191,7 @@ function renderFgSummary(setData) {
   }
   state.currentGlossary = fg?.glossary || null;
 
-  let html = `<div class="fg-table-block">
-  <div class="fg-table-head">
-    <p class="fg-section-title">Alle funktionellen Gruppen je Molekül</p>
-  </div>`;
+  let html = `<div class="fg-table-block">`;
 
   if (!hasFgData(setData)) {
     html += `<p class="fg-missing">Funktionelle Gruppen konnten nicht geladen werden — bitte Seite neu laden (Hard-Refresh). Was funktionelle Gruppen sind, steht unter „Mehr zum KI-Modell“.</p>`;
@@ -763,8 +1241,8 @@ function scrollQuizToMolTops(offset = 8) {
   scrollToElementWithOffset(img || document.getElementById("molecule-grid"), offset);
 }
 
-function scrollResolutionDetailsIntoView() {
-  const details = document.getElementById("resolution-details");
+function scrollFgHighlightDetailsIntoView() {
+  const details = document.getElementById("fg-highlight-details");
   if (!details) return;
   const target = details.querySelector("summary") || details;
   requestAnimationFrame(() => {
@@ -778,12 +1256,36 @@ function ensureResolutionInView() {
   scrollQuizToMolTops(8);
 }
 
-function toggleResolutionDetails() {
-  const details = document.getElementById("resolution-details");
+function toggleFgHighlightDetails() {
+  const details = document.getElementById("fg-highlight-details");
   if (!details) return;
   details.open = !details.open;
+  syncDetailsKeyHint(details);
+  updateQuizTopHintsEl();
   if (details.open) {
-    scrollResolutionDetailsIntoView();
+    scrollFgHighlightDetailsIntoView();
+  }
+}
+
+function scrollPeaPanelIntoView() {
+  const details = document.getElementById("pea-panel-details");
+  if (!details) return;
+  const target = details.querySelector("summary") || details;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollToElementWithOffset(target, 8);
+    });
+  });
+}
+
+function togglePeaPanelDetails() {
+  const details = document.getElementById("pea-panel-details");
+  if (!details) return;
+  details.open = !details.open;
+  syncDetailsKeyHint(details);
+  updateQuizTopHintsEl();
+  if (details.open) {
+    scrollPeaPanelIntoView();
   }
 }
 
@@ -791,9 +1293,9 @@ function renderCurrentSet() {
   const setData = getCurrentSetData();
   if (!setData) return;
 
-  const juryIdx = state.juryAnswers[state.currentIdx];
   const gtIdx = setData.ground_truth_ooo_idx;
-  const resolved = juryIdx != null;
+  const juryIdx = isPoolSpeedrunMode() ? null : state.juryAnswers[state.currentIdx];
+  const resolved = !isPoolSpeedrunMode() && juryIdx != null;
   state.resolved = resolved;
 
   const grid = document.getElementById("molecule-grid");
@@ -819,6 +1321,28 @@ function renderCurrentSet() {
   const btnNext = document.getElementById("btn-next");
   const btnPrev = document.getElementById("btn-prev");
 
+  if (isPoolSpeedrunMode()) {
+    const question = document.querySelector("#screen-quiz .question");
+    if (question) {
+      question.textContent = "Welches Molekül passt nicht? (1–4, schnell!)";
+    }
+    resolution?.classList.add("hidden");
+    btnNext?.classList.add("hidden");
+    btnPrev?.classList.add("hidden");
+    closeGlossary();
+    clearResolutionFgPanels();
+    document.getElementById("fg-model-perspective")?.classList.add("hidden");
+    document.getElementById("pea-container").innerHTML = "";
+    setSpeedrunFeedback("");
+    updateProgress();
+    updateQuizChrome();
+    return;
+  }
+
+  btnPrev?.classList.remove("hidden");
+  const question = document.querySelector("#screen-quiz .question");
+  if (question) question.textContent = "Welches Molekül passt nicht dazu?";
+
   if (resolved) {
     resolution.classList.remove("hidden");
     btnNext.classList.remove("hidden");
@@ -827,8 +1351,10 @@ function renderCurrentSet() {
     renderModelPerspective(setData);
     renderFgSummary(setData);
 
-    const details = document.getElementById("resolution-details");
-    if (details) details.open = false;
+    const fgDetails = document.getElementById("fg-highlight-details");
+    if (fgDetails) fgDetails.open = false;
+    const peaDetails = document.getElementById("pea-panel-details");
+    if (peaDetails) peaDetails.open = false;
 
     renderPeaHeatmap(
       document.getElementById("pea-container"),
@@ -846,23 +1372,94 @@ function renderCurrentSet() {
   } else {
     resolution.classList.add("hidden");
     btnNext.classList.add("hidden");
-    document.getElementById("fg-highlight").innerHTML = "";
+    clearResolutionFgPanels();
     const perspectiveEl = document.getElementById("fg-model-perspective");
     if (perspectiveEl) {
       perspectiveEl.innerHTML = "";
       perspectiveEl.classList.add("hidden");
     }
-    document.getElementById("fg-summary").innerHTML = "";
     document.getElementById("pea-container").innerHTML = "";
     closeGlossary();
   }
 
   btnPrev.disabled = state.currentIdx === 0;
   updateProgress();
+  updateQuizChrome();
+}
+
+async function advancePoolSpeedrunSet() {
+  if (!isPoolSpeedrunMode() || state.speedrunEnded || state.speedrunTimeLeftMs <= 0) return;
+  let nextIdx = state.currentIdx + 1;
+  if (nextIdx >= state.poolEntries.length) nextIdx = 0;
+  try {
+    let found = await findNextSpeedrunPoolIndex(nextIdx);
+    if (found >= state.poolEntries.length) {
+      found = await findNextSpeedrunPoolIndex(0);
+    }
+    state.currentIdx = found < state.poolEntries.length ? found : nextIdx;
+    await ensurePoolSetAt(state.currentIdx);
+    renderCurrentSet();
+    playQuizSetEnter();
+  } catch (err) {
+    console.error(err);
+    endPoolSpeedrun();
+  }
+}
+
+function onSpeedrunPick(molIdx) {
+  if (state.speedrunPickBusy || state.speedrunEnded || state.speedrunTimeLeftMs <= 0) return;
+  const setData = getCurrentSetData();
+  if (!setData) return;
+
+  state.speedrunPickBusy = true;
+  const correct = isSpeedrunPickCorrect(setData, molIdx);
+  if (correct) state.speedrunScore++;
+
+  const quizBody = document.getElementById("quiz-body");
+  const grid = document.getElementById("molecule-grid");
+  quizBody?.classList.remove("speedrun-flash-ok", "speedrun-flash-bad");
+  grid?.querySelectorAll(".mol").forEach((card, i) => {
+    card.classList.remove("speedrun-pick-ok", "speedrun-pick-bad");
+    if (i === molIdx) card.classList.add(correct ? "speedrun-pick-ok" : "speedrun-pick-bad");
+    if (!correct && i === setData.ground_truth_ooo_idx) {
+      card.classList.add("speedrun-pick-ok");
+    }
+  });
+  quizBody?.classList.add(correct ? "speedrun-flash-ok" : "speedrun-flash-bad");
+  setSpeedrunFeedback(correct ? "" : buildSpeedrunWrongFeedback(setData, molIdx));
+  updateSpeedrunScoreLive();
+
+  const delay = correct ? SPEEDRUN_PICK_ADVANCE_MS : SPEEDRUN_PICK_ADVANCE_WRONG_MS;
+  window.setTimeout(async () => {
+    quizBody?.classList.remove("speedrun-flash-ok", "speedrun-flash-bad");
+    setSpeedrunFeedback("");
+    state.speedrunPickBusy = false;
+    if (!state.speedrunEnded && state.speedrunTimeLeftMs > 0) {
+      await advancePoolSpeedrunSet();
+    }
+  }, delay);
+}
+
+function endPoolSpeedrun() {
+  if (state.speedrunEnded) return;
+  state.speedrunEnded = true;
+  stopSpeedrunTimer();
+  closeGlossary();
+  const final = document.getElementById("speedrun-final-score");
+  if (final) {
+    final.textContent = `Du hast ${state.speedrunScore} Ausreißer in 3 Minuten richtig erkannt.`;
+  }
+  showScreen("speedrunOutro");
+  placeThemeButton("speedrunOutro");
 }
 
 function onMoleculeClick(molIdx) {
-  if (state.resolved || state.quizTransitionLock) return;
+  if (state.quizTransitionLock) return;
+  if (isPoolSpeedrunMode()) {
+    onSpeedrunPick(molIdx);
+    return;
+  }
+  if (state.resolved) return;
   state.juryAnswers[state.currentIdx] = molIdx;
   document.getElementById("quiz-body")?.classList.add("is-revealing");
   renderCurrentSet();
@@ -873,22 +1470,27 @@ function onMoleculeClick(molIdx) {
 
 async function goNext() {
   if (state.poolLoading || state.quizTransitionLock) return;
+  if (isPoolSpeedrunMode()) return;
 
   if (state.mode === "endless") {
-    const total = state.poolEntries.length;
     try {
-      await runQuizSetTransition(async () => {
+      if (state.poolShuffleOn) {
+        await jumpToPoolIndex(nextPoolPermutationIndex());
+      } else {
+        const total = state.poolEntries.length;
         if (state.currentIdx < total - 1) {
           state.currentIdx++;
-          await ensurePoolSetAt(state.currentIdx);
         } else {
           state.currentIdx = 0;
           state.juryAnswers = new Array(total).fill(null);
-          await ensurePoolSetAt(0);
         }
-        renderCurrentSet();
-        window.scrollTo(0, 0);
-      });
+        syncPoolIndexChrome();
+        await runQuizSetTransition(async () => {
+          await ensurePoolSetAt(state.currentIdx);
+          renderCurrentSet();
+          window.scrollTo(0, 0);
+        });
+      }
     } catch (err) {
       console.error(err);
       showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
@@ -909,16 +1511,22 @@ async function goNext() {
 
 async function goPrev() {
   if (state.poolLoading || state.quizTransitionLock) return;
-  if (state.currentIdx === 0) return;
+  if (isPoolSpeedrunMode()) return;
+  if (!state.poolShuffleOn && state.currentIdx === 0) return;
 
   if (state.mode === "endless") {
     try {
-      await runQuizSetTransition(async () => {
+      if (state.poolShuffleOn) {
+        await jumpToPoolIndex(prevPoolPermutationIndex());
+      } else {
         state.currentIdx--;
-        await ensurePoolSetAt(state.currentIdx);
-        renderCurrentSet();
-        window.scrollTo(0, 0);
-      });
+        syncPoolIndexChrome();
+        await runQuizSetTransition(async () => {
+          await ensurePoolSetAt(state.currentIdx);
+          renderCurrentSet();
+          window.scrollTo(0, 0);
+        });
+      }
     } catch (err) {
       console.error(err);
       showIntroLoadError(`Set konnte nicht geladen werden: ${err.message}`);
@@ -934,7 +1542,7 @@ async function goPrev() {
 }
 
 function showOutro() {
-  if (state.mode === "endless") return;
+  if (isPoolMode()) return;
   const total = state.curatedSets.length;
   let juryCorrect = 0;
   state.curatedSets.forEach((set, i) => {
@@ -944,11 +1552,6 @@ function showOutro() {
     `Du lagst ${juryCorrect} von ${total} mal richtig.`;
   closeGlossary();
   showScreen("outro");
-}
-
-function actionButtonHtml(label, hint = null) {
-  if (!hint) return label;
-  return `${label} <span class="key-hint key-hint-suffix" aria-hidden="true">(${hint})</span>`;
 }
 
 function setStartButtonState(loading, errorMsg = null) {
@@ -963,7 +1566,7 @@ function setStartButtonState(loading, errorMsg = null) {
   }
 
   btn.removeAttribute("aria-busy");
-  btn.innerHTML = actionButtonHtml("Los geht's", "1");
+  setButtonKeyHint(btn, "Los geht's", "1");
   btn.disabled = Boolean(errorMsg) || !state.curatedSets.length;
 }
 
@@ -990,10 +1593,30 @@ function bindQuizControls() {
   document.getElementById("btn-restart")?.addEventListener("click", onStartClick);
   document.getElementById("btn-endless")?.addEventListener("click", onEndlessClick);
   document.getElementById("btn-intro-endless")?.addEventListener("click", onEndlessClick);
+  document.getElementById("btn-intro-pool-speedrun")?.addEventListener("click", () => {
+    startPoolSpeedrun().catch((err) => console.error(err));
+  });
+  document.getElementById("btn-speedrun-retry")?.addEventListener("click", () => {
+    startPoolSpeedrun().catch((err) => console.error(err));
+  });
+  document.getElementById("btn-speedrun-to-pool")?.addEventListener("click", onEndlessClick);
+  document.getElementById("btn-speedrun-outro-home")?.addEventListener("click", goHome);
+  document.getElementById("pool-shuffle-toggle")?.addEventListener("click", togglePoolShuffle);
+  const poolJumpInput = document.getElementById("pool-jump-input");
+  poolJumpInput?.addEventListener("change", onPoolJumpFromInput);
+  poolJumpInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      onPoolJumpFromInput();
+    }
+  });
   document.getElementById("btn-more-info")?.addEventListener("click", () => showInfoScreen("outro"));
   document.getElementById("btn-intro-more-info")?.addEventListener("click", () => showInfoScreen("intro"));
   document.getElementById("btn-info-back")?.addEventListener("click", () => {
-    goHome();
+    if (state.infoReturn === "intro") goHome();
+    else if (state.infoReturn === "outro") showScreen("outro");
+    else showScreen("intro");
   });
   document.getElementById("btn-back-quiz")?.addEventListener("click", async () => {
     setStartButtonState(true);
@@ -1041,32 +1664,106 @@ function onEndlessClick() {
   });
 }
 
+function restoreIntroLinkBtn(btn, loading) {
+  if (!btn) return;
+  btn.disabled = loading;
+  const base = btn.dataset.label;
+  if (!base) return;
+  const key = (btn.dataset.keyHint || "").replace(/^\(|\)$/g, "");
+  if (loading) {
+    btn.textContent = "Lade …";
+    return;
+  }
+  setButtonKeyHint(btn, base, key || null);
+}
+
 function setPoolButtonsLoading(loading) {
-  for (const id of ["btn-intro-endless", "btn-endless"]) {
-    const btn = document.getElementById(id);
-    if (!btn) continue;
-    btn.disabled = loading;
-    btn.textContent = loading ? "Lade …" : POOL_BTN_LABEL;
+  restoreIntroLinkBtn(document.getElementById("btn-intro-endless"), loading);
+  restoreIntroLinkBtn(document.getElementById("btn-intro-pool-speedrun"), loading);
+  const endlessOutro = document.getElementById("btn-endless");
+  if (endlessOutro) {
+    endlessOutro.disabled = loading;
+    endlessOutro.textContent = loading ? "Lade …" : POOL_BTN_LABEL;
   }
 }
 
+function resetSpeedrunState() {
+  stopSpeedrunTimer();
+  state.speedrunScore = 0;
+  state.speedrunEndsAt = null;
+  state.speedrunTimeLeftMs = 0;
+  state.speedrunEnded = false;
+  state.speedrunPickBusy = false;
+}
+
 function goHome() {
+  resetSpeedrunState();
+  state.mode = null;
+  state.quizTransitionLock = false;
   closeGlossary();
+  closeFgTutorial();
   showScreen("intro");
+  updateQuizChrome();
+  setPoolButtonsLoading(false);
+  if (state.curatedSets.length) {
+    state.loadError = null;
+    document.getElementById("intro-load-error")?.remove();
+    setStartButtonState(false, null);
+  }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function startQuiz() {
+  resetSpeedrunState();
   state.mode = "curated";
   state.sets = state.curatedSets;
   state.currentIdx = 0;
   state.juryAnswers = new Array(state.sets.length).fill(null);
   showScreen("quiz");
+  updateQuizChrome();
   renderCurrentSet();
   playQuizSetEnter();
 }
 
+async function startPoolSpeedrun() {
+  if (!state.appReady) {
+    showIntroLoadError("Quiz wird noch geladen — bitte einen Moment warten.");
+    return;
+  }
+  if (state.loadError || !state.config?.sets?.length) {
+    showIntroLoadError(state.loadError || "Keine Sets geladen — bitte Seite neu laden.");
+    return;
+  }
+  setPoolButtonsLoading(true);
+  try {
+    const manifest = await loadPoolManifest();
+    const curated = state.config.sets.map((e) => `${e.strategy}_${e.set_idx}`);
+    state.poolEntries = shuffleArray(buildPoolEntries(manifest, curated));
+    if (!state.poolEntries.length) {
+      throw new Error("Keine zusätzlichen Sets im Pool.");
+    }
+    state.poolCache = new Map();
+    state.poolSetData = null;
+    state.mode = "pool-speedrun";
+    state.sets = [];
+    resetSpeedrunState();
+    state.speedrunScore = 0;
+    let startIdx = await findNextSpeedrunPoolIndex(0);
+    if (startIdx >= state.poolEntries.length) startIdx = 0;
+    state.currentIdx = startIdx;
+    await ensurePoolSetAt(state.currentIdx);
+    showScreen("quiz");
+    updateQuizChrome();
+    startPoolSpeedrunCountdown();
+    renderCurrentSet();
+    playQuizSetEnter();
+  } finally {
+    setPoolButtonsLoading(false);
+  }
+}
+
 async function startEndlessMode() {
+  resetSpeedrunState();
   setPoolButtonsLoading(true);
   try {
     const manifest = await loadPoolManifest();
@@ -1078,11 +1775,15 @@ async function startEndlessMode() {
     state.poolCache = new Map();
     state.poolSetData = null;
     state.mode = "endless";
+    state.poolShuffleOn = false;
+    state.poolOrder = [];
+    state.poolOrderPos = 0;
     state.currentIdx = 0;
     state.juryAnswers = new Array(state.poolEntries.length).fill(null);
     state.sets = [];
     await ensurePoolSetAt(0);
     showScreen("quiz");
+    updateQuizChrome();
     renderCurrentSet();
     playQuizSetEnter();
   } finally {
@@ -1133,13 +1834,31 @@ function initKeyboard() {
     const tutorialBackdrop = document.getElementById("fg-tutorial-backdrop");
     if (tutorialBackdrop && !tutorialBackdrop.classList.contains("hidden")) return;
 
-    if (isCuratorMode() && SCREENS.curator.classList.contains("active")) return;
+    if (isCuratorMode()) {
+      const curatorActive =
+        SCREENS.curator?.classList.contains("active") ||
+        document.getElementById("screen-perspective-curator")?.classList.contains("active") ||
+        document.getElementById("screen-fg-curator")?.classList.contains("active");
+      if (curatorActive) return;
+    }
 
-    if (SCREENS.quiz.classList.contains("active")) {
-      if (e.key === "d" || e.key === "D") {
+    if (SCREENS.quiz?.classList.contains("active")) {
+      if (e.key === "f" || e.key === "F") {
         if (state.resolved) {
           e.preventDefault();
-          toggleResolutionDetails();
+          toggleFgHighlightDetails();
+        }
+        return;
+      }
+      if ((e.key === "r" || e.key === "R") && isEndlessPoolMode()) {
+        e.preventDefault();
+        togglePoolShuffle();
+        return;
+      }
+      if (e.key === "p" || e.key === "P") {
+        if (state.resolved) {
+          e.preventDefault();
+          togglePeaPanelDetails();
         }
         return;
       }
@@ -1148,23 +1867,40 @@ function initKeyboard() {
         goHome();
         return;
       }
-      if (e.key === "ArrowRight" && state.resolved) {
-        e.preventDefault();
-        goNext();
-      } else if (e.key === "ArrowLeft") {
+      if (isPoolSpeedrunMode()) {
+        if (e.key >= "1" && e.key <= "4") {
+          e.preventDefault();
+          onMoleculeClick(parseInt(e.key, 10) - 1);
+        }
+        return;
+      }
+      if (e.key === "ArrowLeft") {
         e.preventDefault();
         goPrev();
-      } else if (e.key === "Enter" && state.resolved) {
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (state.resolved) {
+          goNext();
+        } else if (isEndlessPoolMode()) {
+          navigatePoolSet(1);
+        }
+        return;
+      }
+      if ((e.key === "Enter" || e.key === " ") && state.resolved) {
         e.preventDefault();
         goNext();
-      } else if (!state.resolved && e.key >= "1" && e.key <= "4") {
+        return;
+      }
+      if (!state.resolved && e.key >= "1" && e.key <= "4") {
         e.preventDefault();
         onMoleculeClick(parseInt(e.key, 10) - 1);
       }
       return;
     }
 
-    if (SCREENS.intro.classList.contains("active")) {
+    if (SCREENS.intro?.classList.contains("active")) {
       if (e.key === "1" || (e.key === "Enter" && !e.shiftKey)) {
         e.preventDefault();
         clickById("btn-start");
@@ -1176,12 +1912,23 @@ function initKeyboard() {
         clickById("btn-intro-endless");
       } else if (e.key === "4") {
         e.preventDefault();
+        document.getElementById("btn-intro-pool-speedrun")?.click();
+      } else if (e.key === "5") {
+        e.preventDefault();
         clickById("btn-intro-more-info");
       }
       return;
     }
 
-    if (SCREENS.outro.classList.contains("active")) {
+    if (SCREENS.speedrunOutro?.classList.contains("active")) {
+      if (e.key === "h" || e.key === "H") {
+        e.preventDefault();
+        goHome();
+      }
+      return;
+    }
+
+    if (SCREENS.outro?.classList.contains("active")) {
       if (e.key === "h" || e.key === "H") {
         e.preventDefault();
         goHome();
@@ -1200,10 +1947,11 @@ function initKeyboard() {
       return;
     }
 
-    if (SCREENS.info.classList.contains("active")) {
+    if (SCREENS.info?.classList.contains("active")) {
       if (e.key === "Escape" || e.key === "b" || e.key === "B") {
         e.preventDefault();
-        goHome();
+        if (state.infoReturn === "intro") goHome();
+        else showScreen(state.infoReturn === "outro" ? "outro" : "intro");
       }
     }
   });
@@ -1234,25 +1982,24 @@ function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-function isCompactTheme() {
-  return window.matchMedia("(max-width: 767px)").matches;
-}
-
 function updateThemeButton(theme, followsSystem) {
   const btn = document.getElementById("btn-theme");
   if (!btn) return;
-  const compact = isCompactTheme();
+  const compact = isCompactKeyHints();
   const suffix = followsSystem && !compact ? " · SYS" : "";
   if (theme === "dark") {
-    btn.textContent = compact ? "☀" : `☀ HELL${suffix}`;
+    const label = compact ? "☀" : `☀ HELL${suffix}`;
+    btn.innerHTML = escapeHtml(label);
     btn.setAttribute("aria-label", followsSystem ? "Hellmodus (folgt System)" : "Hellmodus");
   } else {
-    btn.textContent = compact ? "☾" : `☾ DUNKEL${suffix}`;
+    const label = compact ? "☾" : `☾ DUNKEL${suffix}`;
+    btn.innerHTML = escapeHtml(label);
     btn.setAttribute("aria-label", followsSystem ? "Dunkelmodus (folgt System)" : "Dunkelmodus");
   }
   btn.title = followsSystem
     ? "Folgt der Systemeinstellung — Klick setzt manuelle Wahl"
     : "Manuelle Theme-Wahl";
+  updateQuizTopHintsEl();
 }
 
 function applyTheme(theme, persist = false) {
@@ -1300,6 +2047,9 @@ function initTheme() {
 
 async function init() {
   initTheme();
+  bindDetailsKeyHintSync();
+  initKeyHintsLayout(refreshKeyHintsLayout);
+  refreshKeyHintsLayout();
   initKeyboard();
   initGlossary();
   initFgTutorial();

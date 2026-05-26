@@ -193,15 +193,18 @@
       },
       "fg_primary": "Ring O aliph",
       "fg_labels": [
-        "O im Ring (cycl. Ether)"
+        "O im Ring (cycl. Ether)",
+        "tert. Amin (3× C–N)"
       ],
       "fg_labels_full": [
-        "Ring O aliph"
+        "Ring O aliph",
+        "Tertiary amine"
       ],
       "fg_ring_n_detail_de": [],
       "fg_primary_de": "O im Ring (cycl. Ether)",
       "fg_labels_de": [
-        "O im Ring (cycl. Ether)"
+        "O im Ring (cycl. Ether)",
+        "tert. Amin (3× C–N)"
       ],
       "mol_formula": "C7H11NO"
     }
@@ -771,6 +774,10 @@
         "text": "N mit einem H und zwei C-Nachbarn. Typisch: sekundäres Amin.",
         "image": "fg_ref/secondary_amine.png"
       },
+      "tert. Amin (3× C–N)": {
+        "text": "N ohne H, drei C-Nachbarn. Typisch: tertiäres Amin.",
+        "image": "fg_ref/tertiary_amine.png"
+      },
       "Ether (–O–)": {
         "text": "O zwischen zwei C, nicht im Ring. Typisch: Ether.",
         "image": "fg_ref/ether.png"
@@ -788,9 +795,15 @@
         "image": "fg_ref/ring_n_1.png"
       }
     },
-    "alt_gt_indices": [],
-    "alt_gt_fgs": {},
-    "alt_gt_fgs_de": {},
+    "alt_gt_indices": [
+      3
+    ],
+    "alt_gt_fgs": {
+      "3": "Tertiary amine"
+    },
+    "alt_gt_fgs_de": {
+      "3": "tert. Amin (3× C–N)"
+    },
     "model_pred_idx": 1,
     "model_alt_correct": false,
     "model_exclusive_fgs_de": [],
